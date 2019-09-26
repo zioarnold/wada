@@ -30,6 +30,7 @@ public class DBConnectionOperation {
     private String note; //note
     private String serviceLevel; //livello di servizio
     private String description; //descrizione
+    private boolean statusStatement = false;
 
 
     /*
@@ -62,11 +63,11 @@ public class DBConnectionOperation {
      * Se esiste, al momento skippa.
      * Se non esiste - censisce.
      */
-    void insertToFarmQSense(String userID,
-                            String came,
-                            String description,
-                            String note,
-                            String serviceLevel) {
+    public void insertToFarmQSense(String userID,
+                                   String came,
+                                   String description,
+                                   String note,
+                                   String serviceLevel) {
         loggingMisc = new LoggingMisc();
         loggingMisc.printConsole(1, "Checking if connection is null");
         try {
@@ -81,8 +82,10 @@ public class DBConnectionOperation {
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, "Executing query");
+                    statusStatement = false;
                     loggingMisc.printConsole(1, "INSERT INTO WADA.FARM_QSENSE (USERID, CAME, DESCRIZIONE, NOTE, LIVELLO_SERVIZIO, DATA_LAST_MODIFY) " +
                             "VALUES('" + userID + "', " + came + ", '" + description + "', '" + note + "', '" + serviceLevel + "', SYSDATE);");
+                    statusStatement = true;
 //                    resultSet = statement.executeQuery("INSERT INTO WADA.FARM_QSENSE (USERID, CAME, DESCRIZIONE, NOTE, LIVELLO_SERVIZIO, DATA_LAST_MODIFY)" +
 //                            "VALUES('" + userID + "', 1, 'FARM LAB01', 'NOTA NA', 'SVILUPPO', SYSDATE)");
                     loggingMisc.printConsole(1, "Executing query - successful");
@@ -350,6 +353,14 @@ public class DBConnectionOperation {
 
     private void setConnection(Connection connection) {
         DBConnectionOperation.connection = connection;
+    }
+
+    public boolean isStatusStatement() {
+        return statusStatement;
+    }
+
+    public void setStatusStatement(boolean statusStatement) {
+        this.statusStatement = statusStatement;
     }
 }
 
