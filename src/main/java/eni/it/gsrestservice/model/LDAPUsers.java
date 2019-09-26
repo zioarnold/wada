@@ -1,17 +1,34 @@
 package eni.it.gsrestservice.model;
 
+import org.springframework.ldap.odm.annotations.Attribute;
+import org.springframework.ldap.odm.annotations.Entry;
+
+@Entry(base = "dc=pri", objectClasses = "person")
 public class LDAPUsers {
+
+    @Attribute(name = "name")
+    String name;
+    @Attribute(name = "displayName")
     private String displayName;
+    @Attribute(name = "eniMatricolaNotes")
     private String eniMatricolaNotes;
-    private String name;
+    @Attribute(name = "mail")
     private String mail;
+    @Attribute(name = "givenName")
     private String givenName;
+    @Attribute(name = "sn")
     private String sn;
+    @Attribute(name = "badPwdCount")
     private String badPwdCount;
+    @Attribute(name = "pwdLastSet")
     private String pwdLastSet;
+    @Attribute(name = "userAccountDisabled")
     private String userAccountDisabled;
+    @Attribute(name = "userDontExpirePassword")
     private String userDontExpirePassword;
+    @Attribute(name = "memberOf")
     private String memberOf;
+    @Attribute(name = "ou")
     private String ou;
 
     public LDAPUsers() {
