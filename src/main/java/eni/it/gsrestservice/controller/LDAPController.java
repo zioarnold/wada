@@ -28,7 +28,7 @@ public class LDAPController {
 
     @GetMapping("/allusersfromldap")
     public ModelAndView getAllUsersFromLDAP(HttpServletRequest request) {
-        request.setAttribute("ldapusers", ldapRepository.findAll());
+        request.setAttribute("ldapusers", ldapService.findAll());
         return new ModelAndView("allUsersFromLDAP");
     }
 }
