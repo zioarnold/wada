@@ -1,6 +1,7 @@
-<!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html lang="en">
+<%@ taglib prefix="json" uri="http://www.atg.com/taglibs/json" %>
+<%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/xml" %>
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatibile" content="IE=edge"/>
@@ -25,7 +26,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/static">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUpload" role="button"
@@ -33,8 +34,8 @@
                    aria-haspopup="true" aria-expanded="false">
                     Caricamento
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
-                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownUpload">
+                    <a class="dropdown-item" href="/massiveUploadPage">Caricamento massivo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
                 </div>
@@ -60,47 +61,60 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container">
-    <div class="input-group mb-3">
-        <form action="/searchquserondb" method="get">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <input class="btn btn-primary" type="submit" value="Cerca"/>
-                </div>
-                <div>
-                    <input type="text" class="form-control" placeholder="Inserisci matricola"
-                           aria-label="Inserisci matricola"
-                           aria-describedby="basic-addon2" name="quser_filter">
-                </div>
+<div class="container text-center">
+    <form action="/massiveUpload" method="post" enctype="multipart/form-data">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <input class="btn btn-primary" type="submit" value="Carica">
             </div>
-        </form>
-    </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile03" name="file">
+                <label class="custom-file-label" for="inputGroupFile03">File.CSV con separatore ;</label>
+            </div>
+        </div>
+    </form>
 </div>
 <c:choose>
-    <c:when test="${empty quser_filter}">
+    <c:when test="${empty filecontent}">
         <%--        Sarebbe errore qui, cioè nulla--%>
     </c:when>
     <c:otherwise>
         <div class="container text-center" id="userDiv">
-            <h2>Utenza sul DB</h2>
+            <h2>Contenuto</h2>
             <hr>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr>
                         <th>
-                            Matricola
+                            Access
                         </th>
                         <th>
-                            Cognome Nome
+                            NtName
+                        </th>
+                        <th>
+                            Utente
+                        </th>
+                        <th>
+                            Gruppo
+                        </th>
+                        <th>
+                            Note
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>${quser_filter.userId}</td>
-                        <td>${quser_filter.name}</td>
-                    </tr>
+                    <c:import url="http:://localhost/massiveUpload" var="json"/>
+                    <json:parse json="${dataJson}" var="parsedJSON"/>
+                    <json:array>
+                        <tr th:each="article: ${articleList}">
+                            <td>${ACCESS}</td>
+                            <td>${NTNAME}</td>
+                            <td>${UTENTE}</td>
+                            <td>${Gruppo}</td>
+                            <td>${NOTE}</td>
+                        </tr>
+                    </json:array>
                     </tbody>
                 </table>
             </div>

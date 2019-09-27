@@ -5,11 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import eni.it.gsrestservice.model.CSVReader;
 import eni.it.gsrestservice.model.DBConnectionOperation;
 import eni.it.gsrestservice.parsers.CSV;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,39 +21,42 @@ public class CSVReaderController {
     private String csv = "";
     private DBConnectionOperation connectionOperation;
 
-    @RequestMapping(value = "/upload")
+    @GetMapping(value = "/singleUpload")
     public ModelAndView uploadFile() {
-        ModelAndView modelAndView = new ModelAndView("upload");
-        return modelAndView;
+        return new ModelAndView("singleUpload");
     }
 
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @GetMapping(value = "/massiveUploadPage")
+    public ModelAndView massiveUploadPage() {
+        return new ModelAndView("massiveUpload");
+    }
+
+    @RequestMapping(value = "/massiveUpload", method = RequestMethod.POST)
     public ModelAndView uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        ModelAndView uploadSuccess = new ModelAndView("massiveUpload");
         if (!file.isEmpty()) {
-            csvReader.setContent(new String(file.getBytes()));
-            return new ModelAndView("uploadSuccess");
+            InputStream inputStream = new ByteArrayInputStream(file.getBytes());
+            CSV csv = new CSV(true, ';', new BufferedReader(new InputStreamReader(inputStream)));
+            List<String> fieldNames = null;
+            if (csv.hasNext()) fieldNames = new ArrayList<>(csv.next());
+            List<Map<String, String>> list = new ArrayList<>();
+            while (csv.hasNext()) {
+                List<String> x = csv.next();
+                Map<String, String> obj = new LinkedHashMap<>();
+                for (int i = 0; i < fieldNames.size(); i++) {
+                    obj.put(fieldNames.get(i), x.get(i));
+                }
+                list.add(obj);
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            String json = mapper.writeValueAsString(list);
+            uploadSuccess.addObject("filecontent", json);
+
+            System.out.println("file = " + new String(file.getBytes()));
+            return uploadSuccess;
         }
         return new ModelAndView("error");
-    }
-
-    @RequestMapping(value = "/showContent", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String showContent() throws IOException {
-        InputStream in = new ByteArrayInputStream(csvReader.getContent().getBytes());
-        CSV csv = new CSV(true, ';', new BufferedReader(new InputStreamReader(in)));
-        List<String> fieldNames = null;
-        if (csv.hasNext()) fieldNames = new ArrayList<>(csv.next());
-        List<Map<String, String>> list = new ArrayList<>();
-        while (csv.hasNext()) {
-            List<String> x = csv.next();
-            Map<String, String> obj = new LinkedHashMap<>();
-            for (int i = 0; i < fieldNames.size(); i++) {
-                obj.put(fieldNames.get(i), x.get(i));
-            }
-            list.add(obj);
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        return mapper.writeValueAsString(list);
     }
 
     @RequestMapping(value = "/loadToDB", method = RequestMethod.POST)

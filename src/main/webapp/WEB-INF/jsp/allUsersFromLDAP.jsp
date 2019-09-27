@@ -60,53 +60,72 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container">
-    <div class="input-group mb-3">
-        <form action="/searchquserondb" method="get">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <input class="btn btn-primary" type="submit" value="Cerca"/>
-                </div>
-                <div>
-                    <input type="text" class="form-control" placeholder="Inserisci matricola"
-                           aria-label="Inserisci matricola"
-                           aria-describedby="basic-addon2" name="quser_filter">
-                </div>
-            </div>
-        </form>
+<div class="container text-center" id="usersDiv">
+    <h2>Utenze sul DB</h2>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>
+                    displayName
+                </th>
+                <th>
+                    eniMatricolaNotes
+                </th>
+                <th>
+                    name
+                </th>
+                <th>
+                    mail
+                </th>
+                <th>
+                    givenName
+                </th>
+                <th>
+                    sn
+                </th>
+                <th>
+                    badPwdCount
+                </th>
+                <th>
+                    pwdLastSet
+                </th>
+                <th>
+                    userAccountDisabled
+                </th>
+                <th>
+                    userDontExpirePassword
+                </th>
+                <th>
+                    memberOf
+                </th>
+                <th>
+                    ou
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="ldapuser" items="${ldapusers}">
+                <tr>
+                    <td>${ldapuser.displayName}</td>
+                    <td>${ldapuser.eniMatricolaNotes}</td>
+                    <td>${ldapuser.name}</td>
+                    <td>${ldapuser.mail}</td>
+                    <td>${ldapuser.givenName}</td>
+                    <td>${ldapuser.sn}</td>
+                    <td>${ldapuser.badPwdCount}</td>
+                    <td>${ldapuser.pwdLastSet}</td>
+                    <td>${ldapuser.userAccountDisabled}</td>
+                    <td>${ldapuser.userDontExpirePassword}</td>
+                    <td>${ldapuser.memberOf}</td>
+                    <td>${ldapuser.ou}</td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
     </div>
 </div>
-<c:choose>
-    <c:when test="${empty quser_filter}">
-        <%--        Sarebbe errore qui, cioè nulla--%>
-    </c:when>
-    <c:otherwise>
-        <div class="container text-center" id="userDiv">
-            <h2>Utenza sul DB</h2>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            Matricola
-                        </th>
-                        <th>
-                            Cognome Nome
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>${quser_filter.userId}</td>
-                        <td>${quser_filter.name}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </c:otherwise>
-</c:choose>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -118,5 +137,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+
 </body>
 </html>

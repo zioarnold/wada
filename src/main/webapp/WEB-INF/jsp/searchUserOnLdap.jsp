@@ -28,19 +28,29 @@
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/upload">Caricamento</a>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUpload" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Caricamento
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
+                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
+                </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSearch" role="button"
+                   data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     Ricerca
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
                     <a class="dropdown-item" href="/searchquserondbpage">Ricerca su DB</a>
-                    <a class="dropdown-item" href="#">Ricerca su ADLDS</a>
+                    <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="#">Estrazione completa ADLDS</a>
+                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
                 </div>
             </li>
         </ul>
@@ -79,18 +89,62 @@
                     <thead>
                     <tr>
                         <th>
-                            Matricola
+                            displayName
                         </th>
                         <th>
-                            Cognome Nome
+                            eniMatricolaNotes
+                        </th>
+                        <th>
+                            name
+                        </th>
+                        <th>
+                            mail
+                        </th>
+                        <th>
+                            givenName
+                        </th>
+                        <th>
+                            sn
+                        </th>
+                        <th>
+                            badPwdCount
+                        </th>
+                        <th>
+                            pwdLastSet
+                        </th>
+                        <th>
+                            userAccountDisabled
+                        </th>
+                        <th>
+                            userDontExpirePassword
+                        </th>
+                        <th>
+                            memberOf
+                        </th>
+                        <th>
+                            ou
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>${ldapuser.userId}</td>
-                        <td>${ldapuser.name}</td>
-                    </tr>
+                    <tbody>
+                    <c:forEach var="ldapuser" items="${ldapusers}">
+                        <tr>
+                            <td>${ldapuser.displayName}</td>
+                            <td>${ldapuser.eniMatricolaNotes}</td>
+                            <td>${ldapuser.name}</td>
+                            <td>${ldapuser.mail}</td>
+                            <td>${ldapuser.givenName}</td>
+                            <td>${ldapuser.sn}</td>
+                            <td>${ldapuser.badPwdCount}</td>
+                            <td>${ldapuser.pwdLastSet}</td>
+                            <td>${ldapuser.userAccountDisabled}</td>
+                            <td>${ldapuser.userDontExpirePassword}</td>
+                            <td>${ldapuser.memberOf}</td>
+                            <td>${ldapuser.ou}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
                     </tbody>
                 </table>
             </div>

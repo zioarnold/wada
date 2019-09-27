@@ -4,8 +4,10 @@ import eni.it.gsrestservice.config.LoggingMisc;
 import eni.it.gsrestservice.dao.LDAPRepository;
 import eni.it.gsrestservice.model.LDAPUsers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -14,12 +16,12 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
 @Service
-@Transactional
 public class LDAPService {
     private static InitialDirContext initialDirContext;
     @Autowired
@@ -30,6 +32,13 @@ public class LDAPService {
     private SearchControls searchControl;
     private NamingEnumeration<SearchResult> answer;
     private SearchResult result;
+
+    @Autowired
+    private Environment environment;
+    @Autowired
+    private ContextSource contextSource;
+    @Autowired
+    private LdapTemplate ldapTemplate;
 
     private Attribute displayName,
             eniMatricolaNotes,
@@ -168,5 +177,33 @@ public class LDAPService {
                     + e.getExplanation() + " " + e.getLocalizedMessage());
         }
         return Collections.singletonList(ldapUsers);
+    }
+
+    public void authenticate(String username, String password) {
+        contextSource.getContext("cn=" + username + ",cn=users," + environment.getRequiredProperty("ldap.partitionSuffix"), password);
+    }
+
+    //EniDesignatedNumber - ENIMatricolaNotes
+    public LDAPUsers findByEniDesignatedNumber(String cn) {
+//        return ldapRepository.findOne(query().where("ENIMatricolaNotes").is(cn), LDAPUsers.class);
+//        return ldapRepository.findOne(query().where("ENIMatricolaNotes").is(cn), LDAPUsers.class);
+        return null;
+    }
+
+    public List<LDAPUsers> findAll() {
+        List<LDAPUsers> users = new ArrayList<>();
+        for (LDAPUsers u : ldapRepository.findAll()) {
+            users.add(u);
+        }
+        return users;
+    }
+
+    public LDAPUsers create(LDAPUsers person) {
+        ldapTemplate.create(person);
+        return person;
+    }
+
+    public void update(LDAPUsers person) {
+        ldapTemplate.update(person);
     }
 }

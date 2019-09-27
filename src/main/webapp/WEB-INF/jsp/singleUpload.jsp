@@ -27,19 +27,29 @@
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/upload">Caricamento</a>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUpload" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Caricamento
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownUpload">
+                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
+                </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSearch" role="button"
+                   data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     Ricerca
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
                     <a class="dropdown-item" href="/searchquserondbpage">Ricerca su DB</a>
-                    <a class="dropdown-item" href="#">Ricerca su ADLDS</a>
+                    <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="#">Estrazione completa ADLDS</a>
+                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
                 </div>
             </li>
         </ul>
@@ -50,7 +60,7 @@
     </div>
 </nav>
 <div class="container text-center">
-    <form action="uploadFile" method="post">
+    <form action="/massiveUpload" method="post" enctype="multipart/form-data">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <input class="btn btn-primary" type="submit" value="Carica">

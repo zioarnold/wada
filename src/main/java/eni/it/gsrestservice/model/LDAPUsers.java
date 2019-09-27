@@ -2,34 +2,39 @@ package eni.it.gsrestservice.model;
 
 import org.springframework.ldap.odm.annotations.Attribute;
 import org.springframework.ldap.odm.annotations.Entry;
+import org.springframework.ldap.odm.annotations.Id;
 
-@Entry(base = "dc=pri", objectClasses = "person")
+import javax.naming.Name;
+
+@Entry(objectClasses = {"person"})
 public class LDAPUsers {
-
+    private static final String BASE_DN = "dc=pri";
+    @Attribute(name = "displayName")
+    String displayName;
     @Attribute(name = "name")
     String name;
-    @Attribute(name = "displayName")
-    private String displayName;
-    @Attribute(name = "eniMatricolaNotes")
-    private String eniMatricolaNotes;
+    @Attribute(name = "ENIMatricolaNotes")
+    String eniMatricolaNotes;
     @Attribute(name = "mail")
-    private String mail;
+    String mail;
     @Attribute(name = "givenName")
-    private String givenName;
+    String givenName;
     @Attribute(name = "sn")
-    private String sn;
+    String sn;
     @Attribute(name = "badPwdCount")
-    private String badPwdCount;
+    String badPwdCount;
     @Attribute(name = "pwdLastSet")
-    private String pwdLastSet;
-    @Attribute(name = "userAccountDisabled")
-    private String userAccountDisabled;
-    @Attribute(name = "userDontExpirePassword")
-    private String userDontExpirePassword;
+    String pwdLastSet;
+    @Attribute(name = "msDS-UserAccountDisabled")
+    String userAccountDisabled;
+    @Attribute(name = "msDS-UserDontExpirePassword")
+    String userDontExpirePassword;
     @Attribute(name = "memberOf")
-    private String memberOf;
+    String memberOf;
     @Attribute(name = "ou")
-    private String ou;
+    String ou;
+    @Id
+    private Name dn;
 
     public LDAPUsers() {
 

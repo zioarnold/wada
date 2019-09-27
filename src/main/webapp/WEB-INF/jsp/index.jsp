@@ -13,39 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 <body>
-<%--<nav class="navbar navbar-expand-lg navbar-light bg-light">--%>
-<%--    <a class="navbar-brand" href="#">Qlik FarmQSense Mgmt</a>--%>
-<%--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"--%>
-<%--            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">--%>
-<%--        <span class="navbar-toggler-icon"></span>--%>
-<%--    </button>--%>
-<%--    <div class="collapse navbar-collapse" id="navbarSupportedContent">--%>
-<%--        <ul class="navbar-nav mr-auto">--%>
-<%--            <li class="nav-item active">--%>
-<%--                <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>--%>
-<%--            </li>--%>
-<%--            <li class="nav-item dropdown">--%>
-<%--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"--%>
-<%--                   data-toggle="dropdown"--%>
-<%--                   aria-haspopup="true" aria-expanded="false">Ricerca</a>--%>
-<%--                <div class="dropdown-menu" aria-labelledby="navbarDropdown">--%>
-<%--                    <a class="dropdown-item" href="#">Ricerca su DB</a>--%>
-<%--                    <a class="dropdown-item" href="#">Ricerca su ADLDS</a>--%>
-<%--                </div>--%>
-<%--            </li>--%>
-<%--            <li class="nav-item">--%>
-<%--                <a href="#">Caricamento</a>--%>
-<%--            </li>--%>
-<%--            <li class="nav-item">--%>
-<%--                <a href="#">Assistenza</a>--%>
-<%--            </li>--%>
-<%--            <li class="nav-item">--%>
-<%--                <a href="#">Manuale</a>--%>
-<%--            </li>--%>
-<%--        </ul>--%>
-<%--    </div>--%>
-<%--</nav>--%>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Qlik Users Mgmt</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -59,19 +26,29 @@
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/upload">Caricamento</a>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUpload" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Caricamento
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
+                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
+                </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSearch" role="button"
+                   data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     Ricerca
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
                     <a class="dropdown-item" href="/searchquserondbpage">Ricerca su DB</a>
-                    <a class="dropdown-item" href="#">Ricerca su ADLDS</a>
+                    <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="#">Estrazione completa ADLDS</a>
+                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
                 </div>
             </li>
         </ul>
