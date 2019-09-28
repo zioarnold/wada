@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LDAPRepository extends LdapRepository<LDAPUsers> {
+    void findLDAPUsersBy(String cn);
 //    @Autowired
 //    LdapTemplate ldapTemplate = new LdapTemplate();
 //

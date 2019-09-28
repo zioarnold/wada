@@ -31,9 +31,4 @@ public class QUsersController {
     public ModelAndView searchQUserOnDBPage() {
         return new ModelAndView("searchQUserOnDB");
     }
-
-//    @GetMapping(value = "/allqlikusersfromdb")
-//    public List<QUsers> getAllUsers() {
-//        return qUsersService.getAllUsers();
-//    }
 }

@@ -5,6 +5,7 @@ import eni.it.gsrestservice.dao.LDAPRepository;
 import eni.it.gsrestservice.model.LDAPUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -88,7 +89,7 @@ public class LDAPService {
                     if (eniMatricolaNotes != null) {
                         for (int idx = 0; idx < eniMatricolaNotes.size(); idx++) {
                             loggingMisc.printConsole(1, "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
-                            ldapUsers.setEniMatricolaNotes(eniMatricolaNotes.get(idx).toString());
+                            ldapUsers.setUserID(eniMatricolaNotes.get(idx).toString());
                         }
                     }
                     name = result.getAttributes().get("name");
@@ -184,10 +185,13 @@ public class LDAPService {
     }
 
     //EniDesignatedNumber - ENIMatricolaNotes
-    public LDAPUsers findByEniDesignatedNumber(String cn) {
+    public List<String> findByEniDesignatedNumber(String cn) {
 //        return ldapRepository.findOne(query().where("ENIMatricolaNotes").is(cn), LDAPUsers.class);
 //        return ldapRepository.findOne(query().where("ENIMatricolaNotes").is(cn), LDAPUsers.class);
-        return null;
+        return ldapTemplate.search(
+                "ou=users",
+                "cn=" + cn,
+                (AttributesMapper<String>) attrs -> (String) attrs.get("cn").get());
     }
 
     public List<LDAPUsers> findAll() {

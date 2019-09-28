@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 public class LDAPController {
@@ -20,10 +21,15 @@ public class LDAPController {
         return new ModelAndView("searchUserOnLdap");
     }
 
+//    @RequestMapping(value = "/searchuseronldap", method = RequestMethod.GET)
+//    public ModelAndView searchUserOnLdap(HttpServletRequest request, @RequestParam(name = "ldap_user_filter") String filter) {
+//        request.setAttribute("ldapuser", ldapService.findByEniDesignatedNumber(filter));
+//        return new ModelAndView("searchUserOnLdap");
+//    }
+
     @RequestMapping(value = "/searchuseronldap", method = RequestMethod.GET)
-    public ModelAndView searchUserOnLdap(HttpServletRequest request, @RequestParam(name = "ldap_user_filter") String filter) {
-        request.setAttribute("ldapuser", ldapService.findByEniDesignatedNumber(filter));
-        return new ModelAndView("searchUserOnLdap");
+    public List<String> searchUserOnLdap(@RequestParam(name = "userID") String userID) {
+        return ldapService.findByEniDesignatedNumber(userID);
     }
 
     @GetMapping("/allusersfromldap")

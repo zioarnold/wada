@@ -1,6 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="json" uri="http://www.atg.com/taglibs/json" %>
-<%@ taglib prefix="j" uri="http://java.sun.com/jsp/jstl/xml" %>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -95,26 +93,24 @@
                         <th>
                             Utente
                         </th>
-                        <th>
-                            Gruppo
-                        </th>
-                        <th>
-                            Note
-                        </th>
+                            <%--                        <th>--%>
+                            <%--                            Gruppo--%>
+                            <%--                        </th>--%>
+                            <%--                        <th>--%>
+                            <%--                            Note--%>
+                            <%--                        </th>--%>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:import url="http:://localhost/massiveUpload" var="json"/>
-                    <json:parse json="${dataJson}" var="parsedJSON"/>
-                    <json:array>
-                        <tr th:each="article: ${articleList}">
-                            <td>${ACCESS}</td>
-                            <td>${NTNAME}</td>
-                            <td>${UTENTE}</td>
-                            <td>${Gruppo}</td>
-                            <td>${NOTE}</td>
+                    <c:forEach var="content" items="${filecontent}">
+                        <tr>
+                            <td>${content.uAccess}</td>
+                            <td>${content.uNtName}</td>
+                            <td>${content.uUtente}</td>
+                                <%--                            <td>${content.Gruppo}</td>--%>
+                                <%--                            <td>${content.NOTE}</td>--%>
                         </tr>
-                    </json:array>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -132,5 +128,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+<script>
+    $('#inputGroupFile03').on('change', function () {
+        //get the file name
+        var fileName = $(this).val();
+        //replace the "Choose a file" label
+        $(this).next('.custom-file-label').html(fileName);
+    })
+</script>
 </body>
 </html>

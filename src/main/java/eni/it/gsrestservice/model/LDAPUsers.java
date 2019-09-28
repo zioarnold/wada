@@ -14,7 +14,7 @@ public class LDAPUsers {
     @Attribute(name = "name")
     String name;
     @Attribute(name = "ENIMatricolaNotes")
-    String eniMatricolaNotes;
+    String userID;
     @Attribute(name = "mail")
     String mail;
     @Attribute(name = "givenName")
@@ -40,11 +40,11 @@ public class LDAPUsers {
 
     }
 
-    public LDAPUsers(String displayName, String eniMatricolaNotes, String name, String mail,
+    public LDAPUsers(String displayName, String userID, String name, String mail,
                      String givenName, String sn, String badPwdCount, String pwdLastSet,
                      String userAccountDisabled, String userDontExpirePassword, String memberOf, String ou) {
         this.displayName = displayName;
-        this.eniMatricolaNotes = eniMatricolaNotes;
+        this.userID = userID;
         this.name = name;
         this.mail = mail;
         this.givenName = givenName;
@@ -61,7 +61,7 @@ public class LDAPUsers {
     public String toString() {
         return "LDAPUsers{" +
                 "displayName='" + displayName + '\'' +
-                ", eniMatricolaNotes='" + eniMatricolaNotes + '\'' +
+                ", eniMatricolaNotes='" + userID + '\'' +
                 ", name='" + name + '\'' +
                 ", mail='" + mail + '\'' +
                 ", givenName='" + givenName + '\'' +
@@ -83,12 +83,12 @@ public class LDAPUsers {
         this.displayName = displayName;
     }
 
-    public String getEniMatricolaNotes() {
-        return eniMatricolaNotes;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setEniMatricolaNotes(String eniMatricolaNotes) {
-        this.eniMatricolaNotes = eniMatricolaNotes;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getName() {

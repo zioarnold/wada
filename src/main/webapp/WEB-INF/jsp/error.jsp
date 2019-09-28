@@ -34,7 +34,7 @@
                     Caricamento
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
-                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                    <a class="dropdown-item" href="/massiveUploadPage">Caricamento massivo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
                 </div>

@@ -34,7 +34,7 @@
                     Caricamento
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
-                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                    <a class="dropdown-item" href="/massiveUploadPage">Caricamento massivo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
                 </div>
@@ -70,7 +70,7 @@
                 <div>
                     <input type="text" class="form-control" placeholder="Inserisci matricola"
                            aria-label="Inserisci matricola"
-                           aria-describedby="basic-addon2" name="ldap_user_filter">
+                           aria-describedby="basic-addon2" name="userID">
                 </div>
             </div>
         </form>
