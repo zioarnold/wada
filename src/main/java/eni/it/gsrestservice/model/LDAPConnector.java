@@ -9,6 +9,8 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class LDAPConnector {
@@ -35,9 +37,12 @@ public class LDAPConnector {
             userDontExpirePassword,
             memberOf,
             ou;
+    private LDAPUser ldapUser;
 
-    LDAPConnector() {
+    private List<LDAPUser> data;
 
+    public LDAPConnector() {
+        data = new ArrayList<LDAPUser>();
     }
 
     public LDAPConnector(Attribute displayName, Attribute eniMatricolaNotes,
@@ -59,10 +64,11 @@ public class LDAPConnector {
         this.ou = ou;
     }
 
-    void searchOnLDAP(String filter) {
+    public List<LDAPUser> searchOnLDAP(String filter) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
-        dbConnectionOperation = new DBConnectionOperation();
+        ldapUser = new LDAPUser();
+        data.clear();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, this.getLdapURL());
         properties.put(Context.SECURITY_PRINCIPAL, this.getLdapUserName());
@@ -157,6 +163,67 @@ public class LDAPConnector {
                             loggingMisc.printConsole(1, "ou: " + ou.get(idx).toString());
                         }
                     }
+                    if (displayName == null) {
+                        ldapUser.setDisplayName("N/A");
+                    } else {
+                        ldapUser.setDisplayName(displayName.get().toString());
+                    }
+                    if (eniMatricolaNotes == null) {
+                        loggingMisc.printConsole(1, "eniMatricolaNotes is empty, skipping");
+                    } else {
+                        ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
+                    }
+                    if (name == null) {
+                        ldapUser.setName("N/A");
+                    } else {
+                        ldapUser.setName(name.get().toString());
+                    }
+                    if (mail == null) {
+                        ldapUser.setMail("N/A");
+                    } else {
+                        ldapUser.setMail(mail.get().toString());
+                    }
+                    if (givenName == null) {
+                        ldapUser.setGivenName("N/A");
+                    } else {
+                        ldapUser.setGivenName(givenName.get().toString());
+                    }
+                    if (sn == null) {
+                        ldapUser.setSn("N/A");
+                    } else {
+                        ldapUser.setSn(sn.get().toString());
+                    }
+                    if (badPwdCount == null) {
+                        ldapUser.setBadPwdCount("N/A");
+                    } else {
+                        ldapUser.setBadPwdCount(badPwdCount.get().toString());
+                    }
+                    if (pwdLastSet == null) {
+                        ldapUser.setPwdLastSet("N/A");
+                    } else {
+                        ldapUser.setPwdLastSet(pwdLastSet.get().toString());
+                    }
+                    if (userAccountDisabled == null) {
+                        ldapUser.setUserAccountDisabled("N/A");
+                    } else {
+                        ldapUser.setUserAccountDisabled(userAccountDisabled.get().toString());
+                    }
+                    if (userDontExpirePassword == null) {
+                        ldapUser.setUserDontExpirePassword("N/A");
+                    } else {
+                        ldapUser.setUserDontExpirePassword(userDontExpirePassword.get().toString());
+                    }
+                    if (memberOf == null) {
+                        ldapUser.setMemberOf("N/A");
+                    } else {
+                        ldapUser.setMemberOf(memberOf.get().toString());
+                    }
+                    if (ou == null) {
+                        ldapUser.setOu("N/A");
+                    } else {
+                        ldapUser.setOu(ou.get().toString());
+                    }
+                    data.add(ldapUser);
                 } while (answer.hasMore());
             } else {
                 loggingMisc.printConsole(2, "User not found by filter: " + filter);
@@ -167,15 +234,17 @@ public class LDAPConnector {
             loggingMisc.printConsole(2, "Unable to connect to LDAP, check your properties: "
                     + e.getExplanation() + " " + e.getLocalizedMessage());
         }
+        return data;
     }
 
     /**
-     * @param filter criterio di ricerca x popolare il DB
+     * @param userID criterio di ricerca x popolare il DB
      */
-    void searchOnLDAPInsertToDB(String filter) {
+    public void searchOnLDAPInsertToDB(String userType, String userID) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         dbConnectionOperation = new DBConnectionOperation();
+        dbConnectionOperation.connectDB("wada-rdb1-sd.services.eni.intranet", "1531", "WADAS", "wada", "wada_dev1");
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, this.getLdapURL());
         properties.put(Context.SECURITY_PRINCIPAL, this.getLdapUserName());
@@ -185,7 +254,7 @@ public class LDAPConnector {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(ldapBaseDN, "(ENIMatricolaNotes=" + filter + ")", searchControl);
+            answer = initialDirContext.search(this.getLdapBaseDN(), "(ENIMatricolaNotes=" + userID + ")", searchControl);
             loggingMisc.printConsole(1, "Connection to LDAP");
             if (answer.hasMore()) {
                 loggingMisc.printConsole(1, "Connection to LDAP Successful");
@@ -273,16 +342,16 @@ public class LDAPConnector {
                     }
                     dbConnectionOperation.insertToFarmQSense(eniMatricolaNotes.get().toString(),
                             "1", "LALA", "NA NA ", "SVILUPPO");
+                    dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
                     if (displayName == null) {
                         dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), eniMatricolaNotes.get().toString());
                     } else {
                         dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), displayName.get().toString());
                     }
-
-//                    dbConnectionOperation.insertUsers();
+                    dbConnectionOperation.insertUsers(eniMatricolaNotes.get().toString(), userType, "Gruppo1", "Y", ou.get().toString(), mail.get().toString());
                 } while (answer.hasMore());
             } else {
-                loggingMisc.printConsole(2, "User not found by filter: " + filter);
+                loggingMisc.printConsole(2, "User not found by filter: " + userID);
             }
             initialDirContext.close();
             answer.close();
@@ -298,7 +367,7 @@ public class LDAPConnector {
      * @param ldapBaseDN   base domain name x ldap
      * @method connectToLDAP esegue soltanto una connessione per capire se e' online o no.
      */
-    void connectToLDAP(String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN) {
+    public void connectToLDAP(String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         setLdapURL(ldapURL);
@@ -348,6 +417,10 @@ public class LDAPConnector {
 
     private void setLdapBaseDN(String ldapBaseDN) {
         LDAPConnector.ldapBaseDN = ldapBaseDN;
+    }
+
+    private String getLdapBaseDN() {
+        return ldapBaseDN;
     }
 
     private String getLdapPassword() {

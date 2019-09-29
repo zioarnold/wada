@@ -21,11 +21,10 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/static">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUpload" role="button"
@@ -50,8 +49,17 @@
                     <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
+                    <%--                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a href="/managementPage" class="nav-link">Gestione</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Manuale</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>

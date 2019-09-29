@@ -30,30 +30,14 @@ public class CSVReaderController {
     public ModelAndView uploadFile(HttpServletRequest request,
                                    @RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
-            csvReaderService.readData(file.getBytes());
-            request.setAttribute("filecontent", csvReaderService.getAll());
-            csvReaderService.cleanUp();
-            return new ModelAndView("massiveUpload");
+            if (csvReaderService.readDataCheckLdapInsertIntoDB(file.getBytes())) {
+                return new ModelAndView("uploadSuccess");
+            } else {
+                return new ModelAndView("error");
+            }
+//            request.setAttribute("users_not_exist", csvReaderService.getAll());
+//            request.setAttribute("users_exist", csvReaderService.getAll());
         }
         return new ModelAndView("error");
     }
-
-//    @RequestMapping(value = "/loadToDB", method = RequestMethod.POST)
-//    public ModelAndView loadToDB(@RequestParam("redirect_url") String redirect_url) throws IOException {
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvReader.getContent().getBytes())));
-//        reader.readLine();
-//        String firstRow;
-//        String[] userID = new String[5];
-//        while ((firstRow = reader.readLine()) != null) {
-//            userID = firstRow.split(";");
-//        }
-//        if (!connectionOperation.isStatusStatement()) {
-//            connectionOperation.insertToFarmQSense(userID[1], "1", "FARM LAB01", "NOTA NA", "SVILUPPO");
-//        }
-//        return new ModelAndView("redirect:" + redirect_url);
-//    }
-//
-//    public void setConnectionOperation(DBConnectionOperation connectionOperation) {
-//        this.connectionOperation = connectionOperation;
-//    }
 }

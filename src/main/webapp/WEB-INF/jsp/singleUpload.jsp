@@ -20,7 +20,6 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -49,8 +48,17 @@
                     <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
+                    <%--                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a href="/managementPage" class="nav-link">Gestione</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Manuale</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -59,19 +67,7 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container text-center">
-    <form action="/massiveUpload" method="post" enctype="multipart/form-data">
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <input class="btn btn-primary" type="submit" value="Carica">
-            </div>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile03" name="file">
-                <label class="custom-file-label" for="inputGroupFile03">File.CSV con separatore ;</label>
-            </div>
-        </div>
-    </form>
-</div>
+<h2>La pagina e' fase di implementazione</h2>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

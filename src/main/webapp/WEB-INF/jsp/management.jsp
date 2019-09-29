@@ -1,5 +1,12 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: arn81
+  Date: 29-Sep-19
+  Time: 15:15
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +17,6 @@
     <link rel="stylesheet" href="css/bootstrap.css"/>
     <link rel="stylesheet" href="css/navbar.css"/>
     <link rel="stylesheet" href="css/background.css"/>
-    <link type="text/javascript" href="js/bootstrap.js"/>
     <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
@@ -68,53 +74,7 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container">
-    <div class="input-group mb-3">
-        <form action="/searchquserondb" method="get">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <input class="btn btn-primary" type="submit" value="Cerca"/>
-                </div>
-                <div>
-                    <input type="text" class="form-control" placeholder="Inserisci matricola"
-                           aria-label="Inserisci matricola"
-                           aria-describedby="basic-addon2" name="quser_filter">
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<c:choose>
-    <c:when test="${empty quser_filter}">
-        <%--        Sarebbe errore qui, cioè nulla--%>
-    </c:when>
-    <c:otherwise>
-        <div class="container text-center" id="userDiv">
-            <h2>Utenza sul DB</h2>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            Matricola
-                        </th>
-                        <th>
-                            Cognome Nome
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>${quser_filter.userId}</td>
-                        <td>${quser_filter.name}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </c:otherwise>
-</c:choose>
+<h2>La pagina e' in fase di sviluppo</h2>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

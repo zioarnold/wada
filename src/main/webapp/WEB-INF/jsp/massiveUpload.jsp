@@ -20,7 +20,6 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -49,8 +48,17 @@
                     <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
+                    <%--                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a href="/managementPage" class="nav-link">Gestione</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Manuale</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -60,6 +68,11 @@
     </div>
 </nav>
 <div class="container text-center">
+    <h2>Verra' eseguito un check verso LDAP per poi effettuare dei controlli sul DB.</h2>
+    <br>
+    <h2>Qualora utenza esista sull'ADLDS, tale utenza verra' censita come abilitata.</h2>
+    <br>
+    <h2>Per gestire un'utenza singolarmente, <a href="/searchquserondbpage">Clicca qui</a></h2>
     <form action="/massiveUpload" method="post" enctype="multipart/form-data">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -72,51 +85,6 @@
         </div>
     </form>
 </div>
-<c:choose>
-    <c:when test="${empty filecontent}">
-        <%--        Sarebbe errore qui, cioè nulla--%>
-    </c:when>
-    <c:otherwise>
-        <div class="container text-center" id="userDiv">
-            <h2>Contenuto</h2>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            Access
-                        </th>
-                        <th>
-                            NtName
-                        </th>
-                        <th>
-                            Utente
-                        </th>
-                            <%--                        <th>--%>
-                            <%--                            Gruppo--%>
-                            <%--                        </th>--%>
-                            <%--                        <th>--%>
-                            <%--                            Note--%>
-                            <%--                        </th>--%>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="content" items="${filecontent}">
-                        <tr>
-                            <td>${content.uAccess}</td>
-                            <td>${content.uNtName}</td>
-                            <td>${content.uUtente}</td>
-                                <%--                            <td>${content.Gruppo}</td>--%>
-                                <%--                            <td>${content.NOTE}</td>--%>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </c:otherwise>
-</c:choose>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

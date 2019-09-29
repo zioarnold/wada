@@ -20,11 +20,10 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/static">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUpload" role="button"
@@ -49,8 +48,17 @@
                     <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
+                    <%--                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a href="/managementPage" class="nav-link">Gestione</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Manuale</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -59,38 +67,9 @@
         <%--        </form>--%>
     </div>
 </nav>
-<h2>Caricamento del file e' avvenuto con successo!</h2><br>
-<c:choose>
-    <c:when test="${empty filecontent}">
-        <%--        Sarebbe errore qui, cioè nulla--%>
-    </c:when>
-    <c:otherwise>
-        <div class="container text-center" id="userDiv">
-            <h2>Utenza sul DB</h2>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            Matricola
-                        </th>
-                        <th>
-                            Cognome Nome
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>${filecontent.userId}</td>
-                        <td>${filecontent.name}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </c:otherwise>
-</c:choose>
+<div class="container text-center">
+    <h2>Caricamento del file e' avvenuto con successo!</h2>
+</div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

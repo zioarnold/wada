@@ -1,3 +1,5 @@
+<%@ page import="eni.it.gsrestservice.model.LDAPUser" %>
+<%@ page import="java.util.ArrayList" %>
 <!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
@@ -21,7 +23,6 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -50,8 +51,17 @@
                     <a class="dropdown-item" href="/searchuseronldap">Ricerca su ADLDS</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/allqlikusersfromdb">Estrazione completa DB</a>
-                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>
+                    <%--                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
                 </div>
+            </li>
+            <li class="nav-item">
+                <a href="/managementPage" class="nav-link">Gestione</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Manuale</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -60,29 +70,30 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container">
-    <div class="input-group mb-3">
-        <form action="/searchuseronldap" method="get">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <input class="btn btn-primary" type="submit" value="Cerca"/>
-                </div>
-                <div>
-                    <input type="text" class="form-control" placeholder="Inserisci matricola"
-                           aria-label="Inserisci matricola"
-                           aria-describedby="basic-addon2" name="userID">
-                </div>
+<div class="container text-center">
+    <form action="/searchuseronldap" method="get">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <input class="btn btn-primary" type="submit" value="Cerca"/>
             </div>
-        </form>
-    </div>
+            <div>
+                <input type="text" class="form-control" placeholder="Inserisci matricola"
+                       aria-label="Inserisci matricola" aria-describedby="basic-addon2" name="userID">
+            </div>
+        </div>
+    </form>
 </div>
 <c:choose>
-    <c:when test="${empty ldapuser}">
+    <c:when test="${empty userIDDATA}">
         <%--        Sarebbe errore qui, cioè nulla--%>
     </c:when>
     <c:otherwise>
+        <%
+            ArrayList<LDAPUser> std = (ArrayList<LDAPUser>) request.getAttribute("userIDDATA");
+            for (LDAPUser s : std) {
+        %>
         <div class="container text-center" id="userDiv">
-            <h2>Utenza sul DB</h2>
+            <h2>Utenza su ADLDS</h2>
             <hr>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
@@ -127,24 +138,34 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tbody>
-                    <c:forEach var="ldapuser" items="${ldapusers}">
-                        <tr>
-                            <td>${ldapuser.displayName}</td>
-                            <td>${ldapuser.eniMatricolaNotes}</td>
-                            <td>${ldapuser.name}</td>
-                            <td>${ldapuser.mail}</td>
-                            <td>${ldapuser.givenName}</td>
-                            <td>${ldapuser.sn}</td>
-                            <td>${ldapuser.badPwdCount}</td>
-                            <td>${ldapuser.pwdLastSet}</td>
-                            <td>${ldapuser.userAccountDisabled}</td>
-                            <td>${ldapuser.userDontExpirePassword}</td>
-                            <td>${ldapuser.memberOf}</td>
-                            <td>${ldapuser.ou}</td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
+                    <tr>
+                        <td>
+                            <%=s.getDisplayName()%>
+                        </td>
+                        <td><%=s.getENIMatricolaNotes() %>
+                        </td>
+                        <td><%=s.getName() %>
+                        </td>
+                        <td><%=s.getMail() %>
+                        </td>
+                        <td><%=s.getGivenName() %>
+                        </td>
+                        <td><%=s.getSn() %>
+                        </td>
+                        <td><%=s.getBadPwdCount() %>
+                        </td>
+                        <td><%=s.getPwdLastSet() %>
+                        </td>
+                        <td><%=s.getUserAccountDisabled() %>
+                        </td>
+                        <td><%=s.getUserDontExpirePassword() %>
+                        </td>
+                        <td><%=s.getMemberOf() %>
+                        </td>
+                        <td><%=s.getOu() %>
+                        </td>
+                    </tr>
+                    <%}%>
                     </tbody>
                 </table>
             </div>
