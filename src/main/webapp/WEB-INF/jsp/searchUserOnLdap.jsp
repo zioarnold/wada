@@ -58,10 +58,10 @@
                 <a href="/managementPage" class="nav-link">Gestione</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Manuale</a>
+                <a href="/userGuide" class="nav-link">Manuale</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Assistenza</a>
+                <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -85,7 +85,9 @@
 </div>
 <c:choose>
     <c:when test="${empty userIDDATA}">
-        <%--        Sarebbe errore qui, cioè nulla--%>
+        <div class="container text-center">
+            <h2>Nessun utenza digitata oppure utenza non e' presente sull'ADLDS</h2>
+        </div>
     </c:when>
     <c:otherwise>
         <%

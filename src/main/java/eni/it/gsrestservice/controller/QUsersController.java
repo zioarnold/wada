@@ -22,8 +22,8 @@ public class QUsersController {
     }
 
     @RequestMapping("/searchquserondb")
-    public ModelAndView searchQUserOnDB(HttpServletRequest request, @RequestParam(name = "quser_filter") String userId) {
-        request.setAttribute("quser_filter", qUsersService.getUserId(userId.toUpperCase()));
+    public ModelAndView searchQUserOnDB(HttpServletRequest request, @RequestParam(required = false, name = "quser_filter") String userId) {
+        request.setAttribute("quser_filter", qUsersService.findQUser(userId.toUpperCase()));
         return new ModelAndView("searchQUserOnDB");
     }
 

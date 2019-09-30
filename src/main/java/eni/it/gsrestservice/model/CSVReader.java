@@ -2,11 +2,9 @@ package eni.it.gsrestservice.model;
 
 public class CSVReader {
     private String content;
-    private String uAccess;
-    private String uNtName;
-    private String uUtente;
-    private String uGruppo;
-    private String uNote;
+    private String userID;
+    private String role;
+    private String group;
 
     public CSVReader() {
 
@@ -20,43 +18,27 @@ public class CSVReader {
         this.content = content;
     }
 
-    public String getuAccess() {
-        return uAccess;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setuAccess(String uAccess) {
-        this.uAccess = uAccess;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public String getuNtName() {
-        return uNtName;
+    public String getRole() {
+        return role;
     }
 
-    public void setuNtName(String uNtName) {
-        this.uNtName = uNtName;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getuUtente() {
-        return uUtente;
+    public String getGroup() {
+        return group;
     }
 
-    public void setuUtente(String uUtente) {
-        this.uUtente = uUtente;
-    }
-
-    public String getuGruppo() {
-        return uGruppo;
-    }
-
-    public void setuGruppo(String uGruppo) {
-        this.uGruppo = uGruppo;
-    }
-
-    public String getuNote() {
-        return uNote;
-    }
-
-    public void setuNote(String uNote) {
-        this.uNote = uNote;
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

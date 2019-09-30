@@ -39,10 +39,12 @@ public class LDAPConnector {
             ou;
     private LDAPUser ldapUser;
 
-    private List<LDAPUser> data;
+    private List<LDAPUser> userExistsOnLdap;
+    private List<LDAPUser> userNotExistsOnLdap;
 
     public LDAPConnector() {
-        data = new ArrayList<LDAPUser>();
+        userExistsOnLdap = new ArrayList<>();
+        userNotExistsOnLdap = new ArrayList<>();
     }
 
     public LDAPConnector(Attribute displayName, Attribute eniMatricolaNotes,
@@ -68,7 +70,8 @@ public class LDAPConnector {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         ldapUser = new LDAPUser();
-        data.clear();
+        userExistsOnLdap.clear();
+        userNotExistsOnLdap.clear();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, this.getLdapURL());
         properties.put(Context.SECURITY_PRINCIPAL, this.getLdapUserName());
@@ -223,10 +226,11 @@ public class LDAPConnector {
                     } else {
                         ldapUser.setOu(ou.get().toString());
                     }
-                    data.add(ldapUser);
+                    userExistsOnLdap.add(ldapUser);
                 } while (answer.hasMore());
             } else {
                 loggingMisc.printConsole(2, "User not found by filter: " + filter);
+                userNotExistsOnLdap.add(ldapUser);
             }
             initialDirContext.close();
             answer.close();
@@ -234,13 +238,13 @@ public class LDAPConnector {
             loggingMisc.printConsole(2, "Unable to connect to LDAP, check your properties: "
                     + e.getExplanation() + " " + e.getLocalizedMessage());
         }
-        return data;
+        return userExistsOnLdap;
     }
 
     /**
      * @param userID criterio di ricerca x popolare il DB
      */
-    public void searchOnLDAPInsertToDB(String userType, String userID) {
+    public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         dbConnectionOperation = new DBConnectionOperation();
@@ -249,7 +253,9 @@ public class LDAPConnector {
         properties.put(Context.PROVIDER_URL, this.getLdapURL());
         properties.put(Context.SECURITY_PRINCIPAL, this.getLdapUserName());
         properties.put(Context.SECURITY_CREDENTIALS, this.getLdapPassword());
-
+        userNotExistsOnLdap.clear();
+        userExistsOnLdap.clear();
+        ldapUser = new LDAPUser();
         try {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
@@ -342,16 +348,30 @@ public class LDAPConnector {
                     }
                     dbConnectionOperation.insertToFarmQSense(eniMatricolaNotes.get().toString(),
                             "1", "LALA", "NA NA ", "SVILUPPO");
-                    dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
+                    dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
+                    String userGroupUpperCase = userGroup.toUpperCase();
+                    String userGroupLowerCase = userGroup.toLowerCase();
+                    String userRoleUpperCase = userRole.toUpperCase();
+                    String userRoleLowerCase = userRole.toLowerCase();
+                    if (userGroup.equalsIgnoreCase(userGroupLowerCase) || userGroup.equalsIgnoreCase(userGroupUpperCase)) {
+                        dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
+                    }
+                    if (userRole.equalsIgnoreCase(userRoleUpperCase) || userRole.equalsIgnoreCase(userRoleLowerCase)) {
+                        dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
+                    }
                     if (displayName == null) {
                         dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), eniMatricolaNotes.get().toString());
                     } else {
                         dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), displayName.get().toString());
                     }
-                    dbConnectionOperation.insertUsers(eniMatricolaNotes.get().toString(), userType, "Gruppo1", "Y", ou.get().toString(), mail.get().toString());
+                    dbConnectionOperation.insertUsers(eniMatricolaNotes.get().toString(), userRole, userGroup, "Y", ou.get().toString(), mail.get().toString());
+                    ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
+                    userExistsOnLdap.add(ldapUser);
                 } while (answer.hasMore());
             } else {
                 loggingMisc.printConsole(2, "User not found by filter: " + userID);
+                ldapUser.setENIMatricolaNotes(userID);
+                userNotExistsOnLdap.add(ldapUser);
             }
             initialDirContext.close();
             answer.close();
@@ -429,5 +449,21 @@ public class LDAPConnector {
 
     private void setLdapPassword(String ldapPassword) {
         LDAPConnector.ldapPassword = ldapPassword;
+    }
+
+    public List<LDAPUser> getUserExistsOnLdap() {
+        return userExistsOnLdap;
+    }
+
+    public void setUserExistsOnLdap(List<LDAPUser> userExistsOnLdap) {
+        this.userExistsOnLdap = userExistsOnLdap;
+    }
+
+    public List<LDAPUser> getUserNotExistsOnLdap() {
+        return userNotExistsOnLdap;
+    }
+
+    public void setUserNotExistsOnLdap(List<LDAPUser> userNotExistsOnLdap) {
+        this.userNotExistsOnLdap = userNotExistsOnLdap;
     }
 }

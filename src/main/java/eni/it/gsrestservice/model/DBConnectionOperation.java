@@ -3,8 +3,10 @@ package eni.it.gsrestservice.model;
 import eni.it.gsrestservice.config.LoggingMisc;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /* ********************************************************
  * DB Connection and Operations
@@ -30,8 +32,10 @@ public class DBConnectionOperation {
     private String note; //note
     private String serviceLevel; //livello di servizio
     private String description; //descrizione
-    private boolean statusStatement = false;
+    private boolean statusStatement;
 
+    private QUsers qUsers;
+    private List<QUsers> qUsersList;
 
     /*
      * costruttore vuoto per inizializzare gli oggetti
@@ -40,12 +44,47 @@ public class DBConnectionOperation {
         loggingMisc = null;
         statement = null;
         resultSet = null;
-
+        qUsersList = new ArrayList<>();
         userID = "";
         came = "";
         note = "";
         serviceLevel = "";
         description = "";
+    }
+
+    public List<QUsers> findQUser(String userID) {
+        loggingMisc = new LoggingMisc();
+        qUsers = new QUsers();
+        qUsersList.clear();
+        connectDB("wada-rdb1-sd.services.eni.intranet", "1531", "WADAS", "wada", "wada_dev1");
+        loggingMisc.printConsole(1, "Checking if connection is null");
+        try {
+            if (getConnection() == null) {
+                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                System.exit(-1);
+            } else {
+                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                statement = getConnection().createStatement();
+                loggingMisc.printConsole(1, "Creating statement Successful");
+                loggingMisc.printConsole(1, "Executing query");
+                statusStatement = false;
+                resultSet = statement.executeQuery("select * from wada.Q_USERS where USERID like '" + userID + "'");
+                while (resultSet.next()) {
+                    qUsers.setUserId(resultSet.getString("USERID"));
+                    qUsers.setName(resultSet.getString("NAME"));
+                    qUsersList.add(qUsers);
+                }
+                loggingMisc.printConsole(1, "Executing query - successful");
+                statusStatement = true;
+            }
+        } catch (SQLSyntaxErrorException ex) {
+            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            disconnectDB();
+        } catch (SQLException e) {
+            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            disconnectDB();
+        }
+        return qUsersList;
     }
 
     /**
@@ -159,7 +198,41 @@ public class DBConnectionOperation {
                 loggingMisc.printConsole(1, "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, "Creating statement Successful");
-                resultSet = statement.executeQuery("select count(USERID) from WADA.Q_USERS_ATTRIB where USERID like '" + userID + "'");
+                loggingMisc.printConsole(1, "Executing query");
+                loggingMisc.printConsole(1, "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
+
+                resultSet = statement.executeQuery("insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "','" + type + "','" + value + "')");
+                loggingMisc.printConsole(1, "Executing query - successful");
+//                resultSet = statement.executeQuery("select count(Q_USERS_ATTRIB.VALUE) from WADA.Q_USERS_ATTRIB where Q_USERS_ATTRIB.VALUE like '" + group + "'");
+//                resultSet.next();
+//                if (resultSet.getInt(1) == 0) {
+//                } else {
+//                    loggingMisc.printConsole(1, "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
+//                }
+            }
+        } catch (SQLSyntaxErrorException ex) {
+            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            disconnectDB();
+        } catch (SQLException e) {
+            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            disconnectDB();
+        }
+    }
+
+    void insertQUserAttributeEmail(String userID,
+                                   String type,
+                                   String value) {
+        loggingMisc = new LoggingMisc();
+        loggingMisc.printConsole(1, "Checking if connection is null");
+        try {
+            if (getConnection() == null) {
+                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                System.exit(-1);
+            } else {
+                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                statement = getConnection().createStatement();
+                loggingMisc.printConsole(1, "Creating statement Successful");
+                resultSet = statement.executeQuery("select count(Q_USERS_ATTRIB.USERID) from WADA.Q_USERS_ATTRIB where USERID like '" + userID + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, "Executing query");

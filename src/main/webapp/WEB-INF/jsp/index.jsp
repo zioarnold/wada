@@ -54,10 +54,10 @@
                 <a href="/managementPage" class="nav-link">Gestione</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Manuale</a>
+                <a href="/userGuide" class="nav-link">Manuale</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Assistenza</a>
+                <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>

@@ -1,3 +1,5 @@
+<%@ page import="eni.it.gsrestservice.model.QUsers" %>
+<%@ page import="java.util.ArrayList" %>
 <!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
@@ -56,10 +58,10 @@
                 <a href="/managementPage" class="nav-link">Gestione</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Manuale</a>
+                <a href="/userGuide" class="nav-link">Manuale</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Assistenza</a>
+                <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -86,9 +88,15 @@
 </div>
 <c:choose>
     <c:when test="${empty quser_filter}">
-        <%--        Sarebbe errore qui, cioè nulla--%>
+        <div class="container text-center">
+            <h2>Nessun utenza digitata oppure utenza non e' presente sul DB</h2>
+        </div>
     </c:when>
     <c:otherwise>
+        <%
+            ArrayList<QUsers> std = (ArrayList<QUsers>) request.getAttribute("quser_filter");
+            for (QUsers s : std) {
+        %>
         <div class="container text-center" id="userDiv">
             <h2>Utenza sul DB</h2>
             <hr>
@@ -106,9 +114,14 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>${quser_filter.userId}</td>
-                        <td>${quser_filter.name}</td>
+                        <td>
+                            <%=s.getUserId()%>
+                        </td>
+                        <td>
+                            <%=s.getName() %>
+                        </td>
                     </tr>
+                    <%}%>
                     </tbody>
                 </table>
             </div>

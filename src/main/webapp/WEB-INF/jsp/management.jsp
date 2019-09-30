@@ -62,10 +62,10 @@
                 <a href="/managementPage" class="nav-link">Gestione</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Manuale</a>
+                <a href="/userGuide" class="nav-link">Manuale</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Assistenza</a>
+                <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -74,7 +74,9 @@
         <%--        </form>--%>
     </div>
 </nav>
-<h2>La pagina e' in fase di sviluppo</h2>
+<div class="container text-center">
+    <h2>La pagina e' fase di implementazione</h2>
+</div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

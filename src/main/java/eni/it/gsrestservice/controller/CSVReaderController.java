@@ -1,6 +1,5 @@
 package eni.it.gsrestservice.controller;
 
-import eni.it.gsrestservice.model.DBConnectionOperation;
 import eni.it.gsrestservice.service.CSVReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,6 @@ import java.io.IOException;
 public class CSVReaderController {
     @Autowired
     private CSVReaderService csvReaderService;
-    private DBConnectionOperation connectionOperation;
 
     @GetMapping(value = "/singleUpload")
     public ModelAndView uploadFile() {
@@ -27,17 +25,29 @@ public class CSVReaderController {
     }
 
     @RequestMapping(value = "/massiveUpload", method = RequestMethod.POST)
-    public ModelAndView uploadFile(HttpServletRequest request,
-                                   @RequestParam("file") MultipartFile file) throws IOException {
+    public ModelAndView uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
             if (csvReaderService.readDataCheckLdapInsertIntoDB(file.getBytes())) {
                 return new ModelAndView("uploadSuccess");
             } else {
                 return new ModelAndView("error");
             }
-//            request.setAttribute("users_not_exist", csvReaderService.getAll());
-//            request.setAttribute("users_exist", csvReaderService.getAll());
         }
         return new ModelAndView("error");
+    }
+
+    @GetMapping(value = "/showResults")
+    public ModelAndView showUsersExists(HttpServletRequest request,
+                                        @RequestParam(required = false, name = "users_not_exist") String usersNotUploaded,
+                                        @RequestParam(required = false, name = "users_exist") String usersUploaded) {
+        if (usersNotUploaded != null) {
+            request.setAttribute("users_not_exist", csvReaderService.getUsersNotUploaded());
+            return new ModelAndView("uploadSuccess");
+        } else if (usersUploaded != null) {
+            request.setAttribute("users_exist", csvReaderService.getUsersUploaded());
+            return new ModelAndView("uploadSuccess");
+        } else {
+            return new ModelAndView("uploadSuccess");
+        }
     }
 }

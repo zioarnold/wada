@@ -1,3 +1,5 @@
+<%@ page import="eni.it.gsrestservice.model.LDAPUser" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="it">
 <head>
@@ -55,10 +57,10 @@
                 <a href="/managementPage" class="nav-link">Gestione</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Manuale</a>
+                <a href="/userGuide" class="nav-link">Manuale</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Assistenza</a>
+                <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -69,7 +71,80 @@
 </nav>
 <div class="container text-center">
     <h2>Caricamento del file e' avvenuto con successo!</h2>
+    <form action="/showResults" method="get">
+        <input class="btn btn-primary" name="users_not_exist" type="submit" value="Mostrami utenti non caricati">
+        <input class="btn btn-primary" name="users_exist" type="submit" value="Mostrami utenti caricati">
+    </form>
 </div>
+<c:choose>
+    <c:when test="${empty users_not_exist}">
+    </c:when>
+    <c:otherwise>
+        <%
+            ArrayList<LDAPUser> std = (ArrayList<LDAPUser>) request.getAttribute("users_not_exist");
+            for (LDAPUser s : std) {
+        %>
+        <div class="container text-center" id="userDiv">
+            <h2>Matricole non caricate</h2>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            eniMatricolaNotes
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <%=s.getENIMatricolaNotes() %>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${empty users_exist}">
+        <div class="container text-center">
+            <h2>Nessun utenza digitata oppure utenza non e' presente sul DB</h2>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <%
+            ArrayList<LDAPUser> std = (ArrayList<LDAPUser>) request.getAttribute("users_exist");
+            for (LDAPUser s : std) {
+        %>
+        <div class="container text-center" id="userDiv">
+            <h2>Matricole caricate</h2>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            eniMatricolaNotes
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <%=s.getENIMatricolaNotes() %>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

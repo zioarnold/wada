@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import eni.it.gsrestservice.model.CSVReader;
 import eni.it.gsrestservice.model.LDAPConnector;
+import eni.it.gsrestservice.model.LDAPUser;
 import eni.it.gsrestservice.parsers.CSV;
 import org.springframework.stereotype.Service;
 
@@ -55,24 +56,20 @@ public class CSVReaderService {
         String[] userID;
         while ((firstRow = bufferedReader.readLine()) != null) {
             userID = firstRow.split(";");
-            csvReader.setuAccess(userID[0]);
-            csvReader.setuNtName(userID[1]);
-            ldapConnector.searchOnLDAPInsertToDB(userID[0], userID[1]);
-            csvReader.setuUtente(userID[2]);
-//            System.out.println("userID = " + userID[3]);
-//            if (userID[3].equals("")) {
-//                csvReader.setuGruppo("");
-//            } else {
-//                csvReader.setuGruppo(userID[3]);
-//            }
-//            System.out.println("userID = " + userID[4]);
-//            if (userID[4].equals("")) {
-//                csvReader.setuNote("");
-//            } else {
-//                csvReader.setuNote(userID[4]);
-//            }
+            csvReader.setUserID(userID[0]);//Matricola
+            csvReader.setRole(userID[1]);//Ruolo
+            csvReader.setGroup(userID[2]);//Gruppo
+            ldapConnector.searchOnLDAPInsertToDB(userID[0], userID[1], userID[2]);
         }
         status = true;
         return status;
+    }
+
+    public List<LDAPUser> getUsersNotUploaded() {
+        return ldapConnector.getUserNotExistsOnLdap();
+    }
+
+    public List<LDAPUser> getUsersUploaded() {
+        return ldapConnector.getUserExistsOnLdap();
     }
 }

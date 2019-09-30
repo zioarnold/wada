@@ -56,10 +56,10 @@
                 <a href="/managementPage" class="nav-link">Gestione</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Manuale</a>
+                <a href="/userGuide" class="nav-link">Manuale</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Assistenza</a>
+                <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
@@ -70,6 +70,31 @@
 </nav>
 <div class="container text-center">
     <h2>Errore sconosciuto, contattare sistemisti per gli analisi dell'accaduto.</h2>
+    <h3>${errorMsg}</h3>
+    <c:choose>
+        <c:when test="${empty errorMsg}">
+            <%--        Sarebbe errore qui, cioè nulla--%>
+        </c:when>
+        <c:otherwise>
+            <h3>${errorMessageUserNotFound}</h3>
+        </c:otherwise>
+    </c:choose>
+    <c:choose>
+        <c:when test="${empty errorMessageUserNotFound}">
+            <%--        Sarebbe errore qui, cioè nulla--%>
+        </c:when>
+        <c:otherwise>
+            <h3>${errorMessageUserNotFound}</h3>
+        </c:otherwise>
+    </c:choose>
+    <c:choose>
+        <c:when test="${empty errorMessageException}">
+            <%--        Sarebbe errore qui, cioè nulla--%>
+        </c:when>
+        <c:otherwise>
+            <h3>${errorMessageException}</h3>
+        </c:otherwise>
+    </c:choose>
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
