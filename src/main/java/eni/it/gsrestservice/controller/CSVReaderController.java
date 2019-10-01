@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Configuration
 @RestController
-@PropertySource("classpath:config.properties")
+@PropertySource(value = {"classpath:config.properties", "classpath:application.properties"})
 public class CSVReaderController {
     @Autowired
     private CSVReaderService csvReaderService;

@@ -21,6 +21,7 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -33,7 +34,7 @@
                     Caricamento
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
-                    <a class="dropdown-item" href="/massiveUploadPage">Caricamento massivo</a>
+                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
                 </div>
@@ -68,11 +69,11 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container text-center" id="usersDiv">
-    <h2>Utenze sul DB</h2>
+<div class="container text-center" id="userDiv">
+    <h2 class="text-center">Utenze sul DB</h2>
     <hr>
     <div class="table-responsive">
-        <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered table-sm">
             <thead>
             <tr>
                 <th>
@@ -81,13 +82,49 @@
                 <th>
                     Cognome Nome
                 </th>
+                <th>
+                    CAME
+                </th>
+                <th>
+                    Descrizione
+                </th>
+                <th>
+                    Note
+                </th>
+                <th>
+                    Livello Servizio
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Tipo Utenza
+                </th>
+                <th>
+                    Gruppo d'utenza
+                </th>
+                <th>
+                    Organizzazione
+                </th>
+                <th>
+                    Mail
+                </th>
             </tr>
             </thead>
             <tbody>
             <c:forEach var="quser" items="${qusers}">
                 <tr>
                     <td>${quser.userId}</td>
+                    <td>${quser.came}</td>
+                    <td>${quser.description}</td>
+                    <td>${quser.note}</td>
+                    <td>${quser.serviceLevel}</td>
                     <td>${quser.name}</td>
+                    <td>${quser.userType}</td>
+                    <td>${quser.userGroup}</td>
+                    <td>${quser.userIsActive}</td>
+                    <td>${quser.organization}</td>
+                    <td>${quser.email}</td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -105,5 +142,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+
 </body>
 </html>

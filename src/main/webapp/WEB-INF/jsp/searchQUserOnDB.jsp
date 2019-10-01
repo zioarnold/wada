@@ -93,15 +93,11 @@
         </div>
     </c:when>
     <c:otherwise>
-        <%
-            ArrayList<QUsers> std = (ArrayList<QUsers>) request.getAttribute("quser_filter");
-            for (QUsers s : std) {
-        %>
         <div class="container text-center" id="userDiv">
-            <h2>Utenza sul DB</h2>
+            <h2 class="text-center">Utenza sul DB</h2>
             <hr>
             <div class="table-responsive">
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered table-sm">
                     <thead>
                     <tr>
                         <th>
@@ -110,15 +106,120 @@
                         <th>
                             Cognome Nome
                         </th>
+                        <th>
+                            CAME
+                        </th>
+                        <th>
+                            Descrizione
+                        </th>
+                        <th>
+                            Note
+                        </th>
+                        <th>
+                            Livello Servizio
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Tipo Utenza
+                        </th>
+                        <th>
+                            Gruppo d'utenza
+                        </th>
+                        <th>
+                            Organizzazione
+                        </th>
+                        <th>
+                            Mail
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="quser" items="${quser_filter}">
+                        <tr>
+                            <td>${quser.userId}</td>
+                            <td>${quser.came}</td>
+                            <td>${quser.description}</td>
+                            <td>${quser.note}</td>
+                            <td>${quser.serviceLevel}</td>
+                            <td>${quser.name}</td>
+                            <td>${quser.userType}</td>
+                            <td>${quser.userGroup}</td>
+                            <td>${quser.userIsActive}</td>
+                            <td>${quser.organization}</td>
+                            <td>${quser.email}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
+<div class="container text-center">
+    <form action="/showUserTypeGroup" method="get">
+        <input class="btn btn-primary" name="showUserType" type="submit" value="Visualizza i ruoli">
+        <input class="btn btn-primary" name="showUserGroup" type="submit" value="Visualizza i gruppi">
+    </form>
+</div>
+<c:choose>
+    <c:when test="${empty showUserType}">
+    </c:when>
+    <c:otherwise>
+        <%
+            ArrayList<QUsers> std = (ArrayList<QUsers>) request.getAttribute("showUserType");
+            for (QUsers s : std) {
+        %>
+        <div class="container text-center" id="userDiv">
+            <h2>Ruoli dell'utente</h2>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            Ruoli
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td>
-                            <%=s.getUserId()%>
+                            <%=s.getType() %>
                         </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${empty showUserGroup}">
+    </c:when>
+    <c:otherwise>
+        <%
+            ArrayList<QUsers> std = (ArrayList<QUsers>) request.getAttribute("showUserGroup");
+            for (QUsers s : std) {
+        %>
+        <div class="container text-center" id="userDiv">
+            <h2>Gruppi dell'utente</h2>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            Gruppi
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
                         <td>
-                            <%=s.getName() %>
+                            <%=s.getUserGroup() %>
                         </td>
                     </tr>
                     <%}%>

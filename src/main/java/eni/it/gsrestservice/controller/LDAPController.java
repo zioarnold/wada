@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 @RestController
-@PropertySource("classpath:config.properties")
+@PropertySource(value = {"classpath:config.properties", "classpath:application.properties"})
 public class LDAPController {
     @Autowired
     private Environment environment;

@@ -98,7 +98,7 @@
             <h2>Utenza su ADLDS</h2>
             <hr>
             <div class="table-responsive">
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered table-sm">
                     <thead>
                     <tr>
                         <th>
