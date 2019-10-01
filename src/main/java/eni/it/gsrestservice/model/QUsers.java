@@ -5,11 +5,10 @@ import javax.persistence.*;
 @Entity(name = "q_users")
 @Table(name = "Q_USERS", schema = "WADA")
 public class QUsers {
+
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-
-
     @Id
     @Column(name = "USERID")
     private String userId;
@@ -17,7 +16,7 @@ public class QUsers {
     @Column(name = "NAME")
     private String name;
 
-    protected QUsers() {
+    QUsers() {
 
     }
 

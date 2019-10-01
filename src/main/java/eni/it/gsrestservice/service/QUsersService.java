@@ -15,7 +15,7 @@ public class QUsersService {
     DBConnectionOperation dbConnectionOperation;
 
     public List<QUsers> getAllUsers() {
-        return this.qUsersRepository.findAll();
+        return qUsersRepository.findAll();
     }
 
     public List<QUsers> findQUser(String userID) {

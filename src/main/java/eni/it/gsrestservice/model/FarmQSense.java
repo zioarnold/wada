@@ -1,23 +1,31 @@
 package eni.it.gsrestservice.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.io.Serializable;
+import javax.persistence.*;
 
-@Entity(name = "u_users")
-public class FarmQSense implements Serializable {
+@Entity(name = "farm_qsense")
+@Table(name = "FARM_QSENSE", schema = "WADA")
+public class FarmQSense {
     @Id
+    @Column(name = "FARMID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer farmID;
+    @Column(name = "USERID")
     private String userID; //matricola
-    private String came; //came
-    private String note; //note
-    private String serviceLevel; //livello di servizio
+    @Column(name = "CAME")
+    private Integer came; //came
+    @Column(name = "DESCRIZIONE")
     private String description; //descrizione
+    @Column(name = "NOTE")
+    private String note; //note
+    @Column(name = "LIVELLO_SERVIZIO")
+    private String serviceLevel; //livello di servizio
 
     public FarmQSense() {
 
     }
 
-    public FarmQSense(String userID, String came, String note, String serviceLevel, String description) {
+    public FarmQSense(Integer farmID, String userID, Integer came, String note, String serviceLevel, String description) {
+        this.farmID = farmID;
         this.userID = userID;
         this.came = came;
         this.note = note;
@@ -33,11 +41,11 @@ public class FarmQSense implements Serializable {
         this.userID = userID;
     }
 
-    public String getCame() {
+    public Integer getCame() {
         return came;
     }
 
-    public void setCame(String came) {
+    public void setCame(Integer came) {
         this.came = came;
     }
 
@@ -65,14 +73,23 @@ public class FarmQSense implements Serializable {
         this.description = description;
     }
 
+    public Integer getFarmID() {
+        return farmID;
+    }
+
+    public void setFarmID(Integer farmID) {
+        this.farmID = farmID;
+    }
+
     @Override
     public String toString() {
         return "FarmQSense{" +
-                "userID='" + userID + '\'' +
-                ", came='" + came + '\'' +
+                "farmID=" + farmID +
+                ", userID='" + userID + '\'' +
+                ", came=" + came +
+                ", description='" + description + '\'' +
                 ", note='" + note + '\'' +
                 ", serviceLevel='" + serviceLevel + '\'' +
-                ", description='" + description + '\'' +
                 '}';
     }
 }

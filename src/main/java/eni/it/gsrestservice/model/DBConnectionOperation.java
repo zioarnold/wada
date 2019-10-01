@@ -4,8 +4,6 @@ import eni.it.gsrestservice.config.LoggingMisc;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 /* ********************************************************
@@ -27,12 +25,6 @@ public class DBConnectionOperation {
     private static Connection connection; //oggetto che conterra' la stringa di connessione
     private LoggingMisc loggingMisc; //oggetto di log
     private ResultSet resultSet; //oggetto per restituire risultato dallo statement
-    private String userID; //matricola
-    private String came; //came
-    private String note; //note
-    private String serviceLevel; //livello di servizio
-    private String description; //descrizione
-    private boolean statusStatement;
 
     private QUsers qUsers;
     private List<QUsers> qUsersList;
@@ -45,18 +37,12 @@ public class DBConnectionOperation {
         statement = null;
         resultSet = null;
         qUsersList = new ArrayList<>();
-        userID = "";
-        came = "";
-        note = "";
-        serviceLevel = "";
-        description = "";
+        qUsers = new QUsers();
     }
 
     public List<QUsers> findQUser(String userID) {
         loggingMisc = new LoggingMisc();
-        qUsers = new QUsers();
         qUsersList.clear();
-        connectDB("wada-rdb1-sd.services.eni.intranet", "1531", "WADAS", "wada", "wada_dev1");
         loggingMisc.printConsole(1, "Checking if connection is null");
         try {
             if (getConnection() == null) {
@@ -67,7 +53,6 @@ public class DBConnectionOperation {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, "Creating statement Successful");
                 loggingMisc.printConsole(1, "Executing query");
-                statusStatement = false;
                 resultSet = statement.executeQuery("select * from wada.Q_USERS where USERID like '" + userID + "'");
                 while (resultSet.next()) {
                     qUsers.setUserId(resultSet.getString("USERID"));
@@ -75,7 +60,6 @@ public class DBConnectionOperation {
                     qUsersList.add(qUsers);
                 }
                 loggingMisc.printConsole(1, "Executing query - successful");
-                statusStatement = true;
             }
         } catch (SQLSyntaxErrorException ex) {
             loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
@@ -102,11 +86,7 @@ public class DBConnectionOperation {
      * Se esiste, al momento skippa.
      * Se non esiste - censisce.
      */
-    void insertToFarmQSense(String userID,
-                            String came,
-                            String description,
-                            String note,
-                            String serviceLevel) {
+    void insertToFarmQSense(String userID, String came, String description, String note, String serviceLevel) {
         loggingMisc = new LoggingMisc();
         loggingMisc.printConsole(1, "Checking if connection is null");
         try {
@@ -121,10 +101,8 @@ public class DBConnectionOperation {
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, "Executing query");
-                    statusStatement = false;
                     loggingMisc.printConsole(1, "INSERT INTO WADA.FARM_QSENSE (USERID, CAME, DESCRIZIONE, NOTE, LIVELLO_SERVIZIO, DATA_LAST_MODIFY) " +
                             "VALUES('" + userID + "', " + came + ", '" + description + "', '" + note + "', '" + serviceLevel + "', SYSDATE);");
-                    statusStatement = true;
                     resultSet = statement.executeQuery("INSERT INTO WADA.FARM_QSENSE (USERID, CAME, DESCRIZIONE, NOTE, LIVELLO_SERVIZIO, DATA_LAST_MODIFY)" +
                             "VALUES('" + userID + "', 1, 'FARM LAB01', 'NOTA NA', 'SVILUPPO', SYSDATE)");
                     loggingMisc.printConsole(1, "Executing query - successful");
@@ -185,9 +163,7 @@ public class DBConnectionOperation {
         }
     }
 
-    void insertQUserAttribute(String userID,
-                              String type,
-                              String value) {
+    void insertQUserAttribute(String userID, String type, String value) {
         loggingMisc = new LoggingMisc();
         loggingMisc.printConsole(1, "Checking if connection is null");
         try {
@@ -219,9 +195,7 @@ public class DBConnectionOperation {
         }
     }
 
-    void insertQUserAttributeEmail(String userID,
-                                   String type,
-                                   String value) {
+    void insertQUserAttributeEmail(String userID, String type, String value) {
         loggingMisc = new LoggingMisc();
         loggingMisc.printConsole(1, "Checking if connection is null");
         try {
@@ -308,66 +282,6 @@ public class DBConnectionOperation {
         }
     }
 
-    public void searchUserOnDB(String userID) {
-        loggingMisc = new LoggingMisc();
-        loggingMisc.printConsole(1, "Checking if connection is null");
-        try {
-            if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
-                System.exit(-1);
-            } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
-                statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
-                resultSet = statement.executeQuery("SELECT * FROM FARM_QSENSE WHERE USERID LIKE" + "'" + userID + "'");
-            }
-        } catch (SQLException e) {
-            loggingMisc.printConsole(2, "Unknown error " + e.getSQLState() + " " + e.getLocalizedMessage());
-            disconnectDB();
-        }
-    }
-
-    void getAllUsersFromDB() {
-        loggingMisc = new LoggingMisc();
-        HashMap<String, String> hashMap = new HashMap<>();
-        try {
-            loggingMisc.printConsole(1, "Checking if connection is null.");
-            if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
-                System.exit(-1);
-            } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
-                statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
-                resultSet = statement.executeQuery("SELECT * FROM FARM_QSENSE");
-                while (resultSet.next()) {
-                    loggingMisc.printConsole(1, "USERID: " + resultSet.getString(2)
-                            + " ~ CAME: " + resultSet.getInt(3)
-                            + " ~ DESCRIPTION: " + resultSet.getString(4)
-                            + " ~ NOTE: " + resultSet.getString(5)
-                            + " ~ SERVICE LEVEL: " + resultSet.getString(6));
-//                    listDB.add(resultSet.getString(2)); //USERID
-
-                    setUserID(resultSet.getString(2));
-                    setCame(resultSet.getString(3)); //CAME
-                    setDescription(resultSet.getString(4)); //DESCRIPTION
-                    setNote(resultSet.getString(5)); //NOTE
-                    setServiceLevel(resultSet.getString(6)); //SERVICE LEVEL
-                    hashMap.put(getUserID(), getCame() + ";" + getDescription() + ";" + getNote() + ";" + getServiceLevel());
-                }
-                if (hashMap.isEmpty()) {
-                    loggingMisc.printConsole(2, "Error list is empty");
-                } else {
-                    loggingMisc.printConsole(1, "Data in HashMap: " + Collections.singletonList(hashMap));
-                }
-            }
-        } catch (SQLException e) {
-            disconnectDB();
-            loggingMisc.printConsole(2, "Unknown error " + e.getSQLState() + " " + e.getLocalizedMessage());
-            System.exit(-1);
-        }
-    }
-
     void connectDB(String dbHostname,
                    String dbPort,
                    String dbSid,
@@ -391,7 +305,7 @@ public class DBConnectionOperation {
         }
     }
 
-    private void disconnectDB() {
+    void disconnectDB() {
         loggingMisc = new LoggingMisc();
         try {
             loggingMisc.printConsole(1, "Closing statement");
@@ -409,60 +323,12 @@ public class DBConnectionOperation {
         }
     }
 
-    private String getUserID() {
-        return userID;
-    }
-
-    private void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    private String getCame() {
-        return came;
-    }
-
-    private void setCame(String came) {
-        this.came = came;
-    }
-
-    private String getNote() {
-        return note;
-    }
-
-    private void setNote(String note) {
-        this.note = note;
-    }
-
-    private String getServiceLevel() {
-        return serviceLevel;
-    }
-
-    private void setServiceLevel(String serviceLevel) {
-        this.serviceLevel = serviceLevel;
-    }
-
-    private String getDescription() {
-        return description;
-    }
-
-    private void setDescription(String description) {
-        this.description = description;
-    }
-
     private Connection getConnection() {
         return connection;
     }
 
     private void setConnection(Connection connection) {
         DBConnectionOperation.connection = connection;
-    }
-
-    public boolean isStatusStatement() {
-        return statusStatement;
-    }
-
-    public void setStatusStatement(boolean statusStatement) {
-        this.statusStatement = statusStatement;
     }
 }
 

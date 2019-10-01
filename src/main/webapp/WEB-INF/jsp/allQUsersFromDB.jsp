@@ -81,6 +81,39 @@
                 <th>
                     Cognome Nome
                 </th>
+                <th>
+                    CAME
+                </th>
+                <th>
+                    Descrizione
+                </th>
+                <th>
+                    Note
+                </th>
+                <th>
+                    Livello Servizio
+                </th>
+                <th>
+                    Tipo
+                </th>
+                <th>
+                    Valore
+                </th>
+                <th>
+                    Tipo utenza
+                </th>
+                <th>
+                    Gruppo di utenza
+                </th>
+                <th>
+                    Utenza attiva
+                </th>
+                <th>
+                    Organizzazione
+                </th>
+                <th>
+                    Email
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -88,6 +121,17 @@
                 <tr>
                     <td>${quser.userId}</td>
                     <td>${quser.name}</td>
+                    <td>${quser.came}</td>
+                    <td>${quser.descrizione}</td>
+                    <td>${quser.note}</td>
+                    <td>${quser.livello_servizio}</td>
+                    <td>${quser.type}</td>
+                    <td>${quser.value}</td>
+                    <td>${quser.user_type}</td>
+                    <td>${quser.user_group}</td>
+                    <td>${quser.user_is_active}</td>
+                    <td>${quser.organizzazione}</td>
+                    <td>${quser.email}</td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -105,6 +149,5 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
-
 </body>
 </html>

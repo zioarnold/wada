@@ -13,18 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+@SuppressWarnings("DuplicatedCode")
 public class LDAPConnector {
-    private static String ldapURL;
-    private static String ldapUserName;
-    private static String ldapBaseDN;
-    private static String ldapPassword;
     private static InitialDirContext initialDirContext;
     private LoggingMisc loggingMisc;
     private Properties properties;
     private SearchControls searchControl;
     private NamingEnumeration<SearchResult> answer;
-    private SearchResult result;
-    private DBConnectionOperation dbConnectionOperation;
     private Attribute displayName,
             eniMatricolaNotes,
             name,
@@ -38,7 +33,6 @@ public class LDAPConnector {
             memberOf,
             ou;
     private LDAPUser ldapUser;
-
     private List<LDAPUser> userExistsOnLdap;
     private List<LDAPUser> userNotExistsOnLdap;
 
@@ -47,35 +41,16 @@ public class LDAPConnector {
         userNotExistsOnLdap = new ArrayList<>();
     }
 
-    public LDAPConnector(Attribute displayName, Attribute eniMatricolaNotes,
-                         Attribute name, Attribute mail, Attribute givenName,
-                         Attribute sn, Attribute badPwdCount, Attribute pwdLastSet,
-                         Attribute userAccountDisabled, Attribute userDontExpirePassword,
-                         Attribute memberOf, Attribute ou) {
-        this.displayName = displayName;
-        this.eniMatricolaNotes = eniMatricolaNotes;
-        this.name = name;
-        this.mail = mail;
-        this.givenName = givenName;
-        this.sn = sn;
-        this.badPwdCount = badPwdCount;
-        this.pwdLastSet = pwdLastSet;
-        this.userAccountDisabled = userAccountDisabled;
-        this.userDontExpirePassword = userDontExpirePassword;
-        this.memberOf = memberOf;
-        this.ou = ou;
-    }
-
-    public List<LDAPUser> searchOnLDAP(String filter) {
+    public List<LDAPUser> searchOnLDAP(String filter, String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         ldapUser = new LDAPUser();
         userExistsOnLdap.clear();
         userNotExistsOnLdap.clear();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, this.getLdapURL());
-        properties.put(Context.SECURITY_PRINCIPAL, this.getLdapUserName());
-        properties.put(Context.SECURITY_CREDENTIALS, this.getLdapPassword());
+        properties.put(Context.PROVIDER_URL, ldapURL);
+        properties.put(Context.SECURITY_PRINCIPAL, ldapUserName);
+        properties.put(Context.SECURITY_CREDENTIALS, ldapPassword);
         try {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
@@ -85,7 +60,7 @@ public class LDAPConnector {
             if (answer.hasMore()) {
                 loggingMisc.printConsole(1, "Connection to LDAP Successful");
                 do {
-                    result = answer.next();
+                    SearchResult result = answer.next();
                     loggingMisc.printConsole(1, "---------------------------------------------------------------------------");
                     loggingMisc.printConsole(1, "distinguishedName: " + result.getNameInNamespace());
                     String userDN = result.getNameInNamespace();
@@ -244,15 +219,17 @@ public class LDAPConnector {
     /**
      * @param userID criterio di ricerca x popolare il DB
      */
-    public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup) {
+    public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup,
+                                       String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN,
+                                       String dbHostname, String dbPort, String dbSID, String dbUsername, String dbPassword) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
-        dbConnectionOperation = new DBConnectionOperation();
-        dbConnectionOperation.connectDB("wada-rdb1-sd.services.eni.intranet", "1531", "WADAS", "wada", "wada_dev1");
+        DBConnectionOperation dbConnectionOperation = new DBConnectionOperation();
+        dbConnectionOperation.connectDB(dbHostname, dbPort, dbSID, dbUsername, dbPassword);
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, this.getLdapURL());
-        properties.put(Context.SECURITY_PRINCIPAL, this.getLdapUserName());
-        properties.put(Context.SECURITY_CREDENTIALS, this.getLdapPassword());
+        properties.put(Context.PROVIDER_URL, ldapURL);
+        properties.put(Context.SECURITY_PRINCIPAL, ldapUserName);
+        properties.put(Context.SECURITY_CREDENTIALS, ldapPassword);
         userNotExistsOnLdap.clear();
         userExistsOnLdap.clear();
         ldapUser = new LDAPUser();
@@ -260,12 +237,12 @@ public class LDAPConnector {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(this.getLdapBaseDN(), "(ENIMatricolaNotes=" + userID + ")", searchControl);
+            answer = initialDirContext.search(ldapBaseDN, "(ENIMatricolaNotes=" + userID + ")", searchControl);
             loggingMisc.printConsole(1, "Connection to LDAP");
             if (answer.hasMore()) {
                 loggingMisc.printConsole(1, "Connection to LDAP Successful");
                 do {
-                    result = answer.next();
+                    SearchResult result = answer.next();
                     loggingMisc.printConsole(1, "---------------------------------------------------------------------------");
                     loggingMisc.printConsole(1, "distinguishedName: " + result.getNameInNamespace());
                     String userDN = result.getNameInNamespace();
@@ -349,25 +326,19 @@ public class LDAPConnector {
                     dbConnectionOperation.insertToFarmQSense(eniMatricolaNotes.get().toString(),
                             "1", "LALA", "NA NA ", "SVILUPPO");
                     dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
-                    String userGroupUpperCase = userGroup.toUpperCase();
-                    String userGroupLowerCase = userGroup.toLowerCase();
-                    String userRoleUpperCase = userRole.toUpperCase();
-                    String userRoleLowerCase = userRole.toLowerCase();
-                    if (userGroup.equalsIgnoreCase(userGroupLowerCase) || userGroup.equalsIgnoreCase(userGroupUpperCase)) {
-                        dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
-                    }
-                    if (userRole.equalsIgnoreCase(userRoleUpperCase) || userRole.equalsIgnoreCase(userRoleLowerCase)) {
-                        dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
-                    }
+                    dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
+                    dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
                     if (displayName == null) {
                         dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), eniMatricolaNotes.get().toString());
                     } else {
                         dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), displayName.get().toString());
                     }
                     dbConnectionOperation.insertUsers(eniMatricolaNotes.get().toString(), userRole, userGroup, "Y", ou.get().toString(), mail.get().toString());
+
                     ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
                     userExistsOnLdap.add(ldapUser);
                 } while (answer.hasMore());
+                dbConnectionOperation.disconnectDB();
             } else {
                 loggingMisc.printConsole(2, "User not found by filter: " + userID);
                 ldapUser.setENIMatricolaNotes(userID);
@@ -380,90 +351,11 @@ public class LDAPConnector {
         }
     }
 
-    /**
-     * @param ldapURL      hostname del LDAP
-     * @param ldapUserName username x ldap
-     * @param ldapPassword password x ldap
-     * @param ldapBaseDN   base domain name x ldap
-     * @method connectToLDAP esegue soltanto una connessione per capire se e' online o no.
-     */
-    public void connectToLDAP(String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN) {
-        loggingMisc = new LoggingMisc();
-        properties = new Properties();
-        setLdapURL(ldapURL);
-        setLdapUserName(ldapUserName);
-        setLdapPassword(ldapPassword);
-        setLdapBaseDN(ldapBaseDN);
-        properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, getLdapURL());
-        properties.put(Context.SECURITY_PRINCIPAL, getLdapUserName());
-        properties.put(Context.SECURITY_CREDENTIALS, getLdapPassword());
-//        Hashtable<String, String> authEnv = new Hashtable<>();
-        //authEnv.put(Context.SECURITY_AUTHENTICATION, ldapAuth);
-        try {
-            initialDirContext = new InitialDirContext(properties);
-            String filter = "(ENIMatricolaNotes=en30080)";
-            searchControl = new SearchControls();
-            searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(ldapBaseDN, filter, searchControl);
-            loggingMisc.printConsole(1, "Connection to LDAP");
-            if (answer.hasMore()) {
-                loggingMisc.printConsole(1, "Connection to LDAP Successful");
-            } else {
-                loggingMisc.printConsole(2, "Connection to LDAP failed");
-            }
-            initialDirContext.close();
-            answer.close();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getLdapURL() {
-        return ldapURL;
-    }
-
-    private void setLdapURL(String ldapURL) {
-        LDAPConnector.ldapURL = ldapURL;
-    }
-
-    private String getLdapUserName() {
-        return ldapUserName;
-    }
-
-    private void setLdapUserName(String ldapUserName) {
-        LDAPConnector.ldapUserName = ldapUserName;
-    }
-
-    private void setLdapBaseDN(String ldapBaseDN) {
-        LDAPConnector.ldapBaseDN = ldapBaseDN;
-    }
-
-    private String getLdapBaseDN() {
-        return ldapBaseDN;
-    }
-
-    private String getLdapPassword() {
-        return ldapPassword;
-    }
-
-    private void setLdapPassword(String ldapPassword) {
-        LDAPConnector.ldapPassword = ldapPassword;
-    }
-
     public List<LDAPUser> getUserExistsOnLdap() {
         return userExistsOnLdap;
     }
 
-    public void setUserExistsOnLdap(List<LDAPUser> userExistsOnLdap) {
-        this.userExistsOnLdap = userExistsOnLdap;
-    }
-
     public List<LDAPUser> getUserNotExistsOnLdap() {
         return userNotExistsOnLdap;
-    }
-
-    public void setUserNotExistsOnLdap(List<LDAPUser> userNotExistsOnLdap) {
-        this.userNotExistsOnLdap = userNotExistsOnLdap;
     }
 }
