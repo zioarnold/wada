@@ -16,10 +16,6 @@ import java.util.List;
  * JDK 1.8.u181++
  * ********************************************************/
 
-/**
- * @class DBConnectionOperation una classe di initizializzazione di connessione/disconessione al DB
- * esecuzione delle varie query
- */
 @SuppressWarnings("DuplicatedCode")
 public class DBConnectionOperation {
     private static Statement statement; //oggetto per effettuare le query
@@ -30,9 +26,17 @@ public class DBConnectionOperation {
     private List<String> types;
     private List<String> values;
 
+    private static String hostname;
+    private static String port;
+    private static String sid;
+    private static String username;
+    private static String password;
+    private String driver;
+
     /*
      * costruttore vuoto per inizializzare gli oggetti
      */
+
     public DBConnectionOperation() {
         loggingMisc = null;
         statement = null;
@@ -40,6 +44,7 @@ public class DBConnectionOperation {
         qUsersList = new ArrayList<>();
         types = new ArrayList<>();
         values = new ArrayList<>();
+        driver = "org.postgresql.Driver";
     }
 
     public List<QUsers> getAllUsers() {
@@ -47,15 +52,16 @@ public class DBConnectionOperation {
         qUsersList.clear();
         types.clear();
         values.clear();
-        loggingMisc.printConsole(1, "Checking if connection is null");
+        loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
-                loggingMisc.printConsole(1, "Executing query");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
                 resultSet = statement.executeQuery("select qs_dev_users.userid, name, user_is_active " +
                         "from qs_dev_users ");
                 while (resultSet.next()) {
@@ -65,15 +71,14 @@ public class DBConnectionOperation {
                     );
                     qUsersList.add(new QUsers(qUsers));
                 }
-                loggingMisc.printConsole(1, "Executing query - successful");
-                statement.close();
-                resultSet.close();
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
             }
+            disconnectDB();
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
         return qUsersList;
@@ -84,16 +89,17 @@ public class DBConnectionOperation {
         qUsersList.clear();
         values.clear();
         types.clear();
-        loggingMisc.printConsole(1, "Checking if connection is null");
+        loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
-                loggingMisc.printConsole(1, "Executing query");
-                loggingMisc.printConsole(1, "select userid, name, user_is_active from qs_dev_users " +
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "select userid, name, user_is_active from qs_dev_users " +
                         "where userid like '" + userID.toUpperCase() + "'");
                 resultSet = statement.executeQuery("select userid, name, user_is_active " +
                         "from qs_dev_users " +
@@ -105,15 +111,14 @@ public class DBConnectionOperation {
                     );
                     qUsersList.add(qUsers);
                 }
-                statement.close();
-                resultSet.close();
-                loggingMisc.printConsole(1, "Executing query - successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
             }
+            disconnectDB();
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
         return qUsersList;
@@ -146,132 +151,127 @@ public class DBConnectionOperation {
         loggingMisc = new LoggingMisc();
         loggingMisc.printConsole(1, "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 resultSet = statement.executeQuery("SELECT COUNT(USERID) as exist_usr FROM qs_dev_users WHERE USERID LIKE '" + userID + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, "Executing query");
-                    loggingMisc.printConsole(1, "INSERT INTO qs_dev_users (USERID, name, user_is_active, DATA_LAST_MODIFY)\" +\n" +
-                            "                            \"VALUES('\" + userID + \"','\" + name + \"','\" + userIsActive + \"', now())");
+                    loggingMisc.printConsole(1, "INSERT INTO qs_dev_users (USERID, name, user_is_active, DATA_LAST_MODIFY) +" +
+                            "                            VALUES('" + userID + "','" + name + "','" + userIsActive + "', now())");
                     resultSet = statement.executeQuery("INSERT INTO qs_dev_users (USERID, name, user_is_active, DATA_LAST_MODIFY)" +
                             "VALUES('" + userID.toUpperCase() + "','" + name + "','" + userIsActive + "', now())");
-                    statement.close();
-                    resultSet.close();
-                    loggingMisc.printConsole(1, "Executing query - successful");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
                 } else {
-                    loggingMisc.printConsole(1, "User: " + userID + " exists on table FARM_QSENSE, skipping...");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "User: " + userID + " exists on table FARM_QSENSE, skipping...");
                 }
             }
+            disconnectDB();
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
     }
 
     void insertQUserAttribute(String userID, String type, String value) {
         loggingMisc = new LoggingMisc();
-        loggingMisc.printConsole(1, "Checking if connection is null");
+        loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
-                loggingMisc.printConsole(1, "Executing query");
-                loggingMisc.printConsole(1, "insert into qs_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('\" + userID + \"','\" + type + \"','\" + value + \"', now());");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into qs_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('\" + userID + \"','\" + type + \"','\" + value + \"', now());");
                 resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
-                statement.close();
-                resultSet.close();
-                loggingMisc.printConsole(1, "Executing query - successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
             }
+            disconnectDB();
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
     }
 
     void insertQUserAttributeEmail(String userID, String type, String value) {
         loggingMisc = new LoggingMisc();
-        loggingMisc.printConsole(1, "Checking if connection is null");
+        loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 resultSet = statement.executeQuery("select count(USERID) from qs_dev_users_attrib where USERID like '" + userID + "' and type like '" + type + "' and value like '" + value + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
-                    loggingMisc.printConsole(1, "Executing query");
-                    loggingMisc.printConsole(1, "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
                     resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
-                    statement.close();
-                    resultSet.close();
-                    loggingMisc.printConsole(1, "Executing query - successful");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
                 } else {
-                    loggingMisc.printConsole(1, "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
                 }
             }
+            disconnectDB();
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
     }
 
-    public void connectDB(String dbHostname,
-                          String dbPort,
-                          String dbSid,
-                          String dbUsername,
-                          String dbPassword) {
+    void connectDB() {
         loggingMisc = new LoggingMisc();
         try {
-            loggingMisc.printConsole(1, "Initializing Oracle Driver");
-            Class.forName("org.postgresql.Driver");
-            loggingMisc.printConsole(1, "Initializing Oracle Driver Successful");
-            loggingMisc.printConsole(1, "Initializing connection to DB");
-            setConnection(DriverManager.getConnection(dbHostname +
-                    ":" + dbPort + "/" + dbSid, dbUsername, dbPassword));
+            loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Initializing PostreSQL Driver");
+            Class.forName(driver);
+            loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Initializing PostreSQL Driver Successful");
+            loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Initializing connection to DB");
+            setConnection(DriverManager.getConnection(hostname + ":" + port + "/" + sid, username, password));
         } catch (SQLException e) {
             e.printStackTrace();
-            loggingMisc.printConsole(2, "Failed to connect: " + e.getSQLState()
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Failed to connect: " + e.getSQLState()
                     + "Connection is " + getConnection());
         } catch (ClassNotFoundException e) {
-            loggingMisc.printConsole(2, "Driver does not exist " + e.getMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Driver does not exist " + e.getMessage());
         }
     }
 
-    public void disconnectDB() {
+    private void disconnectDB() {
         loggingMisc = new LoggingMisc();
         try {
-            loggingMisc.printConsole(1, "Closing statement");
+            loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Closing statement");
             statement.close();
             resultSet.close();
-            loggingMisc.printConsole(1, "Closing statement Successful");
+            loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Closing statement Successful");
         } catch (SQLException e) {
             try {
-                loggingMisc.printConsole(1, "Trying to close connection to DB: " + e.getMessage());
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Trying to close connection to DB: " + e.getMessage());
                 getConnection().close();
             } catch (SQLException ex) {
-                loggingMisc.printConsole(2, "Unable to close connection to DB: " + ex.getMessage());
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Unable to close connection to DB: " + ex.getMessage());
             }
         } catch (NullPointerException e1) {
-            loggingMisc.printConsole(2, "Unable to close statement: " + e1.getMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Unable to close statement: " + e1.getMessage());
         }
     }
 
@@ -287,16 +287,17 @@ public class DBConnectionOperation {
         loggingMisc = new LoggingMisc();
         qUsersList.clear();
         values.clear();
-        loggingMisc.printConsole(1, "Checking if connection is null");
+        loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
-                loggingMisc.printConsole(1, "Executing query");
-                loggingMisc.printConsole(1, "SELECT type FROM qs_dev_users_attrib WHERE userid like '\" + userId.toUpperCase() + \"'");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "SELECT type FROM qs_dev_users_attrib WHERE userid like '" + userId.toUpperCase() + "'");
                 resultSet = statement.executeQuery("SELECT type, value FROM qs_dev_users_attrib WHERE userid like '" + userId.toUpperCase() + "'");
                 while (resultSet.next()) {
                     QUsers qUsers = new QUsers();
@@ -304,51 +305,58 @@ public class DBConnectionOperation {
                     qUsers.setValue(resultSet.getString("value"));
                     qUsersList.add(qUsers);
                 }
-                statement.close();
-                resultSet.close();
-                loggingMisc.printConsole(1, "Executing query - successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
+                disconnectDB();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
-        System.out.println("types = " + qUsersList);
         return qUsersList;
     }
 
-    public void insertQUserAttributeOU(String userID, String type, String value) {
+    void insertQUserAttributeOU(String userID, String type, String value) {
         loggingMisc = new LoggingMisc();
-        loggingMisc.printConsole(1, "Checking if connection is null");
+        loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Checking if connection is null");
         try {
+            connectDB();
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, "Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, "Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, "Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 resultSet = statement.executeQuery("select count(USERID) from qs_dev_users_attrib where USERID like '" + userID + "' and type like '" + type + "' and value like '" + value + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
-                    loggingMisc.printConsole(1, "Executing query");
-                    loggingMisc.printConsole(1, "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
                     resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
-                    statement.close();
-                    resultSet.close();
-                    loggingMisc.printConsole(1, "Executing query - successful");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
+                    disconnectDB();
                 } else {
-                    loggingMisc.printConsole(1, "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
+                    disconnectDB();
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, "Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + "Syntax error: " + ex.getLocalizedMessage());
             disconnectDB();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBConnectionOperation.class.getSimpleName() + " " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDB();
         }
+    }
+
+    public void initDB(String hostname, String port, String sid, String username, String password) {
+        DBConnectionOperation.hostname = hostname;
+        DBConnectionOperation.port = port;
+        DBConnectionOperation.sid = sid;
+        DBConnectionOperation.username = username;
+        DBConnectionOperation.password = password;
     }
 }
 

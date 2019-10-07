@@ -1,6 +1,12 @@
 package eni.it.gsrestservice.model;
 
 import eni.it.gsrestservice.config.LoggingMisc;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -14,7 +20,9 @@ import java.util.List;
 import java.util.Properties;
 
 @SuppressWarnings("DuplicatedCode")
-public class LDAPConnector {
+@Configuration
+@PropertySource("classpath:application.properties")
+public class LDAPConnector implements EnvironmentAware {
     private static InitialDirContext initialDirContext;
     private LoggingMisc loggingMisc;
     private Properties properties;
@@ -36,75 +44,82 @@ public class LDAPConnector {
     private List<LDAPUser> userExistsOnLdap;
     private List<LDAPUser> userNotExistsOnLdap;
 
+    private static Environment environment;
+
     public LDAPConnector() {
         userExistsOnLdap = new ArrayList<>();
         userNotExistsOnLdap = new ArrayList<>();
     }
 
-    public List<LDAPUser> searchOnLDAP(String filter, String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN) {
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer ldapConnectorConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    public List<LDAPUser> searchOnLDAP(String filter) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         ldapUser = new LDAPUser();
         userExistsOnLdap.clear();
         userNotExistsOnLdap.clear();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, ldapURL);
-        properties.put(Context.SECURITY_PRINCIPAL, ldapUserName);
-        properties.put(Context.SECURITY_CREDENTIALS, ldapPassword);
+        properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
+        properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
+        properties.put(Context.SECURITY_CREDENTIALS, environment.getProperty("vds.password"));
         try {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(ldapBaseDN, "(ENIMatricolaNotes=" + filter + ")", searchControl);
+            answer = initialDirContext.search(environment.getProperty("vds.baseDN"), "(ENIMatricolaNotes=" + filter + ")", searchControl);
             loggingMisc.printConsole(1, "Connection to LDAP");
             if (answer.hasMore()) {
-                loggingMisc.printConsole(1, "Connection to LDAP Successful");
+                loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "Connection to LDAP Successful");
                 do {
                     SearchResult result = answer.next();
                     loggingMisc.printConsole(1, "---------------------------------------------------------------------------");
-                    loggingMisc.printConsole(1, "distinguishedName: " + result.getNameInNamespace());
+                    loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "distinguishedName: " + result.getNameInNamespace());
                     String userDN = result.getNameInNamespace();
-                    loggingMisc.printConsole(1, "getName: " + userDN);
+                    loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "getName: " + userDN);
                     displayName = result.getAttributes().get("displayName");
                     if (displayName != null) {
                         for (int idx = 0; idx < displayName.size(); idx++) {
-                            loggingMisc.printConsole(1, "displayName: " + displayName.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "displayName: " + displayName.get(idx).toString());
                         }
                     }
                     eniMatricolaNotes = result.getAttributes().get("ENIMatricolaNotes");
                     if (eniMatricolaNotes != null) {
                         for (int idx = 0; idx < eniMatricolaNotes.size(); idx++) {
-                            loggingMisc.printConsole(1, "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
                         }
                     }
                     name = result.getAttributes().get("name");
                     if (name != null) {
                         for (int idx = 0; idx < name.size(); idx++) {
-                            loggingMisc.printConsole(1, "name: " + name.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "name: " + name.get(idx).toString());
                         }
                     }
                     mail = result.getAttributes().get("mail");
                     if (mail != null) {
                         for (int idx = 0; idx < mail.size(); idx++) {
-                            loggingMisc.printConsole(1, "mail: " + mail.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "mail: " + mail.get(idx).toString());
                         }
                     }
                     givenName = result.getAttributes().get("givenName");
                     if (givenName != null) {
                         for (int idx = 0; idx < givenName.size(); idx++) {
-                            loggingMisc.printConsole(1, "givenName: " + givenName.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "givenName: " + givenName.get(idx).toString());
                         }
                     }
                     sn = result.getAttributes().get("sn");
                     if (sn != null) {
                         for (int idx = 0; idx < sn.size(); idx++) {
-                            loggingMisc.printConsole(1, "sn: " + sn.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "sn: " + sn.get(idx).toString());
                         }
                     }
                     badPwdCount = result.getAttributes().get("badPwdCount");
                     if (badPwdCount != null) {
                         for (int idx = 0; idx < badPwdCount.size(); idx++) {
-                            loggingMisc.printConsole(1, "badPwdCount: " + badPwdCount.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "badPwdCount: " + badPwdCount.get(idx).toString());
                         }
                     }
                     pwdLastSet = result.getAttributes().get("pwdLastSet");
@@ -112,32 +127,32 @@ public class LDAPConnector {
                         for (int idx = 0; idx < pwdLastSet.size(); idx++) {
                             String lastSetPwd = pwdLastSet.get(idx).toString();
                             String LastSetPwd = loggingMisc.timeStampToDate(lastSetPwd);
-                            loggingMisc.printConsole(1, "pwdLastSet: " + LastSetPwd);
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "pwdLastSet: " + LastSetPwd);
                         }
                     }
                     userAccountDisabled = result.getAttributes().get("msDS-UserAccountDisabled");
                     if (userAccountDisabled != null) {
                         for (int idx = 0; idx < userAccountDisabled.size(); idx++) {
-                            loggingMisc.printConsole(1, "UserAccountDisabled: " + userAccountDisabled.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "UserAccountDisabled: " + userAccountDisabled.get(idx).toString());
                         }
                     }
 
                     userDontExpirePassword = result.getAttributes().get("msDS-UserDontExpirePassword");
                     if (userDontExpirePassword != null) {
                         for (int idx = 0; idx < userDontExpirePassword.size(); idx++) {
-                            loggingMisc.printConsole(1, "UserDontExpirePassword: " + userDontExpirePassword.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "UserDontExpirePassword: " + userDontExpirePassword.get(idx).toString());
                         }
                     }
                     memberOf = result.getAttributes().get("memberOf");
                     if (memberOf != null) {
                         for (int idx = 0; idx < memberOf.size(); idx++) {
-                            loggingMisc.printConsole(1, "memberOf: " + memberOf.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "memberOf: " + memberOf.get(idx).toString());
                         }
                     }
                     ou = result.getAttributes().get("ou");
                     if (ou != null) {
                         for (int idx = 0; idx < ou.size(); idx++) {
-                            loggingMisc.printConsole(1, "ou: " + ou.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "ou: " + ou.get(idx).toString());
                         }
                     }
                     if (displayName == null) {
@@ -203,14 +218,14 @@ public class LDAPConnector {
                     userExistsOnLdap.add(new LDAPUser(ldapUser));
                 } while (answer.hasMore());
             } else {
-                loggingMisc.printConsole(2, "User not found by filter: " + filter);
+                loggingMisc.printConsole(2, LDAPConnector.class.getName() + " " + "User not found by filter: " + filter);
                 ldapUser.setENIMatricolaNotes(filter);
                 userNotExistsOnLdap.add(new LDAPUser(ldapUser));
             }
             initialDirContext.close();
             answer.close();
         } catch (NamingException e) {
-            loggingMisc.printConsole(2, "Unable to connect to LDAP, check your properties: "
+            loggingMisc.printConsole(2, LDAPConnector.class.getName() + " " + "Unable to connect to LDAP, check your properties: "
                     + e.getExplanation() + " " + e.getLocalizedMessage());
         }
         return userExistsOnLdap;
@@ -219,17 +234,15 @@ public class LDAPConnector {
     /**
      * @param userID criterio di ricerca x popolare il DB
      */
-    public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup,
-                                       String ldapURL, String ldapUserName, String ldapPassword, String ldapBaseDN,
-                                       String dbHostname, String dbPort, String dbSID, String dbUsername, String dbPassword) {
+    public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup) {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         DBConnectionOperation dbConnectionOperation = new DBConnectionOperation();
-        dbConnectionOperation.connectDB(dbHostname, dbPort, dbSID, dbUsername, dbPassword);
+        dbConnectionOperation.connectDB();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, ldapURL);
-        properties.put(Context.SECURITY_PRINCIPAL, ldapUserName);
-        properties.put(Context.SECURITY_CREDENTIALS, ldapPassword);
+        properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
+        properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
+        properties.put(Context.SECURITY_CREDENTIALS, environment.getProperty("vds.password"));
         userNotExistsOnLdap.clear();
         userExistsOnLdap.clear();
         ldapUser = new LDAPUser();
@@ -237,56 +250,56 @@ public class LDAPConnector {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(ldapBaseDN, "(ENIMatricolaNotes=" + userID + ")", searchControl);
-            loggingMisc.printConsole(1, "Connection to LDAP");
+            answer = initialDirContext.search(environment.getProperty("vds.baseDN"), "(ENIMatricolaNotes=" + userID + ")", searchControl);
+            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "Connection to LDAP");
             if (answer.hasMore()) {
-                loggingMisc.printConsole(1, "Connection to LDAP Successful");
+                loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "Connection to LDAP Successful");
                 do {
                     SearchResult result = answer.next();
                     loggingMisc.printConsole(1, "---------------------------------------------------------------------------");
-                    loggingMisc.printConsole(1, "distinguishedName: " + result.getNameInNamespace());
+                    loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "distinguishedName: " + result.getNameInNamespace());
                     String userDN = result.getNameInNamespace();
-                    loggingMisc.printConsole(1, "getName: " + userDN);
+                    loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "getName: " + userDN);
                     displayName = result.getAttributes().get("displayName");
                     if (displayName != null) {
                         for (int idx = 0; idx < displayName.size(); idx++) {
-                            loggingMisc.printConsole(1, "displayName: " + displayName.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "displayName: " + displayName.get(idx).toString());
                         }
                     }
                     eniMatricolaNotes = result.getAttributes().get("ENIMatricolaNotes");
                     if (eniMatricolaNotes != null) {
                         for (int idx = 0; idx < eniMatricolaNotes.size(); idx++) {
-                            loggingMisc.printConsole(1, "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
                         }
                     }
                     name = result.getAttributes().get("name");
                     if (name != null) {
                         for (int idx = 0; idx < name.size(); idx++) {
-                            loggingMisc.printConsole(1, "name: " + name.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "name: " + name.get(idx).toString());
                         }
                     }
                     mail = result.getAttributes().get("mail");
                     if (mail != null) {
                         for (int idx = 0; idx < mail.size(); idx++) {
-                            loggingMisc.printConsole(1, "mail: " + mail.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "mail: " + mail.get(idx).toString());
                         }
                     }
                     givenName = result.getAttributes().get("givenName");
                     if (givenName != null) {
                         for (int idx = 0; idx < givenName.size(); idx++) {
-                            loggingMisc.printConsole(1, "givenName: " + givenName.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "givenName: " + givenName.get(idx).toString());
                         }
                     }
                     sn = result.getAttributes().get("sn");
                     if (sn != null) {
                         for (int idx = 0; idx < sn.size(); idx++) {
-                            loggingMisc.printConsole(1, "sn: " + sn.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "sn: " + sn.get(idx).toString());
                         }
                     }
                     badPwdCount = result.getAttributes().get("badPwdCount");
                     if (badPwdCount != null) {
                         for (int idx = 0; idx < badPwdCount.size(); idx++) {
-                            loggingMisc.printConsole(1, "badPwdCount: " + badPwdCount.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "badPwdCount: " + badPwdCount.get(idx).toString());
                         }
                     }
                     pwdLastSet = result.getAttributes().get("pwdLastSet");
@@ -294,32 +307,32 @@ public class LDAPConnector {
                         for (int idx = 0; idx < pwdLastSet.size(); idx++) {
                             String lastSetPwd = pwdLastSet.get(idx).toString();
                             String LastSetPwd = loggingMisc.timeStampToDate(lastSetPwd);
-                            loggingMisc.printConsole(1, "pwdLastSet: " + LastSetPwd);
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "pwdLastSet: " + LastSetPwd);
                         }
                     }
                     userAccountDisabled = result.getAttributes().get("msDS-UserAccountDisabled");
                     if (userAccountDisabled != null) {
                         for (int idx = 0; idx < userAccountDisabled.size(); idx++) {
-                            loggingMisc.printConsole(1, "UserAccountDisabled: " + userAccountDisabled.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "UserAccountDisabled: " + userAccountDisabled.get(idx).toString());
                         }
                     }
 
                     userDontExpirePassword = result.getAttributes().get("msDS-UserDontExpirePassword");
                     if (userDontExpirePassword != null) {
                         for (int idx = 0; idx < userDontExpirePassword.size(); idx++) {
-                            loggingMisc.printConsole(1, "UserDontExpirePassword: " + userDontExpirePassword.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "UserDontExpirePassword: " + userDontExpirePassword.get(idx).toString());
                         }
                     }
                     memberOf = result.getAttributes().get("memberOf");
                     if (memberOf != null) {
                         for (int idx = 0; idx < memberOf.size(); idx++) {
-                            loggingMisc.printConsole(1, "memberOf: " + memberOf.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "memberOf: " + memberOf.get(idx).toString());
                         }
                     }
                     ou = result.getAttributes().get("ou");
                     if (ou != null) {
                         for (int idx = 0; idx < ou.size(); idx++) {
-                            loggingMisc.printConsole(1, "ou: " + ou.get(idx).toString());
+                            loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "ou: " + ou.get(idx).toString());
                         }
                     }
                     if (displayName == null) {
@@ -334,11 +347,10 @@ public class LDAPConnector {
                     dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
                     dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
                     ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
-                    System.out.println("ldapUser = " + ldapUser);
                     userExistsOnLdap.add(new LDAPUser(ldapUser));
                 } while (answer.hasMore());
             } else {
-                loggingMisc.printConsole(2, "User not found by filter: " + userID);
+                loggingMisc.printConsole(2, LDAPConnector.class.getName() + " " + "User not found by filter: " + userID);
                 ldapUser.setENIMatricolaNotes(userID);
                 userNotExistsOnLdap.add(new LDAPUser(ldapUser));
             }
@@ -355,5 +367,10 @@ public class LDAPConnector {
 
     public List<LDAPUser> getUserNotExistsOnLdap() {
         return userNotExistsOnLdap;
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        LDAPConnector.environment = environment;
     }
 }

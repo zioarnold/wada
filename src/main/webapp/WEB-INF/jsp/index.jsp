@@ -59,6 +59,20 @@
             <li class="nav-item">
                 <a href="/assistance" class="nav-link">Assistenza</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li>
+                <a class="navbar-brand"><%=(String) request.getAttribute("farm_name") %>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li>
+                <a class="navbar-brand"><%=(String) request.getAttribute("farm_environment") %>
+                </a>
+            </li>
         </ul>
         <%--        <form class="form-inline my-2 my-lg-0">--%>
         <%--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">--%>

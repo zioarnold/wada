@@ -8,10 +8,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CSVReaderService {
     private CSVReader csvReader = new CSVReader();
+    private List<CSVReader> list = new ArrayList<>();
     private LDAPConnector ldapConnector = new LDAPConnector();
     private boolean status;
 
@@ -19,16 +22,7 @@ public class CSVReaderService {
         csvReader.setContent(new String(data));
     }
 
-    public boolean readDataCheckLdapInsertIntoDB(byte[] data,
-                                                 String ldapURL,
-                                                 String ldapUserName,
-                                                 String ldapPassword,
-                                                 String ldapBaseDN,
-                                                 String dbHostname,
-                                                 String dbPort,
-                                                 String dbSID,
-                                                 String dbUsername,
-                                                 String dbPassword) throws IOException {
+    public boolean readDataCheckLdapInsertIntoDB(byte[] data) throws IOException {
         status = false;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data)));
         bufferedReader.readLine();
@@ -40,9 +34,7 @@ public class CSVReaderService {
             csvReader.setUserID(userID[0]);//Matricola
             csvReader.setRole(userID[1]);//Ruolo
             csvReader.setGroup(userID[2]);//Gruppo
-            ldapConnector.searchOnLDAPInsertToDB(userID[0], userID[1], userID[2],
-                    ldapURL, ldapUserName, ldapPassword, ldapBaseDN,
-                    dbHostname, dbPort, dbSID, dbUsername, dbPassword);
+            ldapConnector.searchOnLDAPInsertToDB(userID[0], userID[1], userID[2]);
         }
         status = true;
         return status;
