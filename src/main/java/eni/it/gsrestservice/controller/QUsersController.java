@@ -1,15 +1,11 @@
 package eni.it.gsrestservice.controller;
 
-import com.google.gson.Gson;
 import eni.it.gsrestservice.model.DBConnectionOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,31 +21,23 @@ public class QUsersController {
     @GetMapping("/allqlikusersfromdb")
     public ModelAndView allQUsersFromDB(HttpServletRequest request) {
         initDB();
-        request.setAttribute("qusers", new Gson().toJson(dbConnectionOperation.getAllUsers()));
+        request.setAttribute("qusers", dbConnectionOperation.getAllUsers());
         return new ModelAndView("allQUsersFromDB");
     }
 
     @RequestMapping("/searchquserondb")
     public ModelAndView searchQUserOnDB(HttpServletRequest request, @RequestParam(required = false, name = "quser_filter") String userId) {
         initDB();
-        request.setAttribute("quser_filter", new Gson().toJson(dbConnectionOperation.findQUser(userId)));
+        request.setAttribute("quser_filter", dbConnectionOperation.findQUser(userId));
         return new ModelAndView("searchQUserOnDB");
     }
 
-    @GetMapping("/showUserTypeGroup")
+    @RequestMapping(value = "/showUserType", method = RequestMethod.GET)
     public ModelAndView showUserType(HttpServletRequest request,
-                                     @RequestParam(required = false, name = "showUserType") String showUserType,
-                                     @RequestParam(required = false, name = "showUserGroup") String showUserGroup) {
+                                     @RequestParam(name = "quser") String userId) {
         initDB();
-        if (showUserType != null) {
-            request.setAttribute("showUserType", new Gson().toJson(dbConnectionOperation.findUserTypeByUserID(showUserType)));
-            return new ModelAndView("searchQUserOnDB");
-        }
-        if (showUserGroup != null) {
-            request.setAttribute("showUserGroup", new Gson().toJson(dbConnectionOperation.findUserTypeByUserID(showUserGroup)));
-            return new ModelAndView("searchQUserOnDB");
-        }
-        return new ModelAndView("searchQUserOnDB");
+        request.setAttribute("other_data", dbConnectionOperation.findUserTypeByUserID(userId));
+        return new ModelAndView("showUserType");
     }
 
     @GetMapping("/searchquserondbpage")

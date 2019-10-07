@@ -1,5 +1,6 @@
+<!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatibile" content="IE=edge"/>
@@ -20,6 +21,7 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -32,7 +34,7 @@
                     Caricamento
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
-                    <a class="dropdown-item" href="/massiveUploadPage">Caricamento massivo</a>
+                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
                 </div>
@@ -67,6 +69,64 @@
         <%--        </form>--%>
     </div>
 </nav>
+<c:choose>
+    <c:when test="${empty other_data}">
+        <div class="container text-center">
+            <h2>Utenza non e' presente sul DB!</h2>
+            <h3>Digitare nuovamente la matricola</h3>
+            <form action="/showUserType" method="get" style="text-transform: uppercase">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <input class="btn btn-primary" type="submit" value="Cerca"/>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" placeholder="Inserisci matricola"
+                               aria-label="Inserisci matricola" aria-describedby="basic-addon2" name="quser">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div class="container text-center" id="userDiv">
+            <h2>Ruoli dell'utente</h2>
+            <form action="/showUserType" method="get" style="text-transform: uppercase">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <input class="btn btn-primary" type="submit" value="Cerca"/>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" placeholder="Inserisci matricola"
+                               aria-label="Inserisci matricola" aria-describedby="basic-addon2" name="quser">
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Valore
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="quser" items="${other_data}">
+                        <tr>
+                            <td>${quser.type}</td>
+                            <td>${quser.value}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -78,5 +138,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+
 </body>
 </html>

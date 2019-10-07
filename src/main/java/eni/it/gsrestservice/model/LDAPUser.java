@@ -18,6 +18,21 @@ public class LDAPUser {
 
     }
 
+    public LDAPUser(LDAPUser ldapUser) {
+        this.displayName = ldapUser.displayName;
+        this.ENIMatricolaNotes = ldapUser.ENIMatricolaNotes;
+        this.name = ldapUser.name;
+        this.mail = ldapUser.mail;
+        this.givenName = ldapUser.givenName;
+        this.sn = ldapUser.sn;
+        this.badPwdCount = ldapUser.badPwdCount;
+        this.pwdLastSet = ldapUser.pwdLastSet;
+        this.userAccountDisabled = ldapUser.userAccountDisabled;
+        this.userDontExpirePassword = ldapUser.userDontExpirePassword;
+        this.memberOf = ldapUser.memberOf;
+        this.ou = ldapUser.ou;
+    }
+
     public LDAPUser(String displayName, String ENIMatricolaNotes, String name, String mail,
                     String givenName, String sn, String badPwdCount, String pwdLastSet,
                     String userAccountDisabled, String userDontExpirePassword, String memberOf, String ou) {

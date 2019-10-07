@@ -113,7 +113,6 @@ public class LDAPConnector {
                             String lastSetPwd = pwdLastSet.get(idx).toString();
                             String LastSetPwd = loggingMisc.timeStampToDate(lastSetPwd);
                             loggingMisc.printConsole(1, "pwdLastSet: " + LastSetPwd);
-                            //printConsole(1, "pwdLastSet: " + pwdLastSet.get(idx).toString());
                         }
                     }
                     userAccountDisabled = result.getAttributes().get("msDS-UserAccountDisabled");
@@ -147,7 +146,7 @@ public class LDAPConnector {
                         ldapUser.setDisplayName(displayName.get().toString());
                     }
                     if (eniMatricolaNotes == null) {
-                        loggingMisc.printConsole(1, "eniMatricolaNotes is empty, skipping");
+                        ldapUser.setENIMatricolaNotes("N/A");
                     } else {
                         ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
                     }
@@ -201,11 +200,12 @@ public class LDAPConnector {
                     } else {
                         ldapUser.setOu(ou.get().toString());
                     }
-                    userExistsOnLdap.add(ldapUser);
+                    userExistsOnLdap.add(new LDAPUser(ldapUser));
                 } while (answer.hasMore());
             } else {
                 loggingMisc.printConsole(2, "User not found by filter: " + filter);
-                userNotExistsOnLdap.add(ldapUser);
+                ldapUser.setENIMatricolaNotes(filter);
+                userNotExistsOnLdap.add(new LDAPUser(ldapUser));
             }
             initialDirContext.close();
             answer.close();
@@ -295,7 +295,6 @@ public class LDAPConnector {
                             String lastSetPwd = pwdLastSet.get(idx).toString();
                             String LastSetPwd = loggingMisc.timeStampToDate(lastSetPwd);
                             loggingMisc.printConsole(1, "pwdLastSet: " + LastSetPwd);
-                            //printConsole(1, "pwdLastSet: " + pwdLastSet.get(idx).toString());
                         }
                     }
                     userAccountDisabled = result.getAttributes().get("msDS-UserAccountDisabled");
@@ -323,26 +322,25 @@ public class LDAPConnector {
                             loggingMisc.printConsole(1, "ou: " + ou.get(idx).toString());
                         }
                     }
-                    dbConnectionOperation.insertToFarmQSense(eniMatricolaNotes.get().toString(),
-                            "1", "LALA", "NA NA ", "SVILUPPO");
+                    if (displayName == null) {
+                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), name.get().toString(), "Y");
+                    } else if (name == null) {
+                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), displayName.get().toString(), "Y");
+                    } else {
+                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), givenName.get().toString(), "Y");
+                    }
                     dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
+                    dbConnectionOperation.insertQUserAttributeOU(eniMatricolaNotes.get().toString(), "organizzazione", ou.get().toString());
                     dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
                     dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
-                    if (displayName == null) {
-                        dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), eniMatricolaNotes.get().toString());
-                    } else {
-                        dbConnectionOperation.insertQUser(eniMatricolaNotes.get().toString(), displayName.get().toString());
-                    }
-                    dbConnectionOperation.insertUsers(eniMatricolaNotes.get().toString(), userRole, userGroup, "Y", ou.get().toString(), mail.get().toString());
-
                     ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
-                    userExistsOnLdap.add(ldapUser);
+                    System.out.println("ldapUser = " + ldapUser);
+                    userExistsOnLdap.add(new LDAPUser(ldapUser));
                 } while (answer.hasMore());
-                dbConnectionOperation.disconnectDB();
             } else {
                 loggingMisc.printConsole(2, "User not found by filter: " + userID);
                 ldapUser.setENIMatricolaNotes(userID);
-                userNotExistsOnLdap.add(ldapUser);
+                userNotExistsOnLdap.add(new LDAPUser(ldapUser));
             }
             initialDirContext.close();
             answer.close();

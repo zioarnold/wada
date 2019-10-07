@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Configuration
@@ -50,20 +49,5 @@ public class CSVReaderController {
             }
         }
         return new ModelAndView("error");
-    }
-
-    @GetMapping(value = "/showResults")
-    public ModelAndView showUsersExists(HttpServletRequest request,
-                                        @RequestParam(required = false, name = "users_not_exist") String usersNotUploaded,
-                                        @RequestParam(required = false, name = "users_exist") String usersUploaded) {
-        if (usersNotUploaded != null) {
-            request.setAttribute("users_not_exist", csvReaderService.getUsersNotUploaded());
-            return new ModelAndView("uploadSuccess");
-        } else if (usersUploaded != null) {
-            request.setAttribute("users_exist", csvReaderService.getUsersUploaded());
-            return new ModelAndView("uploadSuccess");
-        } else {
-            return new ModelAndView("uploadSuccess");
-        }
     }
 }

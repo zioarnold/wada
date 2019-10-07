@@ -1,5 +1,3 @@
-<%@ page import="eni.it.gsrestservice.model.QUsers" %>
-<%@ page import="java.util.ArrayList" %>
 <!doctype html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="en">
@@ -72,7 +70,7 @@
 </nav>
 <div class="container">
     <div class="input-group mb-3">
-        <form action="/searchquserondb" method="get">
+        <form action="/searchquserondb" method="get" style="text-transform: uppercase">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <input class="btn btn-primary" type="submit" value="Cerca"/>
@@ -97,80 +95,46 @@
             <h2 class="text-center">Utenza sul DB</h2>
             <hr>
             <div class="table-responsive">
-                <table class="table table-striped table-bordered table-sm">
-                    <thead>
-                    <tr>
-                        <th>
-                            Matricola
-                        </th>
-                        <th>
-                            Cognome Nome
-                        </th>
-                        <th>
-                            CAME
-                        </th>
-                        <th>
-                            Descrizione
-                        </th>
-                        <th>
-                            Note
-                        </th>
-                        <th>
-                            Livello Servizio
-                        </th>
-                        <th>
-                            Name
-                        </th>
-                        <th>
-                            Tipo Utenza
-                        </th>
-                        <th>
-                            Gruppo d'utenza
-                        </th>
-                        <th>
-                            Organizzazione
-                        </th>
-                        <th>
-                            Mail
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="quser" items="${quser_filter}">
+                <form action="/showUserTypeGroup" method="get">
+                    <table class="table table-striped table-bordered table-sm">
+                        <thead>
                         <tr>
-                            <td>${quser.userId}</td>
-                            <td>${quser.came}</td>
-                            <td>${quser.description}</td>
-                            <td>${quser.note}</td>
-                            <td>${quser.serviceLevel}</td>
-                            <td>${quser.name}</td>
-                            <td>${quser.userType}</td>
-                            <td>${quser.userGroup}</td>
-                            <td>${quser.userIsActive}</td>
-                            <td>${quser.organization}</td>
-                            <td>${quser.email}</td>
+                            <th>
+                                Matricola
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Utenza attiva
+                            </th>
+                            <th>
+                                Altri dati
+                            </th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="quser" items="${quser_filter}">
+                            <tr>
+                                <td>${quser.userId}</td>
+                                <td>${quser.name}</td>
+                                <td>${quser.userIsActive}</td>
+                                <td><a href="/showUserType?quser=${quser.userId}"><span
+                                        class="">Mostrami altri dati</span> </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </c:otherwise>
 </c:choose>
-<div class="container text-center">
-    <form action="/showUserTypeGroup" method="get">
-        <input class="btn btn-primary" name="showUserType" type="submit" value="Visualizza i ruoli">
-        <input class="btn btn-primary" name="showUserGroup" type="submit" value="Visualizza i gruppi">
-    </form>
-</div>
 <c:choose>
-    <c:when test="${empty showUserType}">
+    <c:when test="${empty other_data}">
     </c:when>
     <c:otherwise>
-        <%
-            ArrayList<QUsers> std = (ArrayList<QUsers>) request.getAttribute("showUserType");
-            for (QUsers s : std) {
-        %>
         <div class="container text-center" id="userDiv">
             <h2>Ruoli dell'utente</h2>
             <hr>
@@ -179,50 +143,20 @@
                     <thead>
                     <tr>
                         <th>
-                            Ruoli
+                            Tipo
                         </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <%=s.getType() %>
-                        </td>
-                    </tr>
-                    <%}%>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </c:otherwise>
-</c:choose>
-<c:choose>
-    <c:when test="${empty showUserGroup}">
-    </c:when>
-    <c:otherwise>
-        <%
-            ArrayList<QUsers> std = (ArrayList<QUsers>) request.getAttribute("showUserGroup");
-            for (QUsers s : std) {
-        %>
-        <div class="container text-center" id="userDiv">
-            <h2>Gruppi dell'utente</h2>
-            <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
                         <th>
-                            Gruppi
+                            Valore
                         </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>
-                            <%=s.getUserGroup() %>
-                        </td>
-                    </tr>
-                    <%}%>
+                    <c:forEach var="quser" items="${other_data}">
+                        <tr>
+                            <td>${quser.type}</td>
+                            <td>${quser.value}</td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>

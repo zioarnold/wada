@@ -69,68 +69,53 @@
         <%--        </form>--%>
     </div>
 </nav>
-<div class="container text-center" id="userDiv">
-    <h2 class="text-center">Utenze sul DB</h2>
-    <hr>
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-sm">
-            <thead>
-            <tr>
-                <th>
-                    Matricola
-                </th>
-                <th>
-                    Cognome Nome
-                </th>
-                <th>
-                    CAME
-                </th>
-                <th>
-                    Descrizione
-                </th>
-                <th>
-                    Note
-                </th>
-                <th>
-                    Livello Servizio
-                </th>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Tipo Utenza
-                </th>
-                <th>
-                    Gruppo d'utenza
-                </th>
-                <th>
-                    Organizzazione
-                </th>
-                <th>
-                    Mail
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="quser" items="${qusers}">
-                <tr>
-                    <td>${quser.userId}</td>
-                    <td>${quser.came}</td>
-                    <td>${quser.description}</td>
-                    <td>${quser.note}</td>
-                    <td>${quser.serviceLevel}</td>
-                    <td>${quser.name}</td>
-                    <td>${quser.userType}</td>
-                    <td>${quser.userGroup}</td>
-                    <td>${quser.userIsActive}</td>
-                    <td>${quser.organization}</td>
-                    <td>${quser.email}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
-</div>
+<c:choose>
+    <c:when test="${empty qusers}">
+        <div class="container text-center">
+            <h2>Non ci sono utenze caricate sul DB!</h2>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div class="container text-center" id="userDiv">
+            <h2 class="text-center">Utenze sul DB</h2>
+            <hr>
+            <div class="table-responsive">
+                <form action="#" method="post">
+                    <table class="table table-striped table-bordered table-sm">
+                        <thead>
+                        <tr>
+                            <th>
+                                Matricola
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Utenza attiva
+                            </th>
+                            <th>
+                                Altri dati
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="quser" items="${qusers}">
+                            <tr>
+                                <td>${quser.userId}</td>
+                                <td>${quser.name}</td>
+                                <td>${quser.userIsActive}</td>
+                                <td><a href="/showUserType?quser=${quser.userId}"><span
+                                        class="">Mostrami altri dati</span> </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
