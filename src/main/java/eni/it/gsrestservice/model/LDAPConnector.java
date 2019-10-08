@@ -243,8 +243,6 @@ public class LDAPConnector implements EnvironmentAware {
         properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
         properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
         properties.put(Context.SECURITY_CREDENTIALS, environment.getProperty("vds.password"));
-        userNotExistsOnLdap.clear();
-        userExistsOnLdap.clear();
         ldapUser = new LDAPUser();
         try {
             initialDirContext = new InitialDirContext(properties);
@@ -335,15 +333,25 @@ public class LDAPConnector implements EnvironmentAware {
                             loggingMisc.printConsole(1, LDAPConnector.class.getName() + " " + "ou: " + ou.get(idx).toString());
                         }
                     }
-                    if (displayName == null) {
+                    if (name == null && displayName == null && givenName != null) {
+                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), givenName.get().toString(), "Y");
+                    } else if (name != null && displayName == null && givenName == null) {
                         dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), name.get().toString(), "Y");
-                    } else if (name == null) {
+                    } else if (name == null && displayName != null && givenName == null) {
                         dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), displayName.get().toString(), "Y");
                     } else {
-                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), givenName.get().toString(), "Y");
+                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), eniMatricolaNotes.get().toString(), "Y");
                     }
-                    dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
-                    dbConnectionOperation.insertQUserAttributeOU(eniMatricolaNotes.get().toString(), "organizzazione", ou.get().toString());
+                    if (mail == null) {
+                        dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", "N/A");
+                    } else {
+                        dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
+                    }
+                    if (ou == null) {
+                        dbConnectionOperation.insertQUserAttributeOU(eniMatricolaNotes.get().toString(), "organizzazione", "N/A");
+                    } else {
+                        dbConnectionOperation.insertQUserAttributeOU(eniMatricolaNotes.get().toString(), "organizzazione", ou.get().toString());
+                    }
                     dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
                     dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
                     ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
@@ -359,6 +367,14 @@ public class LDAPConnector implements EnvironmentAware {
         } catch (NamingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearUsersExistsOnLDAP() {
+        userExistsOnLdap.clear();
+    }
+
+    public void clearUsersNotExistsOnLDAP() {
+        userNotExistsOnLdap.clear();
     }
 
     public List<LDAPUser> getUserExistsOnLdap() {

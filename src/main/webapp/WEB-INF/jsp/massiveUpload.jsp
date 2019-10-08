@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/navbar.css"/>
     <link rel="stylesheet" href="css/background.css"/>
     <link type="text/javascript" href="js/bootstrap.js"/>
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
     <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
@@ -82,11 +83,13 @@
     </div>
 </nav>
 <div class="container text-center">
-    <h2>Verra' eseguito un check verso LDAP per poi effettuare dei controlli sul DB.</h2>
+    <h3>Verra' eseguito un check verso LDAP per poi effettuare dei controlli sul DB.</h3>
     <br>
-    <h2>Qualora utenza esista sull'ADLDS, tale utenza verra' censita come abilitata.</h2>
+    <h3>Qualora utenza esista sull'ADLDS, tale utenza verra' censita come abilitata.</h3>
     <br>
-    <h2>Per gestire un'utenza singolarmente, <a href="/searchquserondbpage">Clicca qui</a></h2>
+    <h3>Per gestire un'utenza singolarmente, <a href="/searchquserondbpage">Clicca qui</a></h3>
+    <br>
+    <h3>Il formato deve essere il seguente: USERID;RUOLO;GRUPPO</h3>
     <form action="/massiveUpload" method="post" enctype="multipart/form-data">
         <div class="input-group mb-3">
             <div class="input-group-prepend">

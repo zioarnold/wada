@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/navbar.css"/>
     <link rel="stylesheet" href="css/background.css"/>
     <link type="text/javascript" href="js/bootstrap.js"/>
+    <link rel="shortcut icon" href="/ico/favicon.ico"/>
     <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
@@ -34,7 +35,7 @@
                     Caricamento
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownSearch">
-                    <a class="dropdown-item" href="/massiveUpload">Caricamento massivo</a>
+                    <a class="dropdown-item" href="/massiveUploadPage">Caricamento massivo</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/singleUpload">Caricamento singolo</a>
                 </div>
