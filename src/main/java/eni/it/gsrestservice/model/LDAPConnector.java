@@ -45,14 +45,12 @@ public class LDAPConnector implements EnvironmentAware {
             ou;
     private LDAPUser ldapUser;
     private List<LDAPUser> userExistsOnLdap;
-    private List<LDAPUser> userNotExistsOnLdap;
 
     private static Environment environment;
     private FileOutputStream fileOutputStream;
 
     public LDAPConnector() {
         userExistsOnLdap = new ArrayList<>();
-        userNotExistsOnLdap = new ArrayList<>();
     }
 
     @Bean
@@ -233,6 +231,7 @@ public class LDAPConnector implements EnvironmentAware {
                     } else {
                         ldapUser.setOu(ou.get().toString());
                     }
+                    userExistsOnLdap.add(ldapUser);
                 } while (answer.hasMore());
             } else {
                 String userNotExist = " Utenza non esiste sul VDS: " + filter + "\n";
