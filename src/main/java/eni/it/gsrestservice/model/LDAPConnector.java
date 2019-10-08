@@ -81,6 +81,12 @@ public class LDAPConnector implements EnvironmentAware {
             } else {
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             }
+        } else {
+            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
+                    " Opening file: " + environment.getProperty("log.discard"));
+            fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
+            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
+                    " Opening file: " + environment.getProperty("log.discard") + " successful");
         }
         try {
             initialDirContext = new InitialDirContext(properties);
@@ -281,6 +287,12 @@ public class LDAPConnector implements EnvironmentAware {
             } else {
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             }
+        } else {
+            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
+                    " Opening file: " + environment.getProperty("log.discard"));
+            fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
+            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
+                    " Opening file: " + environment.getProperty("log.discard") + " successful");
         }
         try {
             initialDirContext = new InitialDirContext(properties);
@@ -371,19 +383,25 @@ public class LDAPConnector implements EnvironmentAware {
                             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "ou: " + ou.get(idx).toString());
                         }
                     }
-                    if (name == null && displayName == null && givenName != null) {
-                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), givenName.get().toString(), "Y");
-                    } else if (name != null && displayName == null && givenName == null) {
-                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), name.get().toString(), "Y");
-                    } else if (name == null && displayName != null && givenName == null) {
-                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), displayName.get().toString(), "Y");
+                    if (displayName != null) {
+                        if (displayName.get().toString().contains("'")) {
+                            String displayNameReplaced = displayName.get().toString().replace("'", "''");
+                            dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), displayNameReplaced, "Y");
+                        } else {
+                            dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), displayName.get().toString(), "Y");
+                        }
                     } else {
                         dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), eniRegistrationNumber.get().toString(), "Y");
                     }
                     if (mail == null) {
                         dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", "N/A");
                     } else {
-                        dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mail.get().toString());
+                        if (mail.get().toString().contains("'")) {
+                            String mailReplaced = mail.get().toString().replace("'", "''");
+                            dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mailReplaced);
+                        } else {
+                            dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mail.get().toString());
+                        }
                     }
                     if (ou == null) {
                         dbConnectionOperation.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", "N/A");

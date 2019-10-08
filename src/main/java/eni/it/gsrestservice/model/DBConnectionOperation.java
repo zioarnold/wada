@@ -62,8 +62,8 @@ public class DBConnectionOperation {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
-                resultSet = statement.executeQuery("select qs_dev_users.userid, name, user_is_active " +
-                        "from qs_dev_users ");
+                resultSet = statement.executeQuery("select qs_users.userid, name, user_is_active " +
+                        "from qs_users ");
                 while (resultSet.next()) {
                     QUsers qUsers = new QUsers(resultSet.getString("userid"),
                             resultSet.getString("name"),
@@ -99,10 +99,10 @@ public class DBConnectionOperation {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "select userid, name, user_is_active from qs_dev_users " +
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "select userid, name, user_is_active from qs_users " +
                         "where userid like '" + userID.toUpperCase() + "'");
                 resultSet = statement.executeQuery("select userid, name, user_is_active " +
-                        "from qs_dev_users " +
+                        "from qs_users " +
                         "where userid like '" + userID.toUpperCase() + "'");
                 while (resultSet.next()) {
                     QUsers qUsers = new QUsers(resultSet.getString("userid"),
@@ -158,13 +158,13 @@ public class DBConnectionOperation {
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
-                resultSet = statement.executeQuery("SELECT COUNT(USERID) as exist_usr FROM qs_dev_users WHERE USERID LIKE '" + userID + "'");
+                resultSet = statement.executeQuery("SELECT COUNT(USERID) as exist_usr FROM qs_users WHERE USERID LIKE '" + userID + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, "Executing query");
-                    loggingMisc.printConsole(1, "INSERT INTO qs_dev_users (USERID, name, user_is_active, DATA_LAST_MODIFY) +" +
+                    loggingMisc.printConsole(1, "INSERT INTO qs_users (USERID, name, user_is_active, DATA_LAST_MODIFY) +" +
                             "                            VALUES('" + userID + "','" + name + "','" + userIsActive + "', now())");
-                    resultSet = statement.executeQuery("INSERT INTO qs_dev_users (USERID, name, user_is_active, DATA_LAST_MODIFY)" +
+                    resultSet = statement.executeQuery("INSERT INTO qs_users (USERID, name, user_is_active, DATA_LAST_MODIFY)" +
                             "VALUES('" + userID.toUpperCase() + "','" + name + "','" + userIsActive + "', now())");
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
                 } else {
@@ -194,7 +194,7 @@ public class DBConnectionOperation {
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into qs_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('\" + userID + \"','\" + type + \"','\" + value + \"', now());");
-                resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
+                resultSet = statement.executeQuery("insert into qs_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
             }
             disconnectDB();
@@ -218,12 +218,12 @@ public class DBConnectionOperation {
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
-                resultSet = statement.executeQuery("select count(USERID) from qs_dev_users_attrib where USERID like '" + userID + "' and type like '" + type + "' and value like '" + value + "'");
+                resultSet = statement.executeQuery("select count(USERID) from qs_users_attrib where USERID like '" + userID + "' and type like '" + type + "' and value like '" + value + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "',$$" + value + "$$);");
-                    resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "',$$" + value + "$$, now())");
+                    resultSet = statement.executeQuery("insert into qs_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
                 } else {
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
@@ -298,8 +298,8 @@ public class DBConnectionOperation {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "SELECT type FROM qs_dev_users_attrib WHERE userid like '" + userId.toUpperCase() + "'");
-                resultSet = statement.executeQuery("SELECT type, value FROM qs_dev_users_attrib WHERE userid like '" + userId.toUpperCase() + "'");
+                loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "SELECT type FROM qs_users_attrib WHERE userid like '" + userId.toUpperCase() + "'");
+                resultSet = statement.executeQuery("SELECT type, value FROM qs_users_attrib WHERE userid like '" + userId.toUpperCase() + "'");
                 while (resultSet.next()) {
                     QUsers qUsers = new QUsers();
                     qUsers.setType(resultSet.getString("type"));
@@ -330,12 +330,12 @@ public class DBConnectionOperation {
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Creating statement Successful");
-                resultSet = statement.executeQuery("select count(USERID) from qs_dev_users_attrib where USERID like '" + userID + "' and type like '" + type + "' and value like '" + value + "'");
+                resultSet = statement.executeQuery("select count(USERID) from qs_users_attrib where USERID like '" + userID + "' and type like '" + type + "' and value like '" + value + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
-                    resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
+                    resultSet = statement.executeQuery("insert into qs_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
                     disconnectDB();
                 } else {
