@@ -17,6 +17,12 @@ public class MainController {
     public ModelAndView index(HttpServletRequest request) {
         request.setAttribute("farm_name", environment.getProperty("farm.name"));
         request.setAttribute("farm_environment", environment.getProperty("farm.environment"));
+        prova();
         return new ModelAndView("index");
+    }
+
+    void prova() {
+        String mailWrong = "alessia'.depalma@eni.com";
+        String temp2 = "'" + mailWrong + "'";
     }
 }

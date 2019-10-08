@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 public class LDAPController {
@@ -24,7 +25,7 @@ public class LDAPController {
     }
 
     @RequestMapping(value = "/searchuseronldap")
-    public ModelAndView searchUserOnLdap(HttpServletRequest request, @RequestParam(required = false, name = "userID") String userID) {
+    public ModelAndView searchUserOnLdap(HttpServletRequest request, @RequestParam(required = false, name = "userID") String userID) throws IOException {
         LDAPConnector ldapConnector = new LDAPConnector();
         request.setAttribute("farm_name", environment.getProperty("farm.name"));
         request.setAttribute("farm_environment", environment.getProperty("farm.environment"));

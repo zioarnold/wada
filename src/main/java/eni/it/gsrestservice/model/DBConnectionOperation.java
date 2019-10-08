@@ -222,8 +222,8 @@ public class DBConnectionOperation {
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query");
-                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "','" + value + "');");
-                    resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "','" + value + "', now())");
+                    loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "insert into Q_USERS_ATTRIB (USERID, TYPE, VALUE) VALUES ('" + userID + "', '" + type + "',$$" + value + "$$);");
+                    resultSet = statement.executeQuery("insert into qs_dev_users_attrib (USERID, TYPE, VALUE, data_last_modify) VALUES ('" + userID.toUpperCase() + "','" + type + "',$$" + value + "$$, now())");
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Executing query - successful");
                 } else {
                     loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "User: " + userID + " exists on table Q_USERS_ATTRIB, skipping...");
@@ -262,6 +262,7 @@ public class DBConnectionOperation {
             loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Closing statement");
             statement.close();
             resultSet.close();
+            connection.close();
             loggingMisc.printConsole(1, DBConnectionOperation.class.getSimpleName() + " " + "Closing statement Successful");
         } catch (SQLException e) {
             try {
