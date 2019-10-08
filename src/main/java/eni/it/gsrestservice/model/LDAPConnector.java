@@ -32,7 +32,7 @@ public class LDAPConnector implements EnvironmentAware {
     private SearchControls searchControl;
     private NamingEnumeration<SearchResult> answer;
     private Attribute displayName,
-            eniMatricolaNotes,
+            eniRegistrationNumber,
             name,
             mail,
             givenName,
@@ -102,10 +102,10 @@ public class LDAPConnector implements EnvironmentAware {
                             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "displayName: " + displayName.get(idx).toString());
                         }
                     }
-                    eniMatricolaNotes = result.getAttributes().get("ENIMatricolaNotes");
-                    if (eniMatricolaNotes != null) {
-                        for (int idx = 0; idx < eniMatricolaNotes.size(); idx++) {
-                            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
+                    eniRegistrationNumber = result.getAttributes().get("ENIMatricolaNotes");
+                    if (eniRegistrationNumber != null) {
+                        for (int idx = 0; idx < eniRegistrationNumber.size(); idx++) {
+                            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "ENIMatricolaNotes: " + eniRegistrationNumber.get(idx).toString());
                         }
                     }
                     name = result.getAttributes().get("name");
@@ -176,10 +176,10 @@ public class LDAPConnector implements EnvironmentAware {
                     } else {
                         ldapUser.setDisplayName(displayName.get().toString());
                     }
-                    if (eniMatricolaNotes == null) {
+                    if (eniRegistrationNumber == null) {
                         ldapUser.setENIMatricolaNotes("N/A");
                     } else {
-                        ldapUser.setENIMatricolaNotes(eniMatricolaNotes.get().toString());
+                        ldapUser.setENIMatricolaNotes(eniRegistrationNumber.get().toString());
                     }
                     if (name == null) {
                         ldapUser.setName("N/A");
@@ -302,10 +302,10 @@ public class LDAPConnector implements EnvironmentAware {
                             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "displayName: " + displayName.get(idx).toString());
                         }
                     }
-                    eniMatricolaNotes = result.getAttributes().get("ENIMatricolaNotes");
-                    if (eniMatricolaNotes != null) {
-                        for (int idx = 0; idx < eniMatricolaNotes.size(); idx++) {
-                            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "ENIMatricolaNotes: " + eniMatricolaNotes.get(idx).toString());
+                    eniRegistrationNumber = result.getAttributes().get("ENIMatricolaNotes");
+                    if (eniRegistrationNumber != null) {
+                        for (int idx = 0; idx < eniRegistrationNumber.size(); idx++) {
+                            loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " " + "ENIMatricolaNotes: " + eniRegistrationNumber.get(idx).toString());
                         }
                     }
                     name = result.getAttributes().get("name");
@@ -372,26 +372,26 @@ public class LDAPConnector implements EnvironmentAware {
                         }
                     }
                     if (name == null && displayName == null && givenName != null) {
-                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), givenName.get().toString(), "Y");
+                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), givenName.get().toString(), "Y");
                     } else if (name != null && displayName == null && givenName == null) {
-                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), name.get().toString(), "Y");
+                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), name.get().toString(), "Y");
                     } else if (name == null && displayName != null && givenName == null) {
-                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), displayName.get().toString(), "Y");
+                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), displayName.get().toString(), "Y");
                     } else {
-                        dbConnectionOperation.insertToQSUsers(eniMatricolaNotes.get().toString(), eniMatricolaNotes.get().toString(), "Y");
+                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), eniRegistrationNumber.get().toString(), "Y");
                     }
                     if (mail == null) {
-                        dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", "N/A");
+                        dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", "N/A");
                     } else {
-                        dbConnectionOperation.insertQUserAttributeEmail(eniMatricolaNotes.get().toString(), "email", mail.get().toString());
+                        dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mail.get().toString());
                     }
                     if (ou == null) {
-                        dbConnectionOperation.insertQUserAttributeOU(eniMatricolaNotes.get().toString(), "organizzazione", "N/A");
+                        dbConnectionOperation.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", "N/A");
                     } else {
-                        dbConnectionOperation.insertQUserAttributeOU(eniMatricolaNotes.get().toString(), "organizzazione", ou.get().toString());
+                        dbConnectionOperation.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", ou.get().toString());
                     }
-                    dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "gruppo", userGroup);
-                    dbConnectionOperation.insertQUserAttribute(eniMatricolaNotes.get().toString(), "ruolo", userRole);
+                    dbConnectionOperation.insertQUserAttribute(eniRegistrationNumber.get().toString(), "gruppo", userGroup);
+                    dbConnectionOperation.insertQUserAttribute(eniRegistrationNumber.get().toString(), "ruolo", userRole);
                 } while (answer.hasMore());
             } else {
                 loggingMisc.printConsole(2, LDAPConnector.class.getSimpleName() + " " + "User not found by filter: " + userID);
