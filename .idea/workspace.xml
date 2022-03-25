@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/.mvn/wrapper/MavenWrapperDownloader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Error.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/LoggingMisc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/LoggingMisc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/CSVReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/CSVReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/Management.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QUsers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ManagementService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/background.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/background.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/navbar.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allQUsersFromDB.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allQUsersFromDB.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allUsersFromLDAP.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allUsersFromLDAP.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/error.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/error.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/management.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/management.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/massiveUpload.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/massiveUpload.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchQUserOnDB.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchQUserOnDB.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchUserOnLdap.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchUserOnLdap.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/showUserType.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/showUserType.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/singleUpload.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/uploadSuccess.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/uploadSuccess.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/userGuide.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/userGuide.jsp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="CommittedChangesCache">
+    <option name="refreshEnabled" value="true" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="DBUSERS: database" type="162271b6:PgImplModel$Database" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="DBUSERS: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="DBUSERS: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="DBUSERS: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="DBUSERS" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="DBUSERS: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="qs_dev_users_attrib: table" type="69fad909:PgImplModel$LocalTable" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="WADAS" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="WADAS" type="feb32156:DbDataSourceImpl" />
+        <item name="WADA: schema" type="3abd1b6a:OraImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="WADAS" type="feb32156:DbDataSourceImpl" />
+        <item name="WADA: schema" type="3abd1b6a:OraImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="WADAS" type="feb32156:DbDataSourceImpl" />
+        <item name="WADA: schema" type="3abd1b6a:OraImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="QSADMINUSERS: table" type="942f455b:OraImplModel$Table" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="WADAS" type="feb32156:DbDataSourceImpl" />
+        <item name="WADA: schema" type="3abd1b6a:OraImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="QSFARMSTMP: table" type="942f455b:OraImplModel$Table" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+        <option value="CSS File" />
+        <option value="Class" />
+        <option value="Jsp File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="uid0931174" />
+        <option value="zioarnold &lt;vl80tk@gmail.com&gt;" />
+      </list>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="1RKYTlauTJJJc6ElmMfdkpqGU8W" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DatabaseDriversLRU" value="postgresql&#10;oracle" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="database.data.extractors.current.id" value="SQL Inserts" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\resources\static\ico" />
+      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\resources\static" />
+      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\webapp\WEB-INF\jsp" />
+      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\webapp\WEB-INF\views" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="GsRestServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="gs-rest-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="eni.it.gsrestservice.GsRestServiceApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <envs>
+        <env name="--spring.config.location" value="file:///$PROJECT_DIR$/../../../../work/wada/conf/application.properties" />
+      </envs>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\arn81\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="" />
+      <created>1569417264226</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1569417264226</updated>
+      <workItem from="1569417268006" duration="8279000" />
+      <workItem from="1569485193920" duration="40616000" />
+      <workItem from="1569918006451" duration="21443000" />
+      <workItem from="1570518038497" duration="20060000" />
+      <workItem from="1570547001769" duration="192000" />
+      <workItem from="1570553731373" duration="253000" />
+      <workItem from="1570557154738" duration="11365000" />
+      <workItem from="1570648807638" duration="8701000" />
+      <workItem from="1570729138549" duration="14226000" />
+      <workItem from="1570818469305" duration="14840000" />
+      <workItem from="1571077104406" duration="4377000" />
+      <workItem from="1571156166137" duration="11067000" />
+      <workItem from="1571329466264" duration="1370000" />
+      <workItem from="1571414628079" duration="13240000" />
+      <workItem from="1571675445295" duration="2279000" />
+      <workItem from="1571947844406" duration="6951000" />
+      <workItem from="1572816770261" duration="132000" />
+      <workItem from="1573067261912" duration="8694000" />
+      <workItem from="1573203729743" duration="7948000" />
+      <workItem from="1573221987231" duration="5340000" />
+      <workItem from="1580760785781" duration="3000" />
+      <workItem from="1580760814352" duration="38000" />
+      <workItem from="1580761095910" duration="63000" />
+      <workItem from="1580761375092" duration="119000" />
+      <workItem from="1580761644892" duration="55000" />
+      <workItem from="1580761750439" duration="105000" />
+      <workItem from="1581087088462" duration="3163000" />
+      <workItem from="1581179707950" duration="226000" />
+      <workItem from="1581452512555" duration="33000" />
+      <workItem from="1581452638826" duration="60000" />
+      <workItem from="1581452711281" duration="43000" />
+      <workItem from="1581453493885" duration="103000" />
+      <workItem from="1582538898454" duration="2686000" />
+      <workItem from="1584367617025" duration="789000" />
+      <workItem from="1591285343133" duration="22000" />
+      <workItem from="1592924038936" duration="634000" />
+      <workItem from="1594139829084" duration="801000" />
+      <workItem from="1594306628481" duration="433000" />
+      <workItem from="1597767583654" duration="396000" />
+      <workItem from="1598867469968" duration="211000" />
+      <workItem from="1619128317930" duration="562000" />
+      <workItem from="1619128927727" duration="210000" />
+      <workItem from="1619129217692" duration="487000" />
+      <workItem from="1648231612618" duration="330000" />
+    </task>
+    <task id="LOCAL-00001" summary="more rests addeda">
+      <created>1569509410950</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1569509410950</updated>
+    </task>
+    <task id="LOCAL-00002" summary="spring ldap boot added">
+      <created>1569512608466</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1569512608466</updated>
+    </task>
+    <task id="LOCAL-00003" summary="spring ldap boot added">
+      <created>1569595555884</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1569595555884</updated>
+    </task>
+    <task id="LOCAL-00004" summary="spring ldap boot added">
+      <created>1569595675993</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1569595675993</updated>
+    </task>
+    <task id="LOCAL-00005" summary="select inner join implemented">
+      <created>1569929402490</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1569929402490</updated>
+    </task>
+    <task id="LOCAL-00006" summary="select inner join implemented">
+      <created>1569929441823</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1569929441823</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Views ultimated and dbops added">
+      <created>1569944835685</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1569944835685</updated>
+    </task>
+    <task id="LOCAL-00008" summary="if-elseif-else control implemented, favicon changed">
+      <created>1570524615241</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1570524615242</updated>
+    </task>
+    <task id="LOCAL-00009" summary="double dollar inserted to escape special character in the insert into email on the qs_dev_users_attrib">
+      <created>1570532096000</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1570532096000</updated>
+    </task>
+    <task id="LOCAL-00010" summary="double dollar inserted to escape special character in the insert into email on the qs_dev_users_attrib">
+      <created>1570532217833</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1570532217833</updated>
+    </task>
+    <task id="LOCAL-00011" summary="double dollar inserted to escape special character in the insert into email on the qs_dev_users_attrib">
+      <created>1570532523795</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1570532523800</updated>
+    </task>
+    <task id="LOCAL-00012" summary="double dollar inserted to escape special character in the insert into email on the qs_dev_users_attrib">
+      <created>1570532719724</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1570532719724</updated>
+    </task>
+    <task id="LOCAL-00013" summary="changed db tables from qs_dev to qs_, modified if-else logic">
+      <created>1570544417376</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1570544417376</updated>
+    </task>
+    <task id="LOCAL-00014" summary="dbconnectionoperation.disconnectDB() bug pool fixed">
+      <created>1570561201918</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1570561201918</updated>
+    </task>
+    <task id="LOCAL-00015" summary="external property to init driver added">
+      <created>1570561727440</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1570561727440</updated>
+    </task>
+    <task id="LOCAL-00016" summary="parametrized tables performed">
+      <created>1570565213179</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1570565213179</updated>
+    </task>
+    <task id="LOCAL-00017" summary="unnecessary dependencies removed, internal application.properties&#10;simplified. to make work the app you have the specify&#10;--spring.config.location=file:///C:/temp/application.properties&#10;so it will override the internal application.properties and work correct">
+      <created>1570565915956</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1570565915956</updated>
+    </task>
+    <task id="LOCAL-00018" summary="get all users table dynamic search added">
+      <created>1570567322837</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1570567322837</updated>
+    </task>
+    <task id="LOCAL-00019" summary="get all users table dynamic search added">
+      <created>1570568522626</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1570568522626</updated>
+    </task>
+    <task id="LOCAL-00020" summary="dynamic search adjusted into whole column">
+      <created>1570658855932</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1570658855932</updated>
+    </task>
+    <task id="LOCAL-00021" summary="new dataTablesAPI added.">
+      <created>1570659650959</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1570659650959</updated>
+    </task>
+    <task id="LOCAL-00022" summary="bootstrap modal added with form action inside: edit buttons implemented">
+      <created>1570745270507</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1570745270507</updated>
+    </task>
+    <task id="LOCAL-00023" summary="progress bar implemented">
+      <created>1570822770580</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1570822770580</updated>
+    </task>
+    <task id="LOCAL-00024" summary="progress bar implemented">
+      <created>1570833301628</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1570833301628</updated>
+    </task>
+    <task id="LOCAL-00025" summary="qlikconnector performed">
+      <created>1571081369908</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1571081369908</updated>
+    </task>
+    <task id="LOCAL-00026" summary="modal fade class removed, caused a bug with preventing to reopen modals&#10;and navigate in navbar">
+      <created>1571157701880</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1571157701880</updated>
+    </task>
+    <task id="LOCAL-00027" summary="bugfix bootstrap-modal-js-fade, update user role from qmc to db performed">
+      <created>1571175253060</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1571175253060</updated>
+    </task>
+    <task id="LOCAL-00028" summary="QSUM renamed to WADA">
+      <created>1571339799327</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1571339799328</updated>
+    </task>
+    <task id="LOCAL-00029" summary="added original ojdbc8 jar file, removed spring-session and spring-jpa.&#10;session will be managed by custom configuration through DB and&#10;static field in QsAdminUsers">
+      <created>1571434294395</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1571434294395</updated>
+    </task>
+    <task id="LOCAL-00030" summary="class.forName removed used DriverManager.register instead">
+      <created>1571676498262</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1571676498262</updated>
+    </task>
+    <task id="LOCAL-00031" summary="krajee.js performed">
+      <created>1571954647646</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1571954647646</updated>
+    </task>
+    <task id="LOCAL-00032" summary="edited nav bar menu, optimized functions, implemented deletefarm, delete admins">
+      <created>1573076213910</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1573076213910</updated>
+    </task>
+    <task id="LOCAL-00033" summary="farm edit page renewed">
+      <created>1573226760154</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1573226760154</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UpdateCopyrightCheckinHandler">
+    <option name="UPDATE_COPYRIGHT" value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="more rests addeda" />
+    <MESSAGE value="spring ldap boot added" />
+    <MESSAGE value="select inner join implemented" />
+    <MESSAGE value="Views ultimated and dbops added" />
+    <MESSAGE value="if-elseif-else control implemented, favicon changed" />
+    <MESSAGE value="double dollar inserted to escape special character in the insert into email on the qs_dev_users_attrib" />
+    <MESSAGE value="changed db tables from qs_dev to qs_, modified if-else logic" />
+    <MESSAGE value="dbconnectionoperation.disconnectDB() bug pool fixed" />
+    <MESSAGE value="external property to init driver added" />
+    <MESSAGE value="parametrized tables performed" />
+    <MESSAGE value="unnecessary dependencies removed, internal application.properties&#10;simplified. to make work the app you have the specify&#10;--spring.config.location=file:///C:/temp/application.properties&#10;so it will override the internal application.properties and work correct" />
+    <MESSAGE value="get all users table dynamic search added" />
+    <MESSAGE value="dynamic search adjusted into whole column" />
+    <MESSAGE value="new dataTablesAPI added." />
+    <MESSAGE value="bootstrap modal added with form action inside: edit buttons implemented" />
+    <MESSAGE value="progress bar implemented" />
+    <MESSAGE value="qlikconnector performed" />
+    <MESSAGE value="modal fade class removed, caused a bug with preventing to reopen modals&#10;and navigate in navbar" />
+    <MESSAGE value="bugfix bootstrap-modal-js-fade, update user role from qmc to db performed" />
+    <MESSAGE value="QSUM renamed to WADA" />
+    <MESSAGE value="added original ojdbc8 jar file, removed spring-session and spring-jpa.&#10;session will be managed by custom configuration through DB and&#10;static field in QsAdminUsers" />
+    <MESSAGE value="class.forName removed used DriverManager.register instead" />
+    <MESSAGE value="krajee.js performed" />
+    <MESSAGE value="edited nav bar menu, optimized functions, implemented deletefarm, delete admins" />
+    <MESSAGE value="farm edit page renewed" />
+    <option name="LAST_COMMIT_MESSAGE" value="farm edit page renewed" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="SpringBootApplicationConfigurationType">
+        <watch expression="getUserRoleByUserId(userId)" language="JAVA" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

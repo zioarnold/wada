@@ -8,6 +8,8 @@ public class QUsers {
     private String userIsActive;
     private String type;
     private String value;
+    private String userRoleQS;
+    private String newUserRole;
 
     QUsers() {
 
@@ -21,11 +23,13 @@ public class QUsers {
         this.userIsActive = users.userIsActive;
         this.type = users.type;
         this.value = users.value;
+        this.newUserRole = users.newUserRole;
+        this.userRoleQS = users.userRoleQS;
     }
 
-    public QUsers(String userId,
-                  String name,
-                  String userIsActive
+    QUsers(String userId,
+           String name,
+           String userIsActive
     ) {
         this.userId = userId;
         this.name = name;
@@ -36,7 +40,7 @@ public class QUsers {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -68,7 +72,7 @@ public class QUsers {
         return userIsActive;
     }
 
-    public void setUserIsActive(String userIsActive) {
+    void setUserIsActive(String userIsActive) {
         this.userIsActive = userIsActive;
     }
 
@@ -86,5 +90,13 @@ public class QUsers {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getNewUserRole() {
+        return newUserRole;
+    }
+
+    public void setNewUserRole(String newUserRole) {
+        this.newUserRole = newUserRole;
     }
 }

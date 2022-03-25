@@ -60,7 +60,6 @@ body {
     line-height: 1.5;
     color: #212529;
     text-align: left;
-    background-color: #fff;
 }
 
 [tabindex="-1"]:focus {
@@ -5478,6 +5477,8 @@ a.badge-dark:focus, a.badge-dark.focus {
     font-size: 0.75rem;
     background-color: #e9ecef;
     border-radius: 0.25rem;
+    margin: 10px;
+    width: 700px;
 }
 
 .progress-bar {

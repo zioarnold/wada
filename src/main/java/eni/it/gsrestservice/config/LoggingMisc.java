@@ -43,11 +43,11 @@ public class LoggingMisc {
         }
 
         Date data_log = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         // String format = " - |%1$-8s|%2$-10s|%3$-70s\n";
-        String format = " - |%1$-8s|%2$-10s|%3$s\n";
-        System.out.format(format, msg_type, sdf.format(data_log), msg);
+        String format = "%1$-10s %2$s %3$s\n";
+        System.out.format(format, sdf.format(data_log), msg_type, msg);
     }
 
 
