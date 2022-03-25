@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gs-rest-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/gs-rest-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,6 +158,8 @@
     <property name="DatabaseDriversLRU" value="postgresql&#10;oracle" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
+    <property name="LombokPluginIS_LOMBOK_JPS_FIX_ENABLED" value="true" />
+    <property name="LombokPluginIS_LOMBOK_VERSION_CHECK_Enabled" value="true" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
@@ -174,7 +175,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="vcs.Subversion" />
     <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
   </component>
   <component name="RecentsManager">
@@ -257,7 +258,9 @@
       <workItem from="1619128317930" duration="562000" />
       <workItem from="1619128927727" duration="210000" />
       <workItem from="1619129217692" duration="487000" />
-      <workItem from="1648231612618" duration="1319000" />
+      <workItem from="1648231612618" duration="3088000" />
+      <workItem from="1648234760546" duration="119000" />
+      <workItem from="1648234965419" duration="298000" />
     </task>
     <task id="LOCAL-00001" summary="more rests addeda">
       <created>1569509410950</created>
@@ -497,7 +500,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648232332768</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="farm edit page renewed">
+      <created>1648233085628</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1648233085628</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
