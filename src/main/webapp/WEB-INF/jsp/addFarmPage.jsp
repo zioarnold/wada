@@ -160,87 +160,96 @@
     </div>
 </nav>
 <div class="container text-center">
-    <form action="/addNewFarm" method="post">
+    <h2>Aggiunta FARM</h2>
+    <hr>
+    <form action="/addNewFarm" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="form-group col-md-6">
-                <label for="description">Descrizione </label>
-                <input class="form-control" type="text" name="description" id="description"
+                <label for="description"><b>Descrizione</b></label>
+                <input class="form-control form-control-sm" type="text" name="description" id="description"
                        placeholder="es: FARM QS 12P" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="dbUser">Utenza DB </label>
-                <input class="form-control" type="text" name="dbUser" id="dbUser" placeholder="utenza del DB" required>
+                <label for="dbUser"><b>Utenza DB</b></label>
+                <input class="form-control form-control-sm" type="text" name="dbUser" id="dbUser"
+                       placeholder="utenza del DB" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="dbPassword">DB Password </label>
-                <input class="form-control" type="text" name="dbPassword" id="dbPassword"
+                <label for="dbPassword"><b>DB Password</b></label>
+                <input class="form-control form-control-sm" type="text" name="dbPassword" id="dbPassword"
                        placeholder="la pwd dell utenza db" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="dbHost">DB Host </label>
-                <input class="form-control" name="dbHost" placeholder="es: jdbc:postgresql://xxx.services.eni.intranet"
+                <label for="dbHost"><b>DB Host</b></label>
+                <input class="form-control form-control-sm" name="dbHost" placeholder="es: xxx.services.eni.intranet"
                        id="dbHost" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="dbPort">DB Port</label>
-                <input class="form-control" name="dbPort" id="dbPort" placeholder="porta, es: 1531" required>
+                <label for="dbPort"><b>DB Port</b></label>
+                <input class="form-control form-control-sm" name="dbPort" id="dbPort" placeholder="porta, es: 1531"
+                       type="number" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="dbSid">DB SID</label>
-                <input class="form-control" name="dbSid" id="dbSid" placeholder="SID" required>
+                <label for="dbSid"><b>DB SID</b></label>
+                <input class="form-control form-control-sm" name="dbSid" id="dbSid" placeholder="SID" required>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-md-6">
-                <label for="qsHost">QS Host </label>
-                <input class="form-control" name="qsHost" id="qsHost" placeholder="es: XXlogXXk0n.hosts.eni.intranet"
+                <label for="qsHost"><b>QS Host</b></label>
+                <input class="form-control form-control-sm" name="qsHost" id="qsHost" placeholder="es: XXlogXXk0n"
                        required>
             </div>
             <div class="form-group col-md-6">
-                <label for="qsPathClient">QS Client.jks path </label>
-                <input class="form-control" name="qsPathClient" id="qsPathClient"
-                       placeholder="es: C:/work/wada/certs/client.jks" required>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="qsPathRoot">QS Root.jks path </label>
-                <input class="form-control" name="qsPathRoot" id="qsPathRoot"
-                       placeholder="es: C:/work/wada/certs/root.jks"
+                <label for="qsXrfKey"><b>XRF KEY</b></label>
+                <input class="form-control form-control-sm" name="qsXrfKey" id="qsXrfKey" placeholder="Chiave xrf"
                        required>
             </div>
             <div class="form-group col-md-6">
-                <label for="qsXrfKey">XRF KEY </label>
-                <input class="form-control" name="qsXrfKey" id="qsXrfKey" placeholder="Chiave xrf" required>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="qsKsPassword">QS JKS Password </label>
-                <input class="form-control" name="qsKsPassword" id="qsKsPassword" placeholder="La password dei keystore"
+                <label for="qsPathClient"><b>QS Client.jks</b></label>
+                <input class="form-control form-control-sm " name="qsPathClient" id="qsPathClient"
                        required>
             </div>
             <div class="form-group col-md-6">
-                <label for="qsUserHeader">QS User Header </label>
-                <input class="form-control" name="qsUserHeader" id="qsUserHeader"
+                <label for="qsPathRoot"><b>QS Root.jks</b></label>
+                <input class="form-control form-control-sm " name="qsPathRoot" id="qsPathRoot"
+                       required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="qsKsPassword"><b>QS JKS Password</b></label>
+                <input class="form-control form-control-sm" name="qsKsPassword" id="qsKsPassword"
+                       placeholder="La password dei keystore" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="qsUserHeader"><b>QS User Header</b></label>
+                <input class="form-control form-control-sm" name="qsUserHeader" id="qsUserHeader"
                        placeholder="es: UserDirectory=ENINET; UserId=ADMQSLAB01" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="note">Note </label>
-                <input class="form-control" name="note" id="note" placeholder="eventuali note">
+                <label for="note"><b>Note</b></label>
+                <input class="form-control form-control-sm" name="note" id="note" placeholder="eventuali note">
             </div>
             <div class="form-group col-md-6">
-                <label for="environment">Environment
-                    <select name="environment" class="form-control" id="environment">
-                        <option>DEV</option>
-                        <option>TEST</option>
-                        <option>PRE</option>
-                        <option>PROD</option>
-                    </select>
-                </label>
+                <label for="environment"><b>Environment</b></label>
+                <select name="environment" class="form-control form-control-sm" id="environment">
+                    <option>DEV</option>
+                    <option>TEST</option>
+                    <option>PRE</option>
+                    <option>PROD</option>
+                </select>
             </div>
             <div class="form-group col-md-6">
-                <label for="came">Came </label>
-                <input class="form-control" name="came" id="came" placeholder="es: 6440004" required>
+                <label for="came"><b>CAME</b></label>
+                <input class="form-control form-control-sm" name="came" type="number" id="came"
+                       placeholder="es: 6440004" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="qsReloadTaskName"><b>Reload Task</b></label>
+                <input class="form-control form-control-sm" name="qsReloadTaskName" type="text" id="qsReloadTaskName"
+                       placeholder="es: UDC Sync_usersynctask" required>
             </div>
         </div>
-        <input type="submit" value="Aggiungi" class="btn btn-success">
+        <input type="submit" value="Aggiungi" class="btn btn-success btn-sm">
     </form>
 </div>
 <!-- Optional JavaScript -->
@@ -254,5 +263,20 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script>
+    $('#qsPathClient').on('change', function () { //get the file name
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
+<script>
+    $('#qsPathRoot').on('change', function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 </body>
 </html>

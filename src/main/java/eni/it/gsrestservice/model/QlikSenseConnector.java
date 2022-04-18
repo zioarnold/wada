@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
@@ -36,7 +37,7 @@ public class QlikSenseConnector {
         KeyStore keyStore = KeyStore.getInstance("JKS");
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance: JKS - successful");
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + proxyCert);
-        keyStore.load(new FileInputStream(new File(proxyCert)), rootCertPwd.toCharArray());
+        keyStore.load(Files.newInputStream(new File(proxyCert).toPath()), rootCertPwd.toCharArray());
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + proxyCert + " successful");
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(keyStore, rootCertPwd.toCharArray());
@@ -45,7 +46,7 @@ public class QlikSenseConnector {
         KeyStore keyStoreTrust = KeyStore.getInstance("JKS");
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS - successful");
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + rootCert);
-        keyStoreTrust.load(new FileInputStream(new File(rootCert)), rootCertPwd.toCharArray());
+        keyStoreTrust.load(Files.newInputStream(new File(rootCert).toPath()), rootCertPwd.toCharArray());
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + rootCert + " successful");
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(keyStoreTrust);
@@ -167,12 +168,12 @@ public class QlikSenseConnector {
         connection.setRequestProperty("Content-Type", "application/json");
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request method: POST");
         connection.setRequestMethod("POST");
-        this.sendData(connection, "");
+        sendData(connection, "");
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Connection response code: " + connection.getResponseCode());
         return connection.getResponseCode();
     }
 
-    private void sendData(HttpsURLConnection connection, String data) {
+    private static void sendData(HttpsURLConnection connection, String data) {
         DataOutputStream dataOutputStream = null;
         try {
             dataOutputStream = new DataOutputStream(connection.getOutputStream());
@@ -182,16 +183,16 @@ public class QlikSenseConnector {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            this.closeQuietly(dataOutputStream);
+            closeQuietly(dataOutputStream);
         }
     }
 
-    private void closeQuietly(Closeable closeable) {
+    private static void closeQuietly(Closeable closeable) {
         try {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
 
         }
     }

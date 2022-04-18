@@ -50,13 +50,13 @@
                 if (user_role_logged_in.equals("ADMIN")) {
             %>
             <li class="nav-item">
-                <a class="nav-link" href="/report">Report</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/allFarmPage">Farms</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/allAdminsPage">Admins</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/report">Report</a>
             </li>
             <%
             } else {

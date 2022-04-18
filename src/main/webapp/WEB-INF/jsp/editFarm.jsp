@@ -1,3 +1,5 @@
+<%@ page import="eni.it.gsrestservice.model.QsFarms" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -158,6 +160,7 @@
         <%--        </form>--%>
     </div>
 </nav>
+<% List<QsFarms> qsFarms = (List<QsFarms>) request.getAttribute("farm"); %>
 <c:choose>
     <c:when test="${empty farm}">
         <div class="container text-center">
@@ -165,68 +168,112 @@
         </div>
     </c:when>
     <c:otherwise>
-        <form method="post" action="/saveFarm">
-            <h2 class="text-center">Modifica FARM</h2>
+        <div class="container text-center">
+            <h2>Modifica FARM</h2>
             <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered table-sm" id="myTable">
-                    <thead>
-                    <tr>
-                        <th hidden>FarmId</th>
-                        <th>Descrizione</th>
-                        <th>Ambiente</th>
-                        <th>DBUser</th>
-                        <th>DBPassword</th>
-                        <th>DBHost</th>
-                        <th>DBPort</th>
-                        <th>DBSid</th>
-                        <th>QSHost</th>
-                        <th>QSReloadTaskName</th>
-                        <th>QsClientJKS</th>
-                        <th>QsRootJKS</th>
-                        <th>QsXrfKey</th>
-                        <th>QsJksPwd</th>
-                        <th>QsHeader</th>
-                        <th>Note</th>
-                        <th>Came</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="farm" items="${farm}">
-                        <tr>
-                            <td hidden><input value="${farm.farmId}" type="text" name="farmId"/></td>
-                            <td><input value="${farm.description}" type="text" name="description"/></td>
-                            <td>
-                                <select name="environment">
-                                    <option>DEV</option>
-                                    <option>TEST</option>
-                                    <option>PRE</option>
-                                    <option>PROD</option>
-                                </select>
-                            </td>
-                            <td><input value="${farm.dbUser}" type="text" name="dbUser"/></td>
-                            <td><input value="${farm.dbPassword}" type="text" name="dbPassword"/></td>
-                            <td><input value="${farm.dbHost}" type="text" name="dbHost"/></td>
-                            <td><input value="${farm.dbPort}" type="text" name="dbPort"/></td>
-                            <td><input value="${farm.dbSid}" type="text" name="dbSid"/></td>
-                            <td><input value="${farm.qsHost}" type="text" name="qsHost"/></td>
-                            <td><input value="${farm.qsReloadTaskName}" type="text" name="qsReloadTaskName"></td>
-                            <td><input value="${farm.qsPathClientJKS}" type="text" name="qsPathClientJKS"/></td>
-                            <td><input value="${farm.qsPathRootJKS}" type="text" name="qsPathRootJKS"/></td>
-                            <td><input value="${farm.qsXrfKey}" type="text" name="qsXrfKey"/></td>
-                            <td><input value="${farm.qsKeyStorePwd}" type="text" name="qsKeyStorePwd"/></td>
-                            <td><input value="${farm.qsHeader}" type="text" name="qsHeader"/></td>
-                            <td><input value="${farm.note}" type="text" name="note"/></td>
-                            <td><input value="${farm.came}" type="text" name="came"/></td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-success btn-sm">Salva</button>
-            </div>
-        </form>
+            <% for (QsFarms farms : qsFarms) {
+            %>
+            <form method="post" action="/saveFarm">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="farmId"><b>Id</b></label>
+                        <input type="text" name="farmId" id="farmId" class="form-control form-control-sm"
+                               value="<%=farms.getFarmId()%>" readonly required/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="description"><b>Descrizione</b></label>
+                        <input type="text" name="description" id="description" value="<%=farms.getDescription()%>"
+                               class="form-control form-control-sm" required/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="environment"><b>Ambiente</b></label>
+                        <select name="environment" id="environment" class="form-control form-control-sm" required>
+                            <option>DEV</option>
+                            <option>TEST</option>
+                            <option>PRE</option>
+                            <option>PROD</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dbUser"><b>DB User</b></label>
+                        <input type="text" name="dbUser" id="dbUser" value="<%=farms.getDbUser()%>"
+                               class="form-control form-control-sm" required/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dbPassword"><b>DB Pwd</b></label>
+                        <input type="text" name="dbPassword" id="dbPassword" value="<%=farms.getDbPassword()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dbHost"><b>DB Host</b></label>
+                        <input type="text" name="dbHost" id="dbHost" value="<%=farms.getDbHost()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dbPort"><b>DB Port</b></label>
+                        <input type="text" name="dbPort" id="dbPort" value="<%=farms.getDbPort()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="dbSid"><b>DB SID</b></label>
+                        <input type="text" name="dbSid" id="dbSid" value="<%=farms.getDbSid()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="qsHost"><b>QS Host</b></label>
+                        <input type="text" name="qsHost" id="qsHost" value="<%=farms.getQsHost()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="qsReloadTaskName"><b>QS RTN</b></label>
+                        <input type="text" name="qsReloadTaskName" id="qsReloadTaskName"
+                               value="<%=farms.getQsReloadTaskName()%>" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="qsPathClientJKS"><b>QS ClientJKS</b></label>
+                        <input type="text" name="qsPathClientJKS" id="qsPathClientJKS"
+                               value="<%=farms.getQsPathClientJKS()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="qsPathRootJKS"><b>QS RootJKS</b></label>
+                        <input type="text" name="qsPathRootJKS" id="qsPathRootJKS" value="<%=farms.getQsPathRootJKS()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="qsXrfKey"><b>QS XrfKey</b></label>
+                        <input type="text" name="qsXrfKey" id="qsXrfKey" value="<%=farms.getQsXrfKey()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="qsKeyStorePwd"><b>QS KsPwd</b></label>
+                        <input type="text" name="qsKeyStorePwd" id="qsKeyStorePwd" value="<%=farms.getQsKeyStorePwd()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="qsHeader"><b>QS Header</b></label>
+                        <input type="text" name="qsHeader" id="qsHeader" value="<%=farms.getQsHeader()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="note"><b>Note</b></label>
+                        <input type="text" name="note" id="note" value="<%=farms.getNote()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="came"><b>CAME</b></label>
+                        <input type="text" name="came" id="came" value="<%=farms.getCame()%>"
+                               class="form-control form-control-sm" required>
+                    </div>
+                </div>
+                <% } %>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-sm">Salva</button>
+                </div>
+            </form>
+        </div>
     </c:otherwise>
 </c:choose>
 <!-- Optional JavaScript -->

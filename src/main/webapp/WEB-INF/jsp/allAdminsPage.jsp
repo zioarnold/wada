@@ -9,7 +9,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%List<QsAdmins> qsAdmins = (List<QsAdmins>) request.getAttribute("all_farm"); %>
+<%List<QsAdmins> qsAdmins = (List<QsAdmins>) request.getAttribute("all_admins"); %>
 <!doctype html>
 <html>
 <head>
@@ -164,7 +164,7 @@
     </div>
 </nav>
 <c:choose>
-    <c:when test="${empty all_farm}">
+    <c:when test="${empty all_admins}">
         <div class="container text-center">
             <h2>Nessun record e` presente! Clicca su -> <a href="/addAdminPage"><span class="fa fa-plus"></span></a> per
                 aggiungere un moder o un admin</h2>
@@ -181,12 +181,11 @@
                 <tr>
                     <th>Id</th>
                     <th>Username</th>
-                    <th>LoginTime</th>
-                    <th>ExpireTime</th>
                     <th>Auth</th>
                     <th>Role</th>
+                    <th>LoginTime</th>
                     <th></th>
-                        <%--                    <th></th>--%>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -194,20 +193,18 @@
                     for (QsAdmins s : qsAdmins) {
                 %>
                 <tr>
-                    <td class="u-user"><%=s.getId()%>
+                    <td><%=s.getId()%>
                     </td>
                     <td><%=s.getUsername()%>
-                    </td>
-                    <td><%=s.getCurrentSessionLoginTime()%>
-                    </td>
-                    <td><%=s.getSessionLoginExpireTime()%>
                     </td>
                     <td><%=s.getAuth()%>
                     </td>
                     <td><%=s.getRole()%>
                     </td>
-                        <%--                    <td><a href="/editAdmins?farmId=<%=s.getId()%>"><span class="fa fa-pencil"></span></a></td>--%>
-                    <td><a href="/deleteAdmins?farmId=<%=s.getId()%>"><span class="fa fa-trash"></span></a></td>
+                    <td><%=s.getCurrentSessionLoginTime()%>
+                    </td>
+                    <td><a href="/editAdmin?adminId=<%=s.getId()%>"><span class="fa fa-pencil"></span></a></td>
+                    <td><a href="/deleteAdmin?adminId=<%=s.getId()%>"><span class="fa fa-trash"></span></a></td>
                 </tr>
                 <% } %>
                 </tbody>

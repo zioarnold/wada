@@ -50,6 +50,13 @@
     <orderEntry type="library" name="sortable" level="application" />
     <orderEntry type="library" name="purify" level="application" />
     <orderEntry type="library" name="theme" level="application" />
+    <orderEntry type="library" name="font-awesome" level="application" />
+    <orderEntry type="library" name="bootstrap-fileinput" level="application" />
+    <orderEntry type="library" name="all" level="application" />
+    <orderEntry type="library" name="jquery-3.2.1.slim" level="application" />
+    <orderEntry type="library" name="popper.js" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-rest:2.1.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-rest-webmvc:3.1.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-rest-core:3.1.10.RELEASE" level="project" />
@@ -142,12 +149,5 @@
     <orderEntry type="library" name="Maven: com.oracle.ojdbc:osdt_core:19.3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.oracle.ojdbc:simplefan:19.3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.oracle.ojdbc:ons:19.3.0.0" level="project" />
-    <orderEntry type="library" name="font-awesome" level="application" />
-    <orderEntry type="library" name="bootstrap-fileinput" level="application" />
-    <orderEntry type="library" name="all" level="application" />
-    <orderEntry type="library" name="jquery-3.2.1.slim" level="application" />
-    <orderEntry type="library" name="popper.js" level="application" />
-    <orderEntry type="library" name="bootstrap" level="application" />
-    <orderEntry type="library" name="jquery" level="application" />
   </component>
 </module>
