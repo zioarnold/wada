@@ -559,13 +559,14 @@ public class DBConnectionOperationCentralized {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                resultSet = statement.executeQuery("select ID, USERNAME, CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED, ROLE FROM " + qsAdminUsers);
+                resultSet = statement.executeQuery("select ID, USERNAME, PASSWORD, CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED, ROLE FROM " + qsAdminUsers);
                 while (resultSet.next()) {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     String session_login_expire_time = simpleDateFormat.format(resultSet.getDate("SESSION_LOGIN_EXPIRE_TIME"));
                     String current_session_login_time = simpleDateFormat.format(resultSet.getDate("CURRENT_SESSION_LOGIN_TIME"));
                     QsAdmins qsAdminUsers = new QsAdmins(resultSet.getInt("ID"),
                             resultSet.getString("USERNAME"),
+                            resultSet.getString("PASSWORD"),
                             current_session_login_time,
                             session_login_expire_time,
                             resultSet.getString("AUTHENTICATED"),
@@ -628,6 +629,43 @@ public class DBConnectionOperationCentralized {
         }
         disconnectDBORA();
         return farmsList;
+    }
+
+    public List<QsAdmins> getAdminUserDataById(String adminId) {
+        connectDBORA();
+        adminUsersList.clear();
+        try {
+            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            if (getConnection() == null) {
+                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+            } else {
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                statement = getConnection().createStatement();
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                resultSet = statement.executeQuery("select id, username, password, role from " + qsAdminUsers + " where id like '" + adminId + "'");
+                while (resultSet.next()) {
+                    QsAdmins qsAdmins = new QsAdmins(
+                            resultSet.getInt("ID"),
+                            resultSet.getString("USERNAME"),
+                            resultSet.getString("PASSWORD"),
+                            "",
+                            "",
+                            "",
+                            resultSet.getString("ROLE")
+                    );
+                    adminUsersList.add(qsAdmins);
+                }
+            }
+        } catch (SQLSyntaxErrorException ex) {
+            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            disconnectDBORA();
+        } catch (SQLException e) {
+            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            disconnectDBORA();
+        }
+        disconnectDBORA();
+        return adminUsersList;
     }
 
     public boolean updateFarm(String farmId, String description, String dbUser, String dbPassword, String dbHost,
@@ -745,5 +783,32 @@ public class DBConnectionOperationCentralized {
         }
         disconnectDBORA();
         return true;
+    }
+
+    public boolean resetPasswordByUserId(String adminId, String password) {
+        boolean isPwdUpdated = false;
+        connectDBORA();
+        try {
+            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            if (getConnection() == null) {
+                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+            } else {
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                statement = getConnection().createStatement();
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - UPDATE " + qsAdminUsers + " SET PASSWORD = '" + MD5(password) + "' WHERE ID LIKE '" + adminId + "'");
+                resultSet = statement.executeQuery("update " + qsAdminUsers + " set PASSWORD = '" + MD5(password) + "' where ID like '" + adminId + "'");
+                isPwdUpdated = resultSet.next();
+            }
+        } catch (SQLSyntaxErrorException ex) {
+            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            disconnectDBORA();
+        } catch (SQLException e) {
+            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            disconnectDBORA();
+        }
+        disconnectDBORA();
+        return isPwdUpdated;
     }
 }

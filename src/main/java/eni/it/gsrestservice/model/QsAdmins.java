@@ -3,6 +3,7 @@ package eni.it.gsrestservice.model;
 public class QsAdmins {
     private int id;
     private String username;
+    private String password;
     private String currentSessionLoginTime;
     private String sessionLoginExpireTime;
     private String auth;
@@ -12,9 +13,10 @@ public class QsAdmins {
 
     }
 
-    QsAdmins(int id, String username, String currentSessionLoginTime, String sessionLoginExpireTime, String auth, String role) {
+    QsAdmins(int id, String username, String password, String currentSessionLoginTime, String sessionLoginExpireTime, String auth, String role) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.currentSessionLoginTime = currentSessionLoginTime;
         this.sessionLoginExpireTime = sessionLoginExpireTime;
         this.auth = auth;
@@ -24,6 +26,7 @@ public class QsAdmins {
     public QsAdmins(QsAdmins qsAdmins) {
         this.id = qsAdmins.id;
         this.username = qsAdmins.username;
+        this.password = qsAdmins.password;
         this.currentSessionLoginTime = qsAdmins.currentSessionLoginTime;
         this.sessionLoginExpireTime = qsAdmins.sessionLoginExpireTime;
         this.auth = qsAdmins.auth;

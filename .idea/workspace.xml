@@ -4,23 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="farm edit page renewed">
-      <change afterPath="$PROJECT_DIR$/src/lib/ojdbc10.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/navigator.jsp" afterDir="false" />
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="adaptation to local development, QlikSense excluded due to impossibility to connect to Company's VPN.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/ErrorWadaManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/ErrorWadaManagement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperationCentralized.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperationCentralized.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allAdminsPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allAdminsPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QsAdmins.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QsAdmins.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/navigator.jsp" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +185,7 @@
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "spring.configuration.checksum": "e9693e46f88a1f06918c4b8ade7743ea",
+    "spring.configuration.checksum": "73e2d207480a483bf999300184aa3c00",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -290,6 +281,7 @@
       <workItem from="1680790962662" duration="40000" />
       <workItem from="1680791018191" duration="58000" />
       <workItem from="1680791078415" duration="13524000" />
+      <workItem from="1680806926630" duration="5631000" />
     </task>
     <task id="LOCAL-00001" summary="more rests addeda">
       <created>1569509410950</created>
@@ -557,7 +549,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680791259111</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="adaptation to local development, QlikSense excluded due to impossibility to connect to Company's VPN.">
+      <created>1680807007275</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1680807007275</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -592,7 +591,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="more rests addeda" />
     <MESSAGE value="spring ldap boot added" />
     <MESSAGE value="select inner join implemented" />
     <MESSAGE value="Views ultimated and dbops added" />
@@ -617,7 +615,8 @@
     <MESSAGE value="krajee.js performed" />
     <MESSAGE value="edited nav bar menu, optimized functions, implemented deletefarm, delete admins" />
     <MESSAGE value="farm edit page renewed" />
-    <option name="LAST_COMMIT_MESSAGE" value="farm edit page renewed" />
+    <MESSAGE value="adaptation to local development, QlikSense excluded due to impossibility to connect to Company's VPN." />
+    <option name="LAST_COMMIT_MESSAGE" value="adaptation to local development, QlikSense excluded due to impossibility to connect to Company's VPN." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

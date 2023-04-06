@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -774,6 +775,91 @@ public class ManagementController implements Serializable {
                         .addObject("user_logged_in", QsAdminUsers.username)
                         .addObject("user_role_logged_in", QsAdminUsers.role)
                         .addObject("farm", dbConnectionOperationCentralized.getFarmDataById(farmId));
+            }
+        }
+    }
+
+    @GetMapping("editAdmin")
+    public ModelAndView editAdmin(@RequestParam(required = false, name = "adminId") String adminId) throws Exception {
+        initDB();
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.getAdminUserDataById(adminId).size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("editAdmin")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("user_admin", dbConnectionOperationCentralized.getAdminUserDataById(adminId));
+            }
+        } else {
+            if (dbConnectionOperationCentralized.getAdminUserDataById(adminId).size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("editAdmin")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("user_admin", dbConnectionOperationCentralized.getAdminUserDataById(adminId));
+            }
+        }
+    }
+
+    @PostMapping("/resetPassword")
+    public ModelAndView resetPassword(@RequestParam(required = false, name = "adminId") String adminId,
+                                      @RequestParam(required = false, name = "resetPwd") String password) throws Exception {
+        initDB();
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.resetPasswordByUserId(adminId, password)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
+        } else {
+            if (dbConnectionOperationCentralized.resetPasswordByUserId(adminId, password)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
             }
         }
     }

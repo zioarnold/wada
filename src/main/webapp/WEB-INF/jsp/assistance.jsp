@@ -84,8 +84,8 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownTools">
                     <a class="dropdown-item" href="/executeReloadTaskQMC">Esegui reload task</a>
-                    <%--                    <a class="dropdown-item" href="/managementPageMassive">Gestione massiva</a>--%>
-                    <%--                    <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
+                    <%--                                        <a class="dropdown-item" href="/managementPageMassive">Gestione massiva</a>--%>
+                    <%--                                        <a class="dropdown-item" href="/allusersfromldap">Estrazione completa ADLDS</a>--%>
                 </div>
             </li>
             <li class="nav-item">

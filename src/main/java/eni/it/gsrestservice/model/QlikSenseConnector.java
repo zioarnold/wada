@@ -34,38 +34,36 @@ public class QlikSenseConnector {
 
     public boolean configureCertificate() {
         boolean isConfigured = false;
-        if (!isConfigured) {
-            try {
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + proxyCert + ": JKS");
-                KeyStore keyStore = KeyStore.getInstance("JKS");
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance: JKS - successful");
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + proxyCert);
-                keyStore.load(Files.newInputStream(new File(proxyCert).toPath()), rootCertPwd.toCharArray());
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + proxyCert + " successful");
-                KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-                keyManagerFactory.init(keyStore, rootCertPwd.toCharArray());
-                SSLContext sslContext = SSLContext.getInstance("SSL");
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS");
-                KeyStore keyStoreTrust = KeyStore.getInstance("JKS");
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS - successful");
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + rootCert);
-                keyStoreTrust.load(Files.newInputStream(new File(rootCert).toPath()), rootCertPwd.toCharArray());
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + rootCert + " successful");
-                TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                trustManagerFactory.init(keyStoreTrust);
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring certificates: " + proxyCert + ";" + rootCert);
-                sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
-                loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring certificates: " + proxyCert + ";" + rootCert + " successful");
-                sslSocketFactory = sslContext.getSocketFactory();
-                System.setProperty("javax.net.ssl.keyStore", proxyCert);
-                System.setProperty("javax.net.ssl.keyStorePassword", rootCertPwd);
-                System.setProperty("javax.net.ssl.trustStore", rootCert);
-                System.setProperty("javax.net.ssl.trustStorePassword", rootCertPwd);
-                System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-                isConfigured = true;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        try {
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + proxyCert + ": JKS");
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance: JKS - successful");
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + proxyCert);
+            keyStore.load(Files.newInputStream(new File(proxyCert).toPath()), rootCertPwd.toCharArray());
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + proxyCert + " successful");
+            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(keyStore, rootCertPwd.toCharArray());
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS");
+            KeyStore keyStoreTrust = KeyStore.getInstance("JKS");
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS - successful");
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + rootCert);
+            keyStoreTrust.load(Files.newInputStream(new File(rootCert).toPath()), rootCertPwd.toCharArray());
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - loading keystore: " + rootCert + " successful");
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStoreTrust);
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring certificates: " + proxyCert + ";" + rootCert);
+            sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring certificates: " + proxyCert + ";" + rootCert + " successful");
+            sslSocketFactory = sslContext.getSocketFactory();
+            System.setProperty("javax.net.ssl.keyStore", proxyCert);
+            System.setProperty("javax.net.ssl.keyStorePassword", rootCertPwd);
+            System.setProperty("javax.net.ssl.trustStore", rootCert);
+            System.setProperty("javax.net.ssl.trustStorePassword", rootCertPwd);
+            System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+            isConfigured = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return isConfigured;
     }
