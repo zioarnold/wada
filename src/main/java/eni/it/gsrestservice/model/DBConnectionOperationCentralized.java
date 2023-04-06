@@ -486,11 +486,10 @@ public class DBConnectionOperationCentralized {
                             "VALUES ('" + description + "', '" + dbUser + "','" + dbPassword + "','" + dbHost + "','" + qsHost + "','" + qsPathClient + "','" + qsPathRoot + "','" + qsXrfKey + "','" + qsKsPassword + "','" + note + "','" + dbSid + "','" + dbPort + "','" + qsUserHeader + "','" + came + "','" + environment + "')");
                     resultSet = statement.executeQuery("insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
                             "VALUES ('" + description + "', '" + dbUser + "','" + dbPassword + "','" + dbHost + "','" + qsHost + "','" + qsPathClient + "','" + qsPathRoot + "','" + qsXrfKey + "','" + qsKsPassword + "','" + note + "','" + dbSid + "','" + dbPort + "','" + qsUserHeader + "','" + came + "','" + environment + "')");
-                    isCreated = true;
+                    isCreated = resultSet.next();
                     loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
                             "VALUES ('" + description + "', '" + dbUser + "','" + dbPassword + "','" + dbHost + "','" + qsHost + "','" + qsPathClient + "','" + qsPathRoot + "','" + qsXrfKey + "','" + qsKsPassword + "','" + note + "','" + dbSid + "','" + dbPort + "','" + qsUserHeader + "','" + came + "','" + environment + "') - successful");
                 } else {
-                    isCreated = false;
                     loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Something went wrong");
                 }
             }
@@ -721,8 +720,7 @@ public class DBConnectionOperationCentralized {
                         "    CAME           ='" + came + "'," +
                         "    DATALASTMODIFY = SYSDATE " +
                         "WHERE FARMID like '" + farmId + "'");
-                resultSet.next();
-                isUpdated = true;
+                isUpdated = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
             loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
@@ -737,6 +735,7 @@ public class DBConnectionOperationCentralized {
 
     public boolean deleteFarmById(String farmId) {
         connectDBORA();
+        boolean isFarmDeleted = false;
         try {
             loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
@@ -748,6 +747,7 @@ public class DBConnectionOperationCentralized {
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName());
                 resultSet = statement.executeQuery("DELETE FROM " + qsFarms + " WHERE FARMID LIKE '" + farmId + "'");
+                isFarmDeleted = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
             loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
@@ -757,11 +757,12 @@ public class DBConnectionOperationCentralized {
             disconnectDBORA();
         }
         disconnectDBORA();
-        return true;
+        return isFarmDeleted;
     }
 
     public boolean deleteAdminModerById(int id) {
         connectDBORA();
+        boolean isAdminModerUserDeleted = false;
         try {
             loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
@@ -773,6 +774,7 @@ public class DBConnectionOperationCentralized {
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - DELETE FROM " + qsAdminUsers + " WHERE ID LIKE '" + id + "'");
                 resultSet = statement.executeQuery("DELETE FROM " + qsAdminUsers + " WHERE ID LIKE '" + id + "'");
+                isAdminModerUserDeleted = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
             loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
@@ -782,7 +784,7 @@ public class DBConnectionOperationCentralized {
             disconnectDBORA();
         }
         disconnectDBORA();
-        return true;
+        return isAdminModerUserDeleted;
     }
 
     public boolean resetPasswordByUserId(String adminId, String password) {
