@@ -22,28 +22,52 @@ public class AssistanceController {
     public ModelAndView assistancePage() {
         try {
             initDB();
-            initQlikConnector();
-            if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
-                    return new ModelAndView("assistance")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
-                    return new ModelAndView("assistance")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (initQlikConnector()) {
+                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
+                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                        return new ModelAndView("assistance")
+                                .addObject("farm_name", Farm.description)
+                                .addObject("farm_environment", Farm.environment)
+                                .addObject("ping_qlik", qlikSenseConnector.ping())
+                                .addObject("user_logged_in", QsAdminUsers.username)
+                                .addObject("user_role_logged_in", QsAdminUsers.role);
+                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                        return new ModelAndView("assistance")
+                                .addObject("farm_name", Farm.description)
+                                .addObject("farm_environment", Farm.environment)
+                                .addObject("ping_qlik", qlikSenseConnector.ping())
+                                .addObject("user_logged_in", QsAdminUsers.username)
+                                .addObject("user_role_logged_in", QsAdminUsers.role);
+                    } else {
+                        return new ModelAndView("sessionExpired");
+                    }
                 } else {
-                    return new ModelAndView("sessionExpired");
+                    return new ModelAndView("errorLogin").addObject("errorMsg",
+                            ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
                 }
             } else {
-                return new ModelAndView("errorLogin").addObject("errorMsg",
-                        ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
+                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                        return new ModelAndView("assistance")
+                                .addObject("ping_qlik", 200)
+                                .addObject("farm_name", "PIPPO")
+                                .addObject("farm_environment", "DEV")
+                                .addObject("user_logged_in", QsAdminUsers.username)
+                                .addObject("user_role_logged_in", QsAdminUsers.role);
+                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                        return new ModelAndView("assistance")
+                                .addObject("ping_qlik", 200)
+                                .addObject("farm_name", "PIPPO")
+                                .addObject("farm_environment", "DEV")
+                                .addObject("user_logged_in", QsAdminUsers.username)
+                                .addObject("user_role_logged_in", QsAdminUsers.role);
+                    } else {
+                        return new ModelAndView("sessionExpired");
+                    }
+                } else {
+                    return new ModelAndView("errorLogin").addObject("errorMsg",
+                            ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+                }
             }
         } catch (Exception e) {
             return new ModelAndView("errorLogin").addObject("errorMsg",
@@ -51,7 +75,7 @@ public class AssistanceController {
         }
     }
 
-    private void initQlikConnector() throws Exception {
+    private boolean initQlikConnector() {
         qlikSenseConnector.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
@@ -60,7 +84,7 @@ public class AssistanceController {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        qlikSenseConnector.configureCertificate();
+        return qlikSenseConnector.configureCertificate();
     }
 
     private void initDB() {

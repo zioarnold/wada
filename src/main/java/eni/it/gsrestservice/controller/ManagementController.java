@@ -34,7 +34,7 @@ public class ManagementController implements Serializable {
         );
     }
 
-    private void initQlikConnector() throws Exception {
+    private boolean initQlikConnector() throws Exception {
         qlikSenseConnector.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
@@ -43,60 +43,109 @@ public class ManagementController implements Serializable {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        qlikSenseConnector.configureCertificate();
+        return qlikSenseConnector.configureCertificate();
     }
 
     @GetMapping("/managementPage")
     public ModelAndView managementPage() {
         try {
             initDB();
-            initQlikConnector();
-            if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
-                    if (dbConnectionOperation.getAllUsers().size() == 0) {
-                        return new ModelAndView("error")
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (initQlikConnector()) {
+                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
+                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                        if (dbConnectionOperation.getAllUsers().size() == 0) {
+                            return new ModelAndView("error")
+                                    .addObject("farm_name", Farm.description)
+                                    .addObject("farm_environment", Farm.environment)
+                                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role);
+                        } else {
+                            return new ModelAndView("/management")
+                                    .addObject("farm_name", Farm.description)
+                                    .addObject("farm_environment", Farm.environment)
+                                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                                    .addObject("qusers", dbConnectionOperation.getAllUsers())
+                                    .addObject("rolesList", new RolesListConfig()
+                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                        }
+                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                        if (dbConnectionOperation.getAllUsers().size() == 0) {
+                            return new ModelAndView("error")
+                                    .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
+                                    .addObject("farm_name", Farm.description)
+                                    .addObject("farm_environment", Farm.environment)
+                                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role);
+                        } else {
+                            return new ModelAndView("/management")
+                                    .addObject("farm_name", Farm.description)
+                                    .addObject("farm_environment", Farm.environment)
+                                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                                    .addObject("qusers", dbConnectionOperation.getAllUsers())
+                                    .addObject("rolesList", new RolesListConfig()
+                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                        }
                     } else {
-                        return new ModelAndView("/management")
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role)
-                                .addObject("qusers", dbConnectionOperation.getAllUsers())
-                                .addObject("rolesList", new RolesListConfig()
-                                        .initRolesList(environment.getProperty("roles.config.json.path")));
-                    }
-                } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
-                    if (dbConnectionOperation.getAllUsers().size() == 0) {
-                        return new ModelAndView("error")
-                                .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else {
-                        return new ModelAndView("/management")
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role)
-                                .addObject("qusers", dbConnectionOperation.getAllUsers())
-                                .addObject("rolesList", new RolesListConfig()
-                                        .initRolesList(environment.getProperty("roles.config.json.path")));
+                        return new ModelAndView("sessionExpired");
                     }
                 } else {
-                    return new ModelAndView("sessionExpired");
+                    return new ModelAndView("errorLogin").addObject("errorMsg",
+                            ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
                 }
             } else {
-                return new ModelAndView("errorLogin").addObject("errorMsg",
-                        ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
+                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                        if (dbConnectionOperation.getAllUsers().size() == 0) {
+                            return new ModelAndView("error")
+                                    .addObject("ping_qlik", 200)
+                                    .addObject("farm_name", "PIPPO")
+                                    .addObject("farm_environment", "DEV")
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role);
+                        } else {
+                            return new ModelAndView("/management")
+                                    .addObject("ping_qlik", 200)
+                                    .addObject("farm_name", "PIPPO")
+                                    .addObject("farm_environment", "DEV")
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                                    .addObject("qusers", dbConnectionOperation.getAllUsers())
+                                    .addObject("rolesList", new RolesListConfig()
+                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                        }
+                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                        if (dbConnectionOperation.getAllUsers().size() == 0) {
+                            return new ModelAndView("error")
+                                    .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
+                                    .addObject("ping_qlik", 200)
+                                    .addObject("farm_name", "PIPPO")
+                                    .addObject("farm_environment", "DEV")
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role);
+                        } else {
+                            return new ModelAndView("/management")
+                                    .addObject("ping_qlik", 200)
+                                    .addObject("farm_name", "PIPPO")
+                                    .addObject("farm_environment", "DEV")
+                                    .addObject("user_logged_in", QsAdminUsers.username)
+                                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                                    .addObject("qusers", dbConnectionOperation.getAllUsers())
+                                    .addObject("rolesList", new RolesListConfig()
+                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                        }
+                    } else {
+                        return new ModelAndView("sessionExpired");
+                    }
+                } else {
+                    return new ModelAndView("errorLogin").addObject("errorMsg",
+                            ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+                }
             }
         } catch (Exception e) {
             return new ModelAndView("errorLogin").addObject("errorMsg",
@@ -108,13 +157,24 @@ public class ManagementController implements Serializable {
     public ModelAndView managementPageShowUserData(@RequestParam(required = false, name = "quser_filter") String userId) throws Exception {
         initDB();
         initQlikConnector();
-        return new ModelAndView("/management")
-                .addObject("farm_name", Farm.description)
-                .addObject("farm_environment", Farm.environment)
-                .addObject("ping_qlik", qlikSenseConnector.ping())
-                .addObject("user_logged_in", QsAdminUsers.username)
-                .addObject("user_role_logged_in", QsAdminUsers.role)
-                .addObject("quser_filter", dbConnectionOperation.findUserRoleByUserID(userId));
+        if (initQlikConnector()) {
+            return new ModelAndView("/management")
+                    .addObject("farm_name", Farm.description)
+                    .addObject("farm_environment", Farm.environment)
+                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("user_logged_in", QsAdminUsers.username)
+                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                    .addObject("quser_filter", dbConnectionOperation.findUserRoleByUserID(userId));
+
+        } else {
+            return new ModelAndView("/management")
+                    .addObject("ping_qlik", 200)
+                    .addObject("farm_name", "PIPPO")
+                    .addObject("farm_environment", "DEV")
+                    .addObject("user_logged_in", QsAdminUsers.username)
+                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                    .addObject("quser_filter", dbConnectionOperation.findUserRoleByUserID(userId));
+        }
     }
 
     @RequestMapping(value = "/managementPageEditTypeRole")
@@ -123,23 +183,42 @@ public class ManagementController implements Serializable {
                                                    @RequestParam(required = false, name = "oldRole") String oldRole,
                                                    @RequestParam(required = false, name = "newUserRole") String userRole) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperation.updateRoleByUserID(userId, roleGroup, oldRole, userRole)) {
-            dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utente "
-                    + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
-                    Farm.environment + " ha eseguito questa query: update " +
-                    environment.getProperty("db.tabattrib") + " set value = " + userRole +
-                    " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
-            return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
-                    .addObject("ping_qlik", qlikSenseConnector.ping());
+        if (initQlikConnector()) {
+            if (dbConnectionOperation.updateRoleByUserID(userId, roleGroup, oldRole, userRole)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utente "
+                        + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
+                        Farm.environment + " ha eseguito questa query: update " +
+                        environment.getProperty("db.tabattrib") + " set value = " + userRole +
+                        " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0005_USER_NOT_UPDATED.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0005_USER_NOT_UPDATED.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperation.updateRoleByUserID(userId, roleGroup, oldRole, userRole)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utente "
+                        + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
+                        Farm.environment + " ha eseguito questa query: update " +
+                        environment.getProperty("db.tabattrib") + " set value = " + userRole +
+                        " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0005_USER_NOT_UPDATED.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 
@@ -148,52 +227,95 @@ public class ManagementController implements Serializable {
                                                      @RequestParam(required = false, name = "type") String type,
                                                      @RequestParam(required = false, name = "value") String value) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperation.deleteRoleGroupByUserID(userId, type, value)) {
-            dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
-                    + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
-                    + Farm.environment + " ha eseguto la query: delete from " + environment.getProperty("db.tabattrib")
-                    + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value + "')");
-            return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
-                    .addObject("ping_qlik", qlikSenseConnector.ping());
-        } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0004_GROUP_OR_ROLE_NOT_DELETED.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        }
-    }
-
-    @RequestMapping(value = "/executeReloadTaskQMC")
-    public ModelAndView executeReloadTaskQMC() throws IOException {
-        try {
-            initQlikConnector();
-            if (qlikSenseConnector.startReloadTask() == 201) {
-                return new ModelAndView("success")
-                        .addObject("successMsg", "Comando inviato con successo")
-                        .addObject("farm_name", Farm.description)
-                        .addObject("farm_environment", Farm.environment)
-                        .addObject("ping_qlik", qlikSenseConnector.ping())
-                        .addObject("user_logged_in", QsAdminUsers.username)
-                        .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperation.deleteRoleGroupByUserID(userId, type, value)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
+                        + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
+                        + Farm.environment + " ha eseguto la query: delete from " + environment.getProperty("db.tabattrib")
+                        + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value + "')");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
             } else {
-                return new ModelAndView("error").addObject("errorMsg",
-                                ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0004_GROUP_OR_ROLE_NOT_DELETED.getErrorMsg())
                         .addObject("farm_name", Farm.description)
                         .addObject("farm_environment", Farm.environment)
                         .addObject("ping_qlik", qlikSenseConnector.ping())
                         .addObject("user_logged_in", QsAdminUsers.username)
                         .addObject("user_role_logged_in", QsAdminUsers.role);
             }
+        } else {
+            if (dbConnectionOperation.deleteRoleGroupByUserID(userId, type, value)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
+                        + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
+                        + Farm.environment + " ha eseguto la query: delete from " + environment.getProperty("db.tabattrib")
+                        + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value + "')");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0004_GROUP_OR_ROLE_NOT_DELETED.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/executeReloadTaskQMC")
+    public ModelAndView executeReloadTaskQMC() throws IOException {
+        try {
+            if (initQlikConnector()) {
+                if (qlikSenseConnector.startReloadTask() == 201) {
+                    return new ModelAndView("success")
+                            .addObject("successMsg", "Comando inviato con successo")
+                            .addObject("farm_name", Farm.description)
+                            .addObject("farm_environment", Farm.environment)
+                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role);
+                } else {
+                    return new ModelAndView("error").addObject("errorMsg",
+                                    ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                            .addObject("farm_name", Farm.description)
+                            .addObject("farm_environment", Farm.environment)
+                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("ping_qlik", 200)
+                            .addObject("farm_name", "PIPPO")
+                            .addObject("farm_environment", "DEV")
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role);
+                }
+            } else {
+                if (qlikSenseConnector.startReloadTask() == 201) {
+                    return new ModelAndView("success")
+                            .addObject("successMsg", "Comando inviato con successo")
+                            .addObject("ping_qlik", 200)
+                            .addObject("farm_name", "PIPPO")
+                            .addObject("farm_environment", "DEV")
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role);
+                } else {
+                    return new ModelAndView("error").addObject("errorMsg",
+                                    ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                            .addObject("ping_qlik", 200)
+                            .addObject("farm_name", "PIPPO")
+                            .addObject("farm_environment", "DEV")
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role);
+                }
+            }
         } catch (Exception e) {
             return new ModelAndView("error").addObject("errorMsg",
                             ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+//                    .addObject("farm_name", Farm.description)
+//                    .addObject("farm_environment", Farm.environment)
+//                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", 200)
+                    .addObject("farm_name", "PIPPO")
+                    .addObject("farm_environment", "DEV")
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role);
         }
@@ -202,45 +324,82 @@ public class ManagementController implements Serializable {
     @RequestMapping(value = "/managementPageDelete")
     public ModelAndView managementPageDelete(@RequestParam(required = false, name = "userId") String userId) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperation.deleteUserID(userId)) {
-            dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
-                    + QsAdminUsers.username + " su questa farm: " + Farm.description +
-                    " di " + Farm.environment + " ha eseguito la query: delete from "
-                    + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase() + "')");
-            return new ModelAndView("redirect:/managementPage")
-                    .addObject("ping_qlik", qlikSenseConnector.ping());
+        if (initQlikConnector()) {
+            if (dbConnectionOperation.deleteUserID(userId)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
+                        + QsAdminUsers.username + " su questa farm: " + Farm.description +
+                        " di " + Farm.environment + " ha eseguito la query: delete from "
+                        + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase() + "')");
+                return new ModelAndView("redirect:/managementPage")
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0003_USER_NOT_DELETED.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0003_USER_NOT_DELETED.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperation.deleteUserID(userId)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
+                        + QsAdminUsers.username + " su questa farm: " + Farm.description +
+                        " di " + Farm.environment + " ha eseguito la query: delete from "
+                        + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase() + "')");
+                return new ModelAndView("redirect:/managementPage")
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0003_USER_NOT_DELETED.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 
     @RequestMapping(value = "/report")
     public ModelAndView report() throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.report().size() == 0) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0018_NO_REPORT_EXISTS.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.report().size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0018_NO_REPORT_EXISTS.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("report")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("report", dbConnectionOperationCentralized.report());
+            }
         } else {
-            return new ModelAndView("report")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("report", dbConnectionOperationCentralized.report());
+            if (dbConnectionOperationCentralized.report().size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0018_NO_REPORT_EXISTS.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("report")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("report", dbConnectionOperationCentralized.report());
+            }
         }
     }
 
@@ -249,22 +408,40 @@ public class ManagementController implements Serializable {
                                                   @RequestParam(required = false, name = "type") String type,
                                                   @RequestParam(required = false, name = "userGroup") String userGroup) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperation.insertIntoAttribGroup(userId, type, userGroup)) {
-            dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
-                    Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
-                    + environment.getProperty("db.tabattrib") + " (userid, type, value) VALUES("
-                    + userId.toUpperCase() + "," + type + "," + userGroup + ")'");
-            return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
-                    .addObject("ping_qlik", qlikSenseConnector.ping());
+        if (initQlikConnector()) {
+            if (dbConnectionOperation.insertIntoAttribGroup(userId, type, userGroup)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
+                        Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
+                        + environment.getProperty("db.tabattrib") + " (userid, type, value) VALUES("
+                        + userId.toUpperCase() + "," + type + "," + userGroup + ")'");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0002_INSERT_GROUP_BY_USER_ID_FAILED.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0002_INSERT_GROUP_BY_USER_ID_FAILED.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperation.insertIntoAttribGroup(userId, type, userGroup)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
+                        Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
+                        + environment.getProperty("db.tabattrib") + " (userid, type, value) VALUES("
+                        + userId.toUpperCase() + "," + type + "," + userGroup + ")'");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0002_INSERT_GROUP_BY_USER_ID_FAILED.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 
@@ -272,22 +449,40 @@ public class ManagementController implements Serializable {
     public ModelAndView managementPageDisableUser(@RequestParam(required = false, name = "userId") String userId,
                                                   @RequestParam(required = false, name = "disableYN") String disableYN) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperation.disableUserById(userId, disableYN)) {
-            dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES( 'Utenza " + QsAdminUsers.username + " su questa farm: "
-                    + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
-                    + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
-                    + " where userid like " + userId.toUpperCase() + "')");
-            return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
-                    .addObject("ping_qlik", qlikSenseConnector.ping());
+        if (initQlikConnector()) {
+            if (dbConnectionOperation.disableUserById(userId, disableYN)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES( 'Utenza " + QsAdminUsers.username + " su questa farm: "
+                        + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
+                        + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
+                        + " where userid like " + userId.toUpperCase() + "')");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperation.disableUserById(userId, disableYN)) {
+                dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES( 'Utenza " + QsAdminUsers.username + " su questa farm: "
+                        + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
+                        + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
+                        + " where userid like " + userId.toUpperCase() + "')");
+                return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                        .addObject("ping_qlik", qlikSenseConnector.ping());
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 
@@ -295,50 +490,100 @@ public class ManagementController implements Serializable {
     public ModelAndView managementPageSyncTypeRole(@RequestParam(required = false, name = "userId") String userId,
                                                    @RequestParam(required = false, name = "oldRole") String oldRole) throws Exception {
         initDB();
-        initQlikConnector();
-        if (!getUserRoleByUserId(userId).equalsIgnoreCase("")) {
-            if (getUserRoleByUserId(userId) != null) {
-                if (dbConnectionOperation.synchronizeUserRole(userId, oldRole, getUserRoleByUserId(userId))) {
-                    dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su qesta farm: " +
-                            Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " +
-                            environment.getProperty("db.tabattrib") + " set value = " + getUserRoleByUserId(userId) +
-                            " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
-                    return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
-                            .addObject("ping_qlik", qlikSenseConnector.ping());
-                } else {
-                    return new ModelAndView("error")
-                            .addObject("errorMsg", ErrorWadaManagement.E_0001_QMC_ROLE_VALUE_NULL.getErrorMsg())
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (!getUserRoleByUserId(userId).equalsIgnoreCase("")) {
+                if (getUserRoleByUserId(userId) != null) {
+                    if (dbConnectionOperation.synchronizeUserRole(userId, oldRole, getUserRoleByUserId(userId))) {
+                        dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su qesta farm: " +
+                                Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " +
+                                environment.getProperty("db.tabattrib") + " set value = " + getUserRoleByUserId(userId) +
+                                " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                        return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                                .addObject("ping_qlik", qlikSenseConnector.ping());
+                    } else {
+                        return new ModelAndView("error")
+                                .addObject("errorMsg", ErrorWadaManagement.E_0001_QMC_ROLE_VALUE_NULL.getErrorMsg())
+                                .addObject("farm_name", Farm.description)
+                                .addObject("farm_environment", Farm.environment)
+                                .addObject("ping_qlik", qlikSenseConnector.ping())
+                                .addObject("user_logged_in", QsAdminUsers.username)
+                                .addObject("user_role_logged_in", QsAdminUsers.role);
+                    }
                 }
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0001_QMC_ROLE_VALUE_NULL.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
             }
-        } else {
             return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0001_QMC_ROLE_VALUE_NULL.getErrorMsg())
+                    .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role);
+        } else {
+            if (!getUserRoleByUserId(userId).equalsIgnoreCase("")) {
+                if (getUserRoleByUserId(userId) != null) {
+                    if (dbConnectionOperation.synchronizeUserRole(userId, oldRole, getUserRoleByUserId(userId))) {
+                        dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su qesta farm: " +
+                                Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " +
+                                environment.getProperty("db.tabattrib") + " set value = " + getUserRoleByUserId(userId) +
+                                " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                        return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
+                                .addObject("ping_qlik", qlikSenseConnector.ping());
+                    } else {
+                        return new ModelAndView("error")
+                                .addObject("errorMsg", ErrorWadaManagement.E_0001_QMC_ROLE_VALUE_NULL.getErrorMsg())
+//                            .addObject("farm_name", Farm.description)
+//                            .addObject("farm_environment", Farm.environment)
+//                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                                .addObject("ping_qlik", 200)
+                                .addObject("farm_name", "PIPPO")
+                                .addObject("farm_environment", "DEV")
+                                .addObject("user_logged_in", QsAdminUsers.username)
+                                .addObject("user_role_logged_in", QsAdminUsers.role);
+                    }
+                }
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0001_QMC_ROLE_VALUE_NULL.getErrorMsg())
+//                    .addObject("farm_name", Farm.description)
+//                    .addObject("farm_environment", Farm.environment)
+//                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
+            return new ModelAndView("error")
+                    .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+//                .addObject("farm_name", Farm.description)
+//                .addObject("farm_environment", Farm.environment)
+//                .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", 200)
+                    .addObject("farm_name", "PIPPO")
+                    .addObject("farm_environment", "DEV")
+                    .addObject("user_logged_in", QsAdminUsers.username)
+                    .addObject("user_role_logged_in", QsAdminUsers.role);
         }
-        return new ModelAndView("error")
-                .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
-                .addObject("farm_name", Farm.description)
-                .addObject("farm_environment", Farm.environment)
-                .addObject("ping_qlik", qlikSenseConnector.ping())
-                .addObject("user_logged_in", QsAdminUsers.username)
-                .addObject("user_role_logged_in", QsAdminUsers.role);
+
     }
 
     @GetMapping(value = "/addNewFarmPage")
     public ModelAndView addNewFarmPage() throws IOException {
         return new ModelAndView("addFarmPage")
-                .addObject("farm_name", Farm.description)
-                .addObject("farm_environment", Farm.environment)
-                .addObject("ping_qlik", qlikSenseConnector.ping())
+//                .addObject("farm_name", Farm.description)
+//                .addObject("farm_environment", Farm.environment)
+//                .addObject("ping_qlik", qlikSenseConnector.ping())
+                .addObject("ping_qlik", 200)
+                .addObject("farm_name", "PIPPO")
+                .addObject("farm_environment", "DEV")
                 .addObject("user_logged_in", QsAdminUsers.username)
                 .addObject("user_role_logged_in", QsAdminUsers.role);
     }
@@ -360,140 +605,262 @@ public class ManagementController implements Serializable {
                                    @RequestParam(name = "qsUserHeader") String qsUserHeader,
                                    @RequestParam(name = "environment") String environment) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.addNewFarm(description, dbUser, dbPassword, dbHost, qsHost,
-                qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, came)) {
-            return new ModelAndView("success")
-                    .addObject("successMsg", "Operazione e` andata a buon fine")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.addNewFarm(description, dbUser, dbPassword, dbHost, qsHost,
+                    qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, came)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperationCentralized.addNewFarm(description, dbUser, dbPassword, dbHost, qsHost,
+                    qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, came)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 
     @GetMapping("/allFarmPage")
     public ModelAndView allFarmPage() throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.getAllFarms().size() == 0) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0017_NO_FARM_INSERTED.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.getAllFarms().size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0017_NO_FARM_INSERTED.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("allFarmPage")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("all_farm", dbConnectionOperationCentralized.getAllFarms());
+            }
         } else {
-            return new ModelAndView("allFarmPage")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("all_farm", dbConnectionOperationCentralized.getAllFarms());
+            if (dbConnectionOperationCentralized.getAllFarms().size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0017_NO_FARM_INSERTED.getErrorMsg())
+//                    .addObject("farm_name", Farm.description)
+//                    .addObject("farm_environment", Farm.environment)
+//                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("allFarmPage")
+//                    .addObject("farm_name", Farm.description)
+//                    .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+//                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("all_farm", dbConnectionOperationCentralized.getAllFarms());
+            }
         }
     }
 
     @RequestMapping("/allAdminsPage")
     public ModelAndView allAdminsPage() throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.getAllAdmins().size() == 0) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0017_NO_FARM_INSERTED.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.getAllAdmins().size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("allAdminsPage")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("all_admins", dbConnectionOperationCentralized.getAllAdmins());
+            }
         } else {
-            return new ModelAndView("allAdminsPage")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("all_farm", dbConnectionOperationCentralized.getAllAdmins());
+            if (dbConnectionOperationCentralized.getAllAdmins().size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("allAdminsPage")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("all_admins", dbConnectionOperationCentralized.getAllAdmins());
+            }
         }
     }
 
     @GetMapping("/editFarm")
     public ModelAndView editFarm(@RequestParam(required = false, name = "farmId") String farmId) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.getFarmDataById(farmId).size() == 0) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.getFarmDataById(farmId).size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("editFarm")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("farm", dbConnectionOperationCentralized.getFarmDataById(farmId));
+            }
         } else {
-            return new ModelAndView("editFarm")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("farm", dbConnectionOperationCentralized.getFarmDataById(farmId));
+            if (dbConnectionOperationCentralized.getFarmDataById(farmId).size() == 0) {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("editFarm")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("farm", dbConnectionOperationCentralized.getFarmDataById(farmId));
+            }
         }
     }
 
     @RequestMapping("/deleteFarm")
     public ModelAndView deleteFarm(@RequestParam(required = false, name = "farmId") String farmId) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.deleteFarmById(farmId)) {
-            return new ModelAndView("success")
-                    .addObject("successMsg", "Operazione e` andata a buon fine")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.deleteFarmById(farmId)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperationCentralized.deleteFarmById(farmId)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 
-    @RequestMapping("/deleteAdmins")
-    public ModelAndView deleteAdmins(@RequestParam(required = false, name = "adminId") int id) throws Exception {
+    @RequestMapping("/deleteAdmin")
+    public ModelAndView deleteAdmin(@RequestParam(required = false, name = "adminId") int id) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.deleteAdminModerById(id)) {
-            return new ModelAndView("success")
-                    .addObject("successMsg", "Operazione e` andata a buon fine")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.deleteAdminModerById(id)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperationCentralized.deleteAdminModerById(id)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
+
     }
 
     @RequestMapping("/saveFarm")
@@ -515,25 +882,46 @@ public class ManagementController implements Serializable {
                                  @RequestParam(name = "qsHeader") String qsUserHeader,
                                  @RequestParam(name = "environment") String environment) throws Exception {
         initDB();
-        initQlikConnector();
-        if (dbConnectionOperationCentralized.updateFarm(farmId, description, dbUser, dbPassword, dbHost, qsHost,
-                qsReloadTaskName, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword,
-                note, dbSid, dbPort, qsUserHeader, environment, came)) {
-            return new ModelAndView("success")
-                    .addObject("successMsg", "Operazione e` andata a buon fine")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        if (initQlikConnector()) {
+            if (dbConnectionOperationCentralized.updateFarm(farmId, description, dbUser, dbPassword, dbHost, qsHost,
+                    qsReloadTaskName, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword,
+                    note, dbSid, dbPort, qsUserHeader, environment, came)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
+            if (dbConnectionOperationCentralized.updateFarm(farmId, description, dbUser, dbPassword, dbHost, qsHost,
+                    qsReloadTaskName, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword,
+                    note, dbSid, dbPort, qsUserHeader, environment, came)) {
+                return new ModelAndView("success")
+                        .addObject("successMsg", "Operazione e` andata a buon fine")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
         }
     }
 

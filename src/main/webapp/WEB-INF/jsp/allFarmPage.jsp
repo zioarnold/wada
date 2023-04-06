@@ -192,8 +192,8 @@
                     <th hidden>QsJksPwd</th>
                     <th hidden>QsHeader</th>
                     <th hidden>Note</th>
-                    <th></th>
-                    <th></th>
+                    <th>Modifica</th>
+                    <th>Elimina</th>
                 </tr>
                 </thead>
                 <tbody>

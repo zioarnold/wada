@@ -181,11 +181,11 @@
                 <tr>
                     <th>Id</th>
                     <th>Username</th>
-                    <th>Auth</th>
-                    <th>Role</th>
-                    <th>LoginTime</th>
-                    <th></th>
-                    <th></th>
+                    <th>Autenticato</th>
+                    <th>Ruolo</th>
+                    <th>Data login</th>
+                    <th>Modifica</th>
+                    <th>Elimina</th>
                 </tr>
                 </thead>
                 <tbody>

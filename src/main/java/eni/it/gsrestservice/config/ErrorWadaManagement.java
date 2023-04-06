@@ -17,7 +17,7 @@ public enum ErrorWadaManagement {
     E_0013_UNABLE_CREATE_ADMIN("Non e` stato possibile creare utenza admin"),
     E_0014_UNABLE_TO_LOGOUT_USER("Non e` stato possibile sloggare utente"),
     E_0015_NOT_AUTHENTICATED("Non e` possibile visualizzare la pagina, senza autenticarsi"),
-    E_0016_USER_NOT_EXISTS("Nessun utenza trovato"),
+    E_0016_USER_NOT_EXISTS("Nessun utenza trovata"),
     E_0017_NO_FARM_INSERTED("Nessuna FARM censita"),
     E_0018_NO_REPORT_EXISTS("Nessun report e` presente"),
     E_9999_UNKNOWN_ERROR("Errore imprevisto, contattare assistenza");

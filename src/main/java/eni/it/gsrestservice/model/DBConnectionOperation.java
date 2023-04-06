@@ -712,7 +712,9 @@ public class DBConnectionOperation {
             } else {
                 Statement statement = dbConnectionOperationCentralized.getConnection().createStatement();
                 ResultSet resultSet = statement.executeQuery("insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utenza " + QsAdminUsers.username + " su qesta farm: " +
-                        Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " + qsUsersAttribTbl + " set value = " + newRole + " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                        Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
+                        + qsUsersAttribTbl + " set value = " + newRole + " where value like "
+                        + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
                 resultSet.next();
                 dbConnectionOperationCentralized.disconnectDBORA();
             }

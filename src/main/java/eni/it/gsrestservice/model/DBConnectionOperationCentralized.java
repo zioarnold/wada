@@ -175,6 +175,7 @@ public class DBConnectionOperationCentralized {
     public boolean login(String username, String password) {
         connectDBORA();
         isAuthenticated = false;
+        int index = 0;
         try {
             loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
@@ -185,14 +186,21 @@ public class DBConnectionOperationCentralized {
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
                 resultSet = statement.executeQuery("select USERNAME, PASSWORD, ROLE from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
+
                 while (resultSet.next()) {
+                    ++index;
                     QsAdminUsers.username = resultSet.getString("USERNAME");
                     QsAdminUsers.password = resultSet.getString("PASSWORD");
                     QsAdminUsers.role = resultSet.getString("ROLE");
                 }
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + "- update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
-                resultSet = statement.executeQuery("update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
-                isAuthenticated = true;
+
+                if (index > 0) {
+                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + "- update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
+                    resultSet = statement.executeQuery("update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
+                    isAuthenticated = true;
+                } else {
+                    isAuthenticated = false;
+                }
             }
         } catch (SQLSyntaxErrorException ex) {
             loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
@@ -326,7 +334,7 @@ public class DBConnectionOperationCentralized {
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
-                        "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms + "");
+                        "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms);
                 while (resultSet.next()) {
                     Farm.dbUser = resultSet.getString("DBUSER");
                     Farm.dbPassword = resultSet.getString("DBPASSWORD");
@@ -403,7 +411,7 @@ public class DBConnectionOperationCentralized {
     }
 
     public boolean createAdmin(String username, String password, String role) {
-        boolean isCreated = false;
+        boolean isCreated = false, isAuditQueryCreated = false;
         connectDBORA();
         try {
             loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
@@ -424,8 +432,28 @@ public class DBConnectionOperationCentralized {
             loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
+
+        try {
+            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            if (getConnection() == null) {
+                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+            } else {
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                statement = getConnection().createStatement();
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utenza " + QsAdminUsers.username + " ha eseguito la seguente query: insert into " + qsAdminUsers + "(USERNAME, PASSWORD, ROLE) VALUES (" + username + "," + MD5(password) + "," + role + "')");
+                resultSet = statement.executeQuery("INSERT INTO QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " ha eseguito la seguente query: insert into " + qsAdminUsers + "(USERNAME, PASSWORD, ROLE) VALUES (" + username + "," + MD5(password) + "," + role + ")')");
+                isAuditQueryCreated = resultSet.next();
+            }
+        } catch (SQLSyntaxErrorException ex) {
+            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            disconnectDBORA();
+        } catch (SQLException e) {
+            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            disconnectDBORA();
+        }
         disconnectDBORA();
-        return isCreated;
+        return isCreated || isAuditQueryCreated;
     }
 
     public static boolean isIsAuthenticated() {
@@ -486,7 +514,7 @@ public class DBConnectionOperationCentralized {
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
-                        "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT , QSRELOADTASKNAME FROM " + qsFarms + "");
+                        "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT , QSRELOADTASKNAME FROM " + qsFarms);
                 while (resultSet.next()) {
                     QsFarms qsFarms = new QsFarms(resultSet.getString("FARMID"),
                             resultSet.getString("DESCRIZIONE"),
@@ -531,7 +559,7 @@ public class DBConnectionOperationCentralized {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                resultSet = statement.executeQuery("select ID, USERNAME, CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED, ROLE FROM " + qsAdminUsers + "");
+                resultSet = statement.executeQuery("select ID, USERNAME, CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED, ROLE FROM " + qsAdminUsers);
                 while (resultSet.next()) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                     String session_login_expire_time = simpleDateFormat.format(resultSet.getDate("SESSION_LOGIN_EXPIRE_TIME"));
@@ -680,7 +708,7 @@ public class DBConnectionOperationCentralized {
                 statement = getConnection().createStatement();
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + "");
+                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName());
                 resultSet = statement.executeQuery("DELETE FROM " + qsFarms + " WHERE FARMID LIKE '" + farmId + "'");
             }
         } catch (SQLSyntaxErrorException ex) {
