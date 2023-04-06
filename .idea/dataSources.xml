@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="DBUSERS" uuid="fd803cbb-4d7d-4e64-bd63-6217f830009a">
+    <data-source source="LOCAL" name="DBUSERS" uuid="fe98e279-dbb9-42de-8389-e4b30025e580">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/DBUSERS</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="WADAS" uuid="e685e33b-16ec-45f4-b1ad-2d91efdb900e">
-      <driver-ref>oracle</driver-ref>
+    <data-source source="LOCAL" name="WADAS" uuid="eb02012f-25de-47e1-9fb8-59fd7405cf00">
+      <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
       <auto-commit>false</auto-commit>
       <jdbc-driver>oracle.jdbc.OracleDriver</jdbc-driver>
-      <jdbc-url>jdbc:oracle:thin:@wada-rdb1-sd.services.eni.intranet:1531:WADAS</jdbc-url>
-      <driver-properties>
-        <property name="v$session.program" value="DataGrip" />
-      </driver-properties>
+      <jdbc-url>jdbc:oracle:thin:@localhost:1521:ORCL</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
 </project>

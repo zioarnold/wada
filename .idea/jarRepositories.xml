@@ -16,15 +16,5 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
-      <option name="name" value="be-release" />
-      <option name="url" value="http://192.168.0.3:8081/artifactory/remote-repos" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="snapshots" />
-      <option name="name" value="be-snapshot" />
-      <option name="url" value="http://192.168.0.3:8081/artifactory/remote-repos" />
-    </remote-repository>
   </component>
 </project>
