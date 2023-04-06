@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-213.7172.25">
+  <component name="dataSourceStorageLocal" created-in="IU-231.8109.175">
     <data-source name="DBUSERS" uuid="fd803cbb-4d7d-4e64-bd63-6217f830009a">
-      <database-info product="PostgreSQL" version="9.6.7" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.2.5" dbms="POSTGRES" exact-version="9.6.7" exact-driver-version="42.2">
+      <database-info product="PostgreSQL" version="15.2" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.5.0" dbms="POSTGRES" exact-version="15.2" exact-driver-version="42.5">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
-      <user-name>udcuser</user-name>
+      <user-name>postgres</user-name>
       <schema-mapping>
         <introspection-scope>
-          <node kind="database" qname="@">
-            <node kind="schema" qname="@" />
+          <node kind="database" qname="DBUSERS">
+            <node kind="schema" qname="public" />
           </node>
         </introspection-scope>
       </schema-mapping>
@@ -29,6 +29,7 @@
           <node kind="schema" qname="WADA" />
         </introspection-scope>
       </schema-mapping>
+      <introspection-level>3</introspection-level>
     </data-source>
   </component>
 </project>
