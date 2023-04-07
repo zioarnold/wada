@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="editAdmin and resetPassword implemented">
-      <change afterPath="$PROJECT_DIR$/sql/oracle/QSADMINUSERS.SQL" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/oracle/QSAUDITLOG.SQL" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/oracle/QSFARMS.SQL" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/oracle/QSFARMSTMP.SQL" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_dev_users.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_dev_users_attrib.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_users.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_users_attrib.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="original sql files added to project, to create postgres db and oracle db and populate them." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -187,6 +177,7 @@
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "spring.configuration.checksum": "e9693e46f88a1f06918c4b8ade7743ea",
     "vue.rearranger.settings.migration": "true"
   },
@@ -288,7 +279,7 @@
       <workItem from="1680791018191" duration="58000" />
       <workItem from="1680791078415" duration="13524000" />
       <workItem from="1680806926630" duration="6173000" />
-      <workItem from="1680867813135" duration="441000" />
+      <workItem from="1680867813135" duration="705000" />
     </task>
     <task id="LOCAL-00001" summary="more rests addeda">
       <created>1569509410950</created>
@@ -577,7 +568,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680824195207</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="original sql files added to project, to create postgres db and oracle db and populate them.">
+      <created>1680868325624</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1680868325624</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -612,7 +610,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="select inner join implemented" />
     <MESSAGE value="Views ultimated and dbops added" />
     <MESSAGE value="if-elseif-else control implemented, favicon changed" />
     <MESSAGE value="double dollar inserted to escape special character in the insert into email on the qs_dev_users_attrib" />
@@ -637,7 +634,8 @@
     <MESSAGE value="farm edit page renewed" />
     <MESSAGE value="adaptation to local development, QlikSense excluded due to impossibility to connect to Company's VPN." />
     <MESSAGE value="editAdmin and resetPassword implemented" />
-    <option name="LAST_COMMIT_MESSAGE" value="editAdmin and resetPassword implemented" />
+    <MESSAGE value="original sql files added to project, to create postgres db and oracle db and populate them." />
+    <option name="LAST_COMMIT_MESSAGE" value="original sql files added to project, to create postgres db and oracle db and populate them." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
