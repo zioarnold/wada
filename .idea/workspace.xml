@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="editAdmin and resetPassword implemented">
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperationCentralized.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/DBConnectionOperationCentralized.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/oracle/QSADMINUSERS.SQL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/oracle/QSAUDITLOG.SQL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/oracle/QSFARMS.SQL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/oracle/QSFARMSTMP.SQL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_dev_users.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_dev_users_attrib.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_users.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/postgres/qs_users_attrib.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,13 +187,16 @@
     "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "spring.configuration.checksum": "73e2d207480a483bf999300184aa3c00",
+    "spring.configuration.checksum": "e9693e46f88a1f06918c4b8ade7743ea",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
       "postgresql",
       "oracle"
+    ],
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/": [
+      "PostgreSQL"
     ]
   }
 }]]></component>
@@ -194,10 +205,11 @@
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="S:\JavaProjects\wada\sql\oracle" />
+      <recent name="S:\JavaProjects\wada\sql\postgres" />
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\resources\static\ico" />
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\resources\static" />
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\webapp\WEB-INF\jsp" />
-      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\webapp\WEB-INF\views" />
     </key>
   </component>
   <component name="RunManager">
@@ -275,7 +287,8 @@
       <workItem from="1680790962662" duration="40000" />
       <workItem from="1680791018191" duration="58000" />
       <workItem from="1680791078415" duration="13524000" />
-      <workItem from="1680806926630" duration="6061000" />
+      <workItem from="1680806926630" duration="6173000" />
+      <workItem from="1680867813135" duration="441000" />
     </task>
     <task id="LOCAL-00001" summary="more rests addeda">
       <created>1569509410950</created>
@@ -557,7 +570,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680823747151</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="editAdmin and resetPassword implemented">
+      <created>1680824195207</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1680824195207</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
