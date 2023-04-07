@@ -53,17 +53,46 @@ public class LDAPController {
     @RequestMapping(value = "/searchUserOnLDAP")
     public ModelAndView searchUserOnLdap(@RequestParam(required = false, name = "userID") String userID) throws Exception {
         LDAPConnector ldapConnector = new LDAPConnector();
-        initQlikConnector();
-        return new ModelAndView("searchUserOnLDAP")
-                .addObject("farm_name", Farm.description)
-                .addObject("farm_environment", Farm.environment)
-                .addObject("ping_qlik", qlikSenseConnector.ping())
-                .addObject("user_logged_in", QsAdminUsers.username)
-                .addObject("user_role_logged_in", QsAdminUsers.role)
-                .addObject("userIDDATA", ldapConnector.searchOnLDAP(userID));
+        if (initQlikConnector()) {
+            if (ldapConnector.searchOnLDAP(userID).size() != 0) {
+                return new ModelAndView("searchUserOnLDAP")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("userIDDATA", ldapConnector.searchOnLDAP(userID));
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0009_USER_NOT_IN_LDAP.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
+        } else {
+            if (ldapConnector.searchOnLDAP(userID).size() != 0) {
+                return new ModelAndView("searchUserOnLDAP")
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role)
+                        .addObject("userIDDATA", ldapConnector.searchOnLDAP(userID));
+            } else {
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0009_USER_NOT_IN_LDAP.getErrorMsg())
+                        .addObject("ping_qlik", 200)
+                        .addObject("farm_name", "PIPPO")
+                        .addObject("farm_environment", "DEV")
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            }
+        }
     }
 
-    private void initQlikConnector() throws Exception {
+    private boolean initQlikConnector() {
         qlikSenseConnector.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
@@ -72,7 +101,7 @@ public class LDAPController {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        qlikSenseConnector.configureCertificate();
+        return qlikSenseConnector.configureCertificate();
     }
 
     private void initDB() {

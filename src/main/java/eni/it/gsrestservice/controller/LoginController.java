@@ -6,6 +6,7 @@ import eni.it.gsrestservice.model.DBConnectionOperationCentralized;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import eni.it.gsrestservice.utility.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,7 +91,7 @@ public class LoginController {
                                   @RequestParam(required = false, name = "password") String password) throws IOException {
         initDB();
         if (dbConnectionOperationCentralized.login(username, password)) {
-            if (!QsAdminUsers.password.equals(dbConnectionOperationCentralized.MD5(password))) {
+            if (!QsAdminUsers.password.equals(Utility.MD5(password))) {
                 return new ModelAndView("errorLogin")
                         .addObject("errorMsg", ErrorWadaManagement.E_0011_USERNAME_PASSWORD_INCORRECT.getErrorMsg());
             } else {
