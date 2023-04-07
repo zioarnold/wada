@@ -1,7 +1,7 @@
 package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
-import eni.it.gsrestservice.model.DBConnectionOperationCentralized;
+import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
@@ -17,15 +17,14 @@ public class MainController {
     @Autowired
     private Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
-    private final DBConnectionOperationCentralized dbConnectionOperationCentralized = new DBConnectionOperationCentralized();
+    private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
 
     @RequestMapping("/addAdmin")
     public ModelAndView addAdmin(@RequestParam(name = "username") String username,
                                  @RequestParam(name = "password") String password,
                                  @RequestParam(name = "role") String role) throws Exception {
-        initDB();
         if (initQlikConnector()) {
-            if (dbConnectionOperationCentralized.createAdmin(username, password, role)) {
+            if (dbOracleOperations.createAdmin(username, password, role)) {
                 return new ModelAndView("success")
                         .addObject("farm_name", Farm.description)
                         .addObject("farm_environment", Farm.environment)
@@ -38,7 +37,7 @@ public class MainController {
                         .addObject("errorMsg", ErrorWadaManagement.E_0013_UNABLE_CREATE_ADMIN.getErrorMsg());
             }
         } else {
-            if (dbConnectionOperationCentralized.createAdmin(username, password, role)) {
+            if (dbOracleOperations.createAdmin(username, password, role)) {
                 return new ModelAndView("success")
                         .addObject("ping_qlik", 200)
                         .addObject("farm_name", "PIPPO")
@@ -56,17 +55,16 @@ public class MainController {
     @RequestMapping("/addAdminPage")
     public ModelAndView addAdminPage() {
         try {
-            initDB();
             if (initQlikConnector()) {
-                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                if (DBOracleOperations.isIsAuthenticated()) {
+                    if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
                         return new ModelAndView("addAdminPage")
                                 .addObject("farm_name", Farm.description)
                                 .addObject("farm_environment", Farm.environment)
                                 .addObject("ping_qlik", qlikSenseConnector.ping())
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                    } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         return new ModelAndView("addAdminPage")
                                 .addObject("farm_name", Farm.description)
                                 .addObject("farm_environment", Farm.environment)
@@ -81,15 +79,15 @@ public class MainController {
                             ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
                 }
             } else {
-                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                if (DBOracleOperations.isIsAuthenticated()) {
+                    if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
                         return new ModelAndView("addAdminPage")
                                 .addObject("ping_qlik", 200)
                                 .addObject("farm_name", "PIPPO")
                                 .addObject("farm_environment", "DEV")
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                    } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         return new ModelAndView("addAdminPage")
                                 .addObject("ping_qlik", 200)
                                 .addObject("farm_name", "PIPPO")
@@ -121,17 +119,5 @@ public class MainController {
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
         return qlikSenseConnector.configureCertificate();
-    }
-
-    private void initDB() {
-        dbConnectionOperationCentralized.initDB(
-                environment.getProperty("db.hostname.main"),
-                environment.getProperty("db.port.main"),
-                environment.getProperty("db.sid.main"),
-                environment.getProperty("db.username.main"),
-                environment.getProperty("db.password.main"),
-                environment.getProperty("db.qs.admin.users"),
-                environment.getProperty("db.qs.farms")
-        );
     }
 }

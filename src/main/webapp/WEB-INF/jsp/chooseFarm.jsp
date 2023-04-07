@@ -33,7 +33,7 @@
                 <h3>Seleziona la FARM</h3>
             </div>
             <div class="card-body">
-                <form action="/selectFarm" method="post">
+                <form class="form-group">
                     <c:choose>
                         <c:when test="${empty farmList}">
                             <span style="color:whitesmoke">Nessuna farm censita!</span>
@@ -52,8 +52,18 @@
                             </select>
                         </c:otherwise>
                     </c:choose>
-                    <div class="form-group">
-                        <input type="submit" value="Scegli" class="btn float-right login_btn">
+                    <br>
+                    <div>
+                        <%--                        <input type="submit" value="Scegli" class="btn float-right login_btn">--%>
+                        <button formaction="/selectFarm" formmethod="get" class="btn float-right login_btn">Scegli
+                        </button>
+                        <c:choose>
+                            <c:when test="${empty farmList}">
+                                <button formaction="/createFarm" class="btn float-left login_btn">Crea</button>
+                            </c:when>
+                            <c:otherwise>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </form>
             </div>

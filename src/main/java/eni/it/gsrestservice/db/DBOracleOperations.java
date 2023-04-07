@@ -1,6 +1,7 @@
-package eni.it.gsrestservice.model;
+package eni.it.gsrestservice.db;
 
 import eni.it.gsrestservice.config.LoggingMisc;
+import eni.it.gsrestservice.model.*;
 import oracle.jdbc.driver.OracleDriver;
 
 import java.sql.*;
@@ -11,7 +12,7 @@ import java.util.List;
 import static eni.it.gsrestservice.utility.Utility.MD5;
 
 @SuppressWarnings("SqlResolve")
-public class DBConnectionOperationCentralized {
+public class DBOracleOperations {
     private static String hostname;
     private static String port;
     private static String sid;
@@ -28,7 +29,7 @@ public class DBConnectionOperationCentralized {
     private final List<QsAudit> qsAuditList;
     private static boolean isAuthenticated;
 
-    public DBConnectionOperationCentralized() {
+    public DBOracleOperations() {
         loggingMisc = new LoggingMisc();
         farmsList = new ArrayList<>();
         adminUsersList = new ArrayList<>();
@@ -45,34 +46,34 @@ public class DBConnectionOperationCentralized {
             String password,
             String qsAdminUsers,
             String qsFarms) {
-        DBConnectionOperationCentralized.hostname = hostname;
-        DBConnectionOperationCentralized.port = port;
-        DBConnectionOperationCentralized.sid = sid;
-        DBConnectionOperationCentralized.username = username;
-        DBConnectionOperationCentralized.password = password;
-        DBConnectionOperationCentralized.qsAdminUsers = qsAdminUsers;
-        DBConnectionOperationCentralized.qsFarms = qsFarms;
+        DBOracleOperations.hostname = hostname;
+        DBOracleOperations.port = port;
+        DBOracleOperations.sid = sid;
+        DBOracleOperations.username = username;
+        DBOracleOperations.password = password;
+        DBOracleOperations.qsAdminUsers = qsAdminUsers;
+        DBOracleOperations.qsFarms = qsFarms;
     }
 
     public void updateAudit(String query) {
         connectDBORA();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - " + query);
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - " + query);
                 resultSet = statement.executeQuery(query);
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -81,53 +82,53 @@ public class DBConnectionOperationCentralized {
     void connectDBORA() {
         loggingMisc = new LoggingMisc();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Initializing OracleSQL Driver");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Initializing OracleSQL Driver");
             DriverManager.registerDriver(new OracleDriver());
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Initializing OracleSQL Driver Successful");
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Initializing connection to DB");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Initializing OracleSQL Driver Successful");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Initializing connection to DB");
             setConnection(DriverManager.getConnection(hostname + ":" + port + ":" + sid, username, password));
         } catch (SQLException e) {
             e.printStackTrace();
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Failed to connect: " + e.getSQLState()
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Failed to connect: " + e.getSQLState()
                     + "Connection is " + getConnection());
         }
     }
 
     void disconnectDBORA() {
         loggingMisc = new LoggingMisc();
-        loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if resultSet is not null");
+        loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if resultSet is not null");
         if (resultSet != null) {
             try {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Trying to close resultSet");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Trying to close resultSet");
                 resultSet.close();
                 if (resultSet.isClosed()) {
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Closing resultSet successful");
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Closing resultSet successful");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             resultSet = null;
         }
-        loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if statement is not null");
+        loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if statement is not null");
         if (statement != null) {
             try {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Trying to close statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Trying to close statement");
                 statement.close();
                 if (statement.isClosed()) {
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Closing statement successful");
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Closing statement successful");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             statement = null;
         }
-        loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is not null");
+        loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is not null");
         if (connection != null) {
             try {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Trying to close connection");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Trying to close connection");
                 connection.close();
                 if (connection.isClosed()) {
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Closing connection successful");
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Closing connection successful");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -145,28 +146,28 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         isAuthenticated = true;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
                 resultSet = statement.executeQuery("select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
                 while (resultSet.next()) {
                     QsAdminUsers.username = resultSet.getString("USERNAME");
                     QsAdminUsers.password = resultSet.getString("PASSWORD");
                 }
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + "- update " + qsAdminUsers + " set AUTHENTICATED = 'N' where USERNAME like '" + username + "'");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + "- update " + qsAdminUsers + " set AUTHENTICATED = 'N' where USERNAME like '" + username + "'");
                 resultSet = statement.executeQuery("update " + qsAdminUsers + " set AUTHENTICATED = 'N' where USERNAME like '" + username + "'");
                 isAuthenticated = false;
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -178,14 +179,14 @@ public class DBConnectionOperationCentralized {
         isAuthenticated = false;
         int index = 0;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
                 resultSet = statement.executeQuery("select USERNAME, PASSWORD, ROLE from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
 
                 while (resultSet.next()) {
@@ -196,7 +197,7 @@ public class DBConnectionOperationCentralized {
                 }
 
                 if (index > 0) {
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + "- update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + "- update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
                     resultSet = statement.executeQuery("update " + qsAdminUsers + " set CURRENT_SESSION_LOGIN_TIME = sysdate, SESSION_LOGIN_EXPIRE_TIME = sysdate + (60/1440), AUTHENTICATED = 'Y' where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
                     isAuthenticated = true;
                 } else {
@@ -204,10 +205,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -219,22 +220,22 @@ public class DBConnectionOperationCentralized {
     }
 
     public void setConnection(Connection connection) {
-        DBConnectionOperationCentralized.connection = connection;
+        DBOracleOperations.connection = connection;
     }
 
     public List<QsAudit> report() {
         qsAuditList.clear();
         connectDBORA();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - select ID, DESCRIPTION, EXECUTION_DATA FROM QSAUDITLOG");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - select ID, DESCRIPTION, EXECUTION_DATA FROM QSAUDITLOG");
                 resultSet = statement.executeQuery("select ID, DESCRIPTION, EXECUTION_DATA FROM QSAUDITLOG");
                 while (resultSet.next()) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
@@ -247,10 +248,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         return qsAuditList;
@@ -260,14 +261,14 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         boolean isSelected = false;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query: \n"
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query: \n"
                         + "SELECT FARM ID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID " +
                         "QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, " +
                         "QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms + " WHERE DESCRIZIONE LIKE " + farmName);
@@ -312,10 +313,10 @@ public class DBConnectionOperationCentralized {
                 isSelected = true;
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -326,14 +327,14 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         boolean isInitiated = false;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
                         "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms);
                 while (resultSet.next()) {
@@ -353,10 +354,10 @@ public class DBConnectionOperationCentralized {
                 isInitiated = true;
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -367,14 +368,14 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         int isSessionExpired = 0;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME from " + qsAdminUsers + " where USERNAME like '" + username + "'");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME from " + qsAdminUsers + " where USERNAME like '" + username + "'");
                 resultSet = statement.executeQuery("select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED from " + qsAdminUsers + " where USERNAME like '" + username + "'");
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
                 Date currentTime = new Date(System.currentTimeMillis());
@@ -386,10 +387,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -400,42 +401,42 @@ public class DBConnectionOperationCentralized {
         boolean isCreated = false, isAuditQueryCreated = false;
         connectDBORA();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - insert into " + qsAdminUsers + " (USERNAME, PASSWORD, ROLE) VALUES ('" + username + "','" + MD5(password) + "','" + role + "')");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - insert into " + qsAdminUsers + " (USERNAME, PASSWORD, ROLE) VALUES ('" + username + "','" + MD5(password) + "','" + role + "')");
                 resultSet = statement.executeQuery("insert into " + qsAdminUsers + " (USERNAME, PASSWORD, ROLE) VALUES ('" + username + "','" + MD5(password) + "','" + role + "')");
                 isCreated = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
 
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utenza " + QsAdminUsers.username + " ha eseguito la seguente query: insert into " + qsAdminUsers + "(USERNAME, PASSWORD, ROLE) VALUES (" + username + "," + MD5(password) + "," + role + "')");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utenza " + QsAdminUsers.username + " ha eseguito la seguente query: insert into " + qsAdminUsers + "(USERNAME, PASSWORD, ROLE) VALUES (" + username + "," + MD5(password) + "," + role + "')");
                 resultSet = statement.executeQuery("INSERT INTO QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " ha eseguito la seguente query: insert into " + qsAdminUsers + "(USERNAME, PASSWORD, ROLE) VALUES (" + username + "," + MD5(password) + "," + role + ")')");
                 isAuditQueryCreated = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -447,7 +448,7 @@ public class DBConnectionOperationCentralized {
     }
 
     public static void setIsAuthenticated(boolean isAuthenticated) {
-        DBConnectionOperationCentralized.isAuthenticated = isAuthenticated;
+        DBOracleOperations.isAuthenticated = isAuthenticated;
     }
 
     public boolean addNewFarm(String description, String dbUser, String dbPassword, String dbHost,
@@ -456,31 +457,31 @@ public class DBConnectionOperationCentralized {
         boolean isCreated = false;
         try {
             connectDBORA();
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is null");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Looking for the FARM by : " + came);
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Looking for the FARM by : " + came);
                 resultSet = statement.executeQuery("select count(CAME) from " + qsFarms + " where CAME like '" + came + "'");
                 resultSet.next();
                 if (resultSet.getInt(1) == 0) {
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Found 0 farm by came: " + came);
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Found 0 farm by came: " + came);
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
                             "VALUES ('" + description + "', '" + dbUser + "','" + dbPassword + "','" + dbHost + "','" + qsHost + "','" + qsPathClient + "','" + qsPathRoot + "','" + qsXrfKey + "','" + qsKsPassword + "','" + note + "','" + dbSid + "','" + dbPort + "','" + qsUserHeader + "','" + came + "','" + environment + "')");
                     resultSet = statement.executeQuery("insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
                             "VALUES ('" + description + "', '" + dbUser + "','" + dbPassword + "','" + dbHost + "','" + qsHost + "','" + qsPathClient + "','" + qsPathRoot + "','" + qsXrfKey + "','" + qsKsPassword + "','" + note + "','" + dbSid + "','" + dbPort + "','" + qsUserHeader + "','" + came + "','" + environment + "')");
                     isCreated = resultSet.next();
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - insert into " + qsFarms + " (DESCRIZIONE, DBUSER, DBPASSWORD, DBHOST, QSHOST, QSPATHCLIENT, QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, DBSID, DBPORT, QSUSERHEADER, CAME, ENVIRONMENT) " +
                             "VALUES ('" + description + "', '" + dbUser + "','" + dbPassword + "','" + dbHost + "','" + qsHost + "','" + qsPathClient + "','" + qsPathRoot + "','" + qsXrfKey + "','" + qsKsPassword + "','" + note + "','" + dbSid + "','" + dbPort + "','" + qsUserHeader + "','" + came + "','" + environment + "') - successful");
                 } else {
-                    loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Something went wrong");
+                    loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Something went wrong");
                 }
             }
         } catch (SQLException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + ex.getLocalizedMessage());
         }
         disconnectDBORA();
         return isCreated;
@@ -490,14 +491,14 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         farmsList.clear();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
                         "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT , QSRELOADTASKNAME FROM " + qsFarms);
                 while (resultSet.next()) {
@@ -522,10 +523,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -536,14 +537,14 @@ public class DBConnectionOperationCentralized {
         adminUsersList.clear();
         connectDBORA();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select ID, USERNAME, PASSWORD, CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED, ROLE FROM " + qsAdminUsers);
                 while (resultSet.next()) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -560,10 +561,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -574,14 +575,14 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         farmsList.clear();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
                         "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms + " WHERE FARMID LIKE '" + farmId + "'");
                 while (resultSet.next()) {
@@ -606,10 +607,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -620,14 +621,14 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         adminUsersList.clear();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select id, username, password, role from " + qsAdminUsers + " where id like '" + adminId + "'");
                 while (resultSet.next()) {
                     QsAdmins qsAdmins = new QsAdmins(
@@ -643,10 +644,10 @@ public class DBConnectionOperationCentralized {
                 }
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -660,15 +661,15 @@ public class DBConnectionOperationCentralized {
         boolean isUpdated = false;
         connectDBORA();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - update " + qsFarms + "\n" +
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - update " + qsFarms + "\n" +
                         "set DESCRIZIONE    ='" + description + " ',\n" +
                         "    DBUSER         ='" + dbUser + " ',\n" +
                         "    DBPASSWORD     ='" + dbPassword + " ',\n" +
@@ -709,10 +710,10 @@ public class DBConnectionOperationCentralized {
                 isUpdated = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -723,23 +724,23 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         boolean isFarmDeleted = false;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName());
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName());
                 resultSet = statement.executeQuery("DELETE FROM " + qsFarms + " WHERE FARMID LIKE '" + farmId + "'");
                 isFarmDeleted = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -750,23 +751,23 @@ public class DBConnectionOperationCentralized {
         connectDBORA();
         boolean isAdminModerUserDeleted = false;
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - DELETE FROM " + qsAdminUsers + " WHERE ID LIKE '" + id + "'");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - DELETE FROM " + qsAdminUsers + " WHERE ID LIKE '" + id + "'");
                 resultSet = statement.executeQuery("DELETE FROM " + qsAdminUsers + " WHERE ID LIKE '" + id + "'");
                 isAdminModerUserDeleted = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();
@@ -777,23 +778,23 @@ public class DBConnectionOperationCentralized {
         boolean isPwdUpdated = false;
         connectDBORA();
         try {
-            loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Checking if connection is null");
+            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
             if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is null. Aborting program");
+                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
             } else {
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Connection is not null. Creating statement");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
                 statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - Executing query");
-                loggingMisc.printConsole(1, DBConnectionOperationCentralized.class.getSimpleName() + " - UPDATE " + qsAdminUsers + " SET PASSWORD = '" + MD5(password) + "' WHERE ID LIKE '" + adminId + "'");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
+                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - UPDATE " + qsAdminUsers + " SET PASSWORD = '" + MD5(password) + "' WHERE ID LIKE '" + adminId + "'");
                 resultSet = statement.executeQuery("update " + qsAdminUsers + " set PASSWORD = '" + MD5(password) + "' where ID like '" + adminId + "'");
                 isPwdUpdated = resultSet.next();
             }
         } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
             disconnectDBORA();
         } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBConnectionOperationCentralized.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
             disconnectDBORA();
         }
         disconnectDBORA();

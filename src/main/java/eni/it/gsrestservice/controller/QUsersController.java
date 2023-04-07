@@ -2,7 +2,12 @@ package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.config.RolesListConfig;
-import eni.it.gsrestservice.model.*;
+import eni.it.gsrestservice.db.DBOracleOperations;
+import eni.it.gsrestservice.db.DBPostgresOperations;
+import eni.it.gsrestservice.model.Farm;
+import eni.it.gsrestservice.model.LDAPConnector;
+import eni.it.gsrestservice.model.QlikSenseConnector;
+import eni.it.gsrestservice.model.QsAdminUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
@@ -12,38 +17,21 @@ import java.io.IOException;
 
 @RestController
 public class QUsersController {
-    private final DBConnectionOperation dbConnectionOperation = new DBConnectionOperation();
-    private final DBConnectionOperationCentralized dbConnectionOperationCentralized = new DBConnectionOperationCentralized();
+    private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
+    private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     @Autowired
     private Environment environment;
 
     private void initDB() {
-        dbConnectionOperation.initDB(
-                Farm.dbHost,
-                Farm.dbPort,
-                Farm.dbSid,
-                Farm.dbUser,
-                Farm.dbPassword,
-                environment.getProperty("db.tabuser"),
-                environment.getProperty("db.tabattrib")
-        );
-        dbConnectionOperationCentralized.initDB(
-                environment.getProperty("db.hostname.main"),
-                environment.getProperty("db.port.main"),
-                environment.getProperty("db.sid.main"),
-                environment.getProperty("db.username.main"),
-                environment.getProperty("db.password.main"),
-                environment.getProperty("db.qs.admin.users"),
-                environment.getProperty("db.qs.farms")
-        );
+        CSVReaderController.initAllDBPostgresOracle(dbPostgresOperations, environment, dbOracleOperations);
     }
 
     @GetMapping("/AllQLIKUsersFromDB")
     public ModelAndView allQUsersFromDB() throws Exception {
         initDB();
         if (initQlikConnector()) {
-            if (dbConnectionOperation.getAllUsers().size() == 0) {
+            if (dbPostgresOperations.getAllUsers().size() == 0) {
                 return new ModelAndView("error")
                         .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
                         .addObject("farm_name", Farm.description)
@@ -58,10 +46,10 @@ public class QUsersController {
                         .addObject("ping_qlik", qlikSenseConnector.ping())
                         .addObject("user_logged_in", QsAdminUsers.username)
                         .addObject("user_role_logged_in", QsAdminUsers.role)
-                        .addObject("qusers", dbConnectionOperation.getAllUsers());
+                        .addObject("qusers", dbPostgresOperations.getAllUsers());
             }
         } else {
-            if (dbConnectionOperation.getAllUsers().size() == 0) {
+            if (dbPostgresOperations.getAllUsers().size() == 0) {
                 return new ModelAndView("error")
                         .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
                         .addObject("ping_qlik", 200)
@@ -76,7 +64,7 @@ public class QUsersController {
                         .addObject("farm_environment", "DEV")
                         .addObject("user_logged_in", QsAdminUsers.username)
                         .addObject("user_role_logged_in", QsAdminUsers.role)
-                        .addObject("qusers", dbConnectionOperation.getAllUsers());
+                        .addObject("qusers", dbPostgresOperations.getAllUsers());
             }
         }
     }
@@ -85,7 +73,7 @@ public class QUsersController {
     public ModelAndView searchQUserOnDB(@RequestParam(required = false, name = "quser_filter") String userId) throws Exception {
         initDB();
         initQlikConnector();
-        if (dbConnectionOperation.findQUser(userId).size() == 0) {
+        if (dbPostgresOperations.findQUser(userId).size() == 0) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0010_USER_IS_NOT_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -100,7 +88,7 @@ public class QUsersController {
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("quser_filter", dbConnectionOperation.findQUser(userId));
+                    .addObject("quser_filter", dbPostgresOperations.findQUser(userId));
         }
     }
 
@@ -108,7 +96,7 @@ public class QUsersController {
     public ModelAndView showUserType(@RequestParam(name = "quser") String userId) throws Exception {
         initDB();
         initQlikConnector();
-        if (dbConnectionOperation.findUserTypeByUserID(userId).size() == 0) {
+        if (dbPostgresOperations.findUserTypeByUserID(userId).size() == 0) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0010_USER_IS_NOT_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -123,7 +111,7 @@ public class QUsersController {
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("other_data", dbConnectionOperation.findUserTypeByUserID(userId));
+                    .addObject("other_data", dbPostgresOperations.findUserTypeByUserID(userId));
         }
     }
 
@@ -143,8 +131,8 @@ public class QUsersController {
         try {
             initDB();
             if (initQlikConnector()) {
-                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                if (DBOracleOperations.isIsAuthenticated()) {
+                    if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
                         return new ModelAndView("singleUploadPage")
                                 .addObject("farm_name", Farm.description)
                                 .addObject("farm_environment", Farm.environment)
@@ -153,7 +141,7 @@ public class QUsersController {
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("rolesList", new RolesListConfig()
                                         .initRolesList(environment.getProperty("roles.config.json.path")));
-                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                    } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         return new ModelAndView("singleUploadPage")
                                 .addObject("farm_name", Farm.description)
                                 .addObject("farm_environment", Farm.environment)
@@ -170,8 +158,8 @@ public class QUsersController {
                             ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
                 }
             } else {
-                if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                    if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+                if (DBOracleOperations.isIsAuthenticated()) {
+                    if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
                         return new ModelAndView("singleUploadPage")
                                 .addObject("ping_qlik", 200)
                                 .addObject("farm_name", "PIPPO")
@@ -180,7 +168,7 @@ public class QUsersController {
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("rolesList", new RolesListConfig()
                                         .initRolesList(environment.getProperty("roles.config.json.path")));
-                    } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                    } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         return new ModelAndView("singleUploadPage")
                                 .addObject("ping_qlik", 200)
                                 .addObject("farm_name", "PIPPO")
@@ -208,9 +196,9 @@ public class QUsersController {
                                      @RequestParam(required = false, name = "userRole") String userRole,
                                      @RequestParam(required = false, name = "userGroup") String userGroup) throws IOException {
         initDB();
-        dbConnectionOperation.initFile(environment.getProperty("log.role.exist.for.user"));
+        dbPostgresOperations.initFile(environment.getProperty("log.role.exist.for.user"));
         new LDAPConnector().searchOnLDAPInsertToDB(userId, userRole, userGroup);
-        dbConnectionOperationCentralized.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
+        dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
                 Farm.description + " di " + Farm.environment + " ha censito utente :" + userId.toUpperCase() + " con ruolo: "
                 + userRole + " e con il gruppo: " + userGroup + "')");
         return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId);

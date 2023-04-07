@@ -1,6 +1,7 @@
 package eni.it.gsrestservice.model;
 
 import eni.it.gsrestservice.config.LoggingMisc;
+import eni.it.gsrestservice.db.DBPostgresOperations;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -267,8 +268,8 @@ public class LDAPConnector implements EnvironmentAware {
     public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup) throws IOException {
         loggingMisc = new LoggingMisc();
         properties = new Properties();
-        DBConnectionOperation dbConnectionOperation = new DBConnectionOperation();
-        dbConnectionOperation.connectDB();
+        DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
+        dbPostgresOperations.connectDB();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
         properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
@@ -389,30 +390,30 @@ public class LDAPConnector implements EnvironmentAware {
                     if (displayName != null) {
                         if (displayName.get().toString().contains("'")) {
                             String displayNameReplaced = displayName.get().toString().replace("'", "''");
-                            dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), displayNameReplaced, "Y");
+                            dbPostgresOperations.insertToQSUsers(eniRegistrationNumber.get().toString(), displayNameReplaced, "Y");
                         } else {
-                            dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), displayName.get().toString(), "Y");
+                            dbPostgresOperations.insertToQSUsers(eniRegistrationNumber.get().toString(), displayName.get().toString(), "Y");
                         }
                     } else {
-                        dbConnectionOperation.insertToQSUsers(eniRegistrationNumber.get().toString(), eniRegistrationNumber.get().toString(), "Y");
+                        dbPostgresOperations.insertToQSUsers(eniRegistrationNumber.get().toString(), eniRegistrationNumber.get().toString(), "Y");
                     }
                     if (mail == null) {
-                        dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", "N/A");
+                        dbPostgresOperations.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", "N/A");
                     } else {
                         if (mail.get().toString().contains("'")) {
                             String mailReplaced = mail.get().toString().replace("'", "''");
-                            dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mailReplaced);
+                            dbPostgresOperations.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mailReplaced);
                         } else {
-                            dbConnectionOperation.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mail.get().toString());
+                            dbPostgresOperations.insertQUserAttributeEmail(eniRegistrationNumber.get().toString(), "email", mail.get().toString());
                         }
                     }
                     if (ou == null) {
-                        dbConnectionOperation.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", "N/A");
+                        dbPostgresOperations.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", "N/A");
                     } else {
-                        dbConnectionOperation.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", ou.get().toString());
+                        dbPostgresOperations.insertQUserAttributeOU(eniRegistrationNumber.get().toString(), "organizzazione", ou.get().toString());
                     }
-                    dbConnectionOperation.insertQUserAttribute(eniRegistrationNumber.get().toString(), "gruppo", userGroup);
-                    dbConnectionOperation.insertQUserAttribute(eniRegistrationNumber.get().toString(), "ruolo", userRole);
+                    dbPostgresOperations.insertQUserAttribute(eniRegistrationNumber.get().toString(), "gruppo", userGroup);
+                    dbPostgresOperations.insertQUserAttribute(eniRegistrationNumber.get().toString(), "ruolo", userRole);
                     if (displayName == null) {
                         ldapUser.setDisplayName("N/A");
                     } else {
@@ -489,7 +490,7 @@ public class LDAPConnector implements EnvironmentAware {
             initialDirContext.close();
             answer.close();
             fileOutputStream.close();
-            dbConnectionOperation.disconnectDB();
+            dbPostgresOperations.disconnectDB();
         } catch (NamingException | IOException e) {
             e.printStackTrace();
         }

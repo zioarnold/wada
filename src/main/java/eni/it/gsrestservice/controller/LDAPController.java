@@ -1,7 +1,11 @@
 package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
-import eni.it.gsrestservice.model.*;
+import eni.it.gsrestservice.db.DBOracleOperations;
+import eni.it.gsrestservice.model.Farm;
+import eni.it.gsrestservice.model.LDAPConnector;
+import eni.it.gsrestservice.model.QlikSenseConnector;
+import eni.it.gsrestservice.model.QsAdminUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Base64;
+
 @RestController
 public class LDAPController {
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
-    private final DBConnectionOperationCentralized dbConnectionOperationCentralized = new DBConnectionOperationCentralized();
+    private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     @Autowired
     private Environment environment;
 
@@ -22,15 +28,15 @@ public class LDAPController {
         try {
             initDB();
             initQlikConnector();
-            if (DBConnectionOperationCentralized.isIsAuthenticated()) {
-                if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == 1) {
+            if (DBOracleOperations.isIsAuthenticated()) {
+                if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
                     return new ModelAndView("searchUserOnLDAP")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
                             .addObject("ping_qlik", qlikSenseConnector.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (dbConnectionOperationCentralized.checkSession(QsAdminUsers.username) == -1) {
+                } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                     return new ModelAndView("searchUserOnLDAP")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
@@ -105,12 +111,13 @@ public class LDAPController {
     }
 
     private void initDB() {
-        dbConnectionOperationCentralized.initDB(
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
+        dbOracleOperations.initDB(
                 environment.getProperty("db.hostname.main"),
                 environment.getProperty("db.port.main"),
                 environment.getProperty("db.sid.main"),
                 environment.getProperty("db.username.main"),
-                environment.getProperty("db.password.main"),
+                decodedPassword,
                 environment.getProperty("db.qs.admin.users"),
                 environment.getProperty("db.qs.farms")
         );

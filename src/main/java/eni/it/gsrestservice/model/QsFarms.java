@@ -23,10 +23,10 @@ public class QsFarms {
 
     }
 
-    QsFarms(String farmId, String description, String came, String dbHost, String dbUser, String dbPassword,
-            String dbPort, String dbSid, String qsHost, String qsHeader, String qsPathClientJKS,
-            String qsPathRootJKS, String qsKeyStorePwd, String qsXrfKey, String qsReloadTaskName,
-            String note, String environment) {
+    public QsFarms(String farmId, String description, String came, String dbHost, String dbUser, String dbPassword,
+                   String dbPort, String dbSid, String qsHost, String qsHeader, String qsPathClientJKS,
+                   String qsPathRootJKS, String qsKeyStorePwd, String qsXrfKey, String qsReloadTaskName,
+                   String note, String environment) {
         this.farmId = farmId;
         this.description = description;
         this.came = came;

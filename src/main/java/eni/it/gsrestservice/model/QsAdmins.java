@@ -13,7 +13,12 @@ public class QsAdmins {
 
     }
 
-    QsAdmins(int id, String username, String password, String currentSessionLoginTime, String sessionLoginExpireTime, String auth, String role) {
+    public QsAdmins(int id, String username,
+                    String password,
+                    String currentSessionLoginTime,
+                    String sessionLoginExpireTime,
+                    String auth,
+                    String role) {
         this.id = id;
         this.username = username;
         this.password = password;
