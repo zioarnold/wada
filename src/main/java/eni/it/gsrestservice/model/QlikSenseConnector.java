@@ -129,14 +129,16 @@ public class QlikSenseConnector {
     }
 
     private String obtainHttpConnection(HttpsURLConnection connection) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder builder = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            builder.append(inputLine);
-        }
-        in.close();
-        return builder.toString();
+        if (connection != null) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder builder = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                builder.append(inputLine);
+            }
+            in.close();
+            return builder.toString();
+        } else return "";
     }
 
     public int ping() {

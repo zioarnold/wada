@@ -68,6 +68,7 @@ public class LDAPConnector implements EnvironmentAware {
         ldapUser = new LDAPUser();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
+        properties.put(Context.SECURITY_AUTHENTICATION, "simple");
         properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
         properties.put(Context.SECURITY_CREDENTIALS, environment.getProperty("vds.password"));
         File fileUsersNotExists = new File(environment.getProperty("log.discard"));
@@ -259,6 +260,7 @@ public class LDAPConnector implements EnvironmentAware {
             loggingMisc.printConsole(2, LDAPConnector.class.getSimpleName() + " - Unable to connect to LDAP, check your properties: "
                     + e.getExplanation() + " " + e.getLocalizedMessage());
         }
+        loggingMisc.printConsole(1, "USERS ON LDAP: " + userExistsOnLdap.toArray().toString());
         return userExistsOnLdap;
     }
 
@@ -299,6 +301,7 @@ public class LDAPConnector implements EnvironmentAware {
                     " - Opening file: " + environment.getProperty("log.discard") + " successful");
         }
         try {
+            loggingMisc.printConsole(1, "Properties: " + properties.toString());
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);

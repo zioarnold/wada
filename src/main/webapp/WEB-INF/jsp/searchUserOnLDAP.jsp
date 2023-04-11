@@ -170,14 +170,10 @@
 <c:choose>
     <c:when test="${empty userIDDATA}">
         <div class="container text-center">
-            <h2>Nessun utenza digitata oppure utenza non e' presente nell'AD</h2>
+            <h2>Nessun utenza digitata</h2>
         </div>
     </c:when>
     <c:otherwise>
-        <%
-            ArrayList<LDAPUser> std = (ArrayList<LDAPUser>) request.getAttribute("userIDDATA");
-            for (LDAPUser s : std) {
-        %>
         <div class="container text-center" id="userDiv">
             <h2>Utenza nell'AD</h2>
             <hr>
@@ -223,6 +219,10 @@
                         </th>
                     </tr>
                     </thead>
+                    <%
+                        ArrayList<LDAPUser> std = (ArrayList<LDAPUser>) request.getAttribute("userIDDATA");
+                        for (LDAPUser s : std) {
+                    %>
                     <tbody>
                     <tr>
                         <td>

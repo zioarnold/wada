@@ -57,7 +57,7 @@ public class LDAPController {
     }
 
     @RequestMapping(value = "/searchUserOnLDAP")
-    public ModelAndView searchUserOnLdap(@RequestParam(required = false, name = "userID") String userID) throws Exception {
+    public ModelAndView searchUserOnLDAP(@RequestParam(required = false, name = "userID") String userID) throws Exception {
         LDAPConnector ldapConnector = new LDAPConnector();
         if (initQlikConnector()) {
             if (ldapConnector.searchOnLDAP(userID).size() != 0) {
