@@ -1,0 +1,8 @@
+{
+  "roles": [
+    "Analyzer",
+    "Contributor",
+    "SuperUserAM",
+    "Viewer"
+  ]
+}

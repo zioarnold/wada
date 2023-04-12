@@ -22,6 +22,7 @@ public class LDAPController {
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     @Autowired
     private Environment environment;
+    private final String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
 
     @GetMapping("/searchUserOnLDAPPage")
     public ModelAndView searchUserOnLDAPPage() {
@@ -111,7 +112,6 @@ public class LDAPController {
     }
 
     private void initDB() {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
         dbOracleOperations.initDB(
                 environment.getProperty("db.hostname.main"),
                 environment.getProperty("db.port.main"),

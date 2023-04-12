@@ -29,6 +29,7 @@ public class CSVReaderController {
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final RolesListConfig rolesListConfig = new RolesListConfig();
     private int value;
+    private final String userRoleListJsonFileLocation = environment.getProperty("roles.config.json.path");
 
     @GetMapping(value = "/massiveUploadPage")
     public ModelAndView massiveUploadPage() {
@@ -155,7 +156,7 @@ public class CSVReaderController {
                 environment.getProperty("log.discard"),
                 environment.getProperty("log.user.role.discarded"));
         dbPostgresOperations.initFile(environment.getProperty("log.role.exist.for.user"));
-        csvReaderService.setRolesList(rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
+        csvReaderService.setRolesList(rolesListConfig.initRolesList(userRoleListJsonFileLocation));
     }
 
     private void initDB() {

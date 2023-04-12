@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
+@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
 @RestController
 public class QUsersController {
     private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
@@ -22,13 +23,14 @@ public class QUsersController {
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     @Autowired
     private Environment environment;
+    private final String userRoleListJsonFileLocation = environment.getProperty("roles.config.json.path");
 
     private void initDB() {
         CSVReaderController.initAllDBPostgresOracle(dbPostgresOperations, environment, dbOracleOperations);
     }
 
     @GetMapping("/AllQLIKUsersFromDB")
-    public ModelAndView allQUsersFromDB() throws Exception {
+    public ModelAndView allQUsersFromDB() {
         initDB();
         if (initQlikConnector()) {
             if (dbPostgresOperations.getAllUsers().size() == 0) {
@@ -70,7 +72,7 @@ public class QUsersController {
     }
 
     @RequestMapping("/searchQUserOnDB")
-    public ModelAndView searchQUserOnDB(@RequestParam(required = false, name = "quser_filter") String userId) throws Exception {
+    public ModelAndView searchQUserOnDB(@RequestParam(required = false, name = "quser_filter") String userId) {
         initDB();
         initQlikConnector();
         if (dbPostgresOperations.findQUser(userId).size() == 0) {
@@ -93,7 +95,7 @@ public class QUsersController {
     }
 
     @RequestMapping(value = "/showUserType", method = RequestMethod.GET)
-    public ModelAndView showUserType(@RequestParam(name = "quser") String userId) throws Exception {
+    public ModelAndView showUserType(@RequestParam(name = "quser") String userId) {
         initDB();
         initQlikConnector();
         if (dbPostgresOperations.findUserTypeByUserID(userId).size() == 0) {
@@ -116,7 +118,7 @@ public class QUsersController {
     }
 
     @GetMapping("/searchQUserOnDBPage")
-    public ModelAndView searchQUserOnDBPage() throws Exception {
+    public ModelAndView searchQUserOnDBPage() {
         initQlikConnector();
         return new ModelAndView("searchQUserOnDB")
                 .addObject("farm_name", Farm.description)
@@ -140,7 +142,7 @@ public class QUsersController {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("rolesList", new RolesListConfig()
-                                        .initRolesList(environment.getProperty("roles.config.json.path")));
+                                        .initRolesList(userRoleListJsonFileLocation));
                     } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         return new ModelAndView("singleUploadPage")
                                 .addObject("farm_name", Farm.description)
@@ -149,7 +151,7 @@ public class QUsersController {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("rolesList", new RolesListConfig()
-                                        .initRolesList(environment.getProperty("roles.config.json.path")));
+                                        .initRolesList(userRoleListJsonFileLocation));
                     } else {
                         return new ModelAndView("sessionExpired");
                     }
@@ -167,7 +169,7 @@ public class QUsersController {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("rolesList", new RolesListConfig()
-                                        .initRolesList(environment.getProperty("roles.config.json.path")));
+                                        .initRolesList(userRoleListJsonFileLocation));
                     } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         return new ModelAndView("singleUploadPage")
                                 .addObject("ping_qlik", 200)
@@ -176,7 +178,7 @@ public class QUsersController {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("rolesList", new RolesListConfig()
-                                        .initRolesList(environment.getProperty("roles.config.json.path")));
+                                        .initRolesList(userRoleListJsonFileLocation));
                     } else {
                         return new ModelAndView("sessionExpired");
                     }

@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="code refactoring">
+      <change afterPath="$PROJECT_DIR$/cfg/userConfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,11 +205,11 @@
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="S:\JavaProjects\wada\cfg" />
+      <recent name="S:\JavaProjects\wada\src\main\resources" />
       <recent name="S:\JavaProjects\wada\sql\oracle" />
       <recent name="S:\JavaProjects\wada\sql\postgres" />
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\resources\static\ico" />
-      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\resources\static" />
-      <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\main\webapp\WEB-INF\jsp" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.GsRestServiceApplication">
@@ -335,7 +341,8 @@
       <workItem from="1681230651966" duration="1836000" />
       <workItem from="1681232506364" duration="503000" />
       <workItem from="1681233012358" duration="3537000" />
-      <workItem from="1681293680206" duration="1464000" />
+      <workItem from="1681293680206" duration="1490000" />
+      <workItem from="1681300925178" duration="1668000" />
     </task>
     <task id="LOCAL-00001" summary="more rests addeda">
       <created>1569509410950</created>
@@ -666,7 +673,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681236793683</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="code refactoring">
+      <created>1681295278408</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1681295278408</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

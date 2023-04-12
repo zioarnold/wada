@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
@@ -49,6 +50,7 @@ public class LDAPConnector implements EnvironmentAware {
     private static Environment environment;
     private FileOutputStream fileOutputStream;
     public static int userNotExistsOnLdap;
+    private final String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("vds.password")));
 
     public static void resetCounter() {
         userNotExistsOnLdap = 0;
@@ -70,7 +72,7 @@ public class LDAPConnector implements EnvironmentAware {
         properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
         properties.put(Context.SECURITY_AUTHENTICATION, "simple");
         properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
-        properties.put(Context.SECURITY_CREDENTIALS, environment.getProperty("vds.password"));
+        properties.put(Context.SECURITY_CREDENTIALS, decodedPassword);
         File fileUsersNotExists = new File(environment.getProperty("log.discard"));
         if (!fileUsersNotExists.exists()) {
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
@@ -260,7 +262,6 @@ public class LDAPConnector implements EnvironmentAware {
             loggingMisc.printConsole(2, LDAPConnector.class.getSimpleName() + " - Unable to connect to LDAP, check your properties: "
                     + e.getExplanation() + " " + e.getLocalizedMessage());
         }
-        loggingMisc.printConsole(1, "USERS ON LDAP: " + userExistsOnLdap.toArray().toString());
         return userExistsOnLdap;
     }
 
@@ -275,7 +276,7 @@ public class LDAPConnector implements EnvironmentAware {
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
         properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
-        properties.put(Context.SECURITY_CREDENTIALS, environment.getProperty("vds.password"));
+        properties.put(Context.SECURITY_CREDENTIALS, decodedPassword);
         ldapUser = new LDAPUser();
         File fileUsersNotExists = new File(environment.getProperty("log.discard"));
         loggingMisc.printConsole(1, "");

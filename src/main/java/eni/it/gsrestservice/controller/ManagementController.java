@@ -26,6 +26,7 @@ public class ManagementController implements Serializable {
     @Autowired
     private Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
+    private final String userRoleListJsonFileLocation = environment.getProperty("roles.config.json.path");
 
     private void initDB() {
         dbPostgresOperations.initDB(
@@ -74,7 +75,7 @@ public class ManagementController implements Serializable {
                                     .addObject("user_role_logged_in", QsAdminUsers.role)
                                     .addObject("qusers", dbPostgresOperations.getAllUsers())
                                     .addObject("rolesList", new RolesListConfig()
-                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                                            .initRolesList(userRoleListJsonFileLocation));
                         }
                     } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         if (dbPostgresOperations.getAllUsers().size() == 0) {
@@ -94,7 +95,7 @@ public class ManagementController implements Serializable {
                                     .addObject("user_role_logged_in", QsAdminUsers.role)
                                     .addObject("qusers", dbPostgresOperations.getAllUsers())
                                     .addObject("rolesList", new RolesListConfig()
-                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                                            .initRolesList(userRoleListJsonFileLocation));
                         }
                     } else {
                         return new ModelAndView("sessionExpired");
@@ -122,7 +123,7 @@ public class ManagementController implements Serializable {
                                     .addObject("user_role_logged_in", QsAdminUsers.role)
                                     .addObject("qusers", dbPostgresOperations.getAllUsers())
                                     .addObject("rolesList", new RolesListConfig()
-                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                                            .initRolesList(userRoleListJsonFileLocation));
                         }
                     } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                         if (dbPostgresOperations.getAllUsers().size() == 0) {
@@ -142,7 +143,7 @@ public class ManagementController implements Serializable {
                                     .addObject("user_role_logged_in", QsAdminUsers.role)
                                     .addObject("qusers", dbPostgresOperations.getAllUsers())
                                     .addObject("rolesList", new RolesListConfig()
-                                            .initRolesList(environment.getProperty("roles.config.json.path")));
+                                            .initRolesList(userRoleListJsonFileLocation));
                         }
                     } else {
                         return new ModelAndView("sessionExpired");
