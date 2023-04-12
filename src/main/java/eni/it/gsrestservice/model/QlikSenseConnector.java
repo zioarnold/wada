@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import javax.net.ssl.*;
 import java.io.*;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.security.KeyStore;
@@ -144,27 +143,20 @@ public class QlikSenseConnector {
     public int ping() {
         String pingURL = "https://" + host + ":4242/ssl/ping?xrfkey=" + xrfKey;
         loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Executing URL: " + pingURL);
-        HttpsURLConnection connection = null;
+        HttpsURLConnection connection;
         try {
             connection = (HttpsURLConnection) new URL(pingURL).openConnection();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        connection.setSSLSocketFactory(sslSocketFactory);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-Xrfkey: " + xrfKey);
-        connection.setRequestProperty("X-Qlik-Xrfkey", xrfKey);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-User: " + userHeader);
-        connection.setRequestProperty("X-Qlik-User", userHeader);
-        connection.setDoInput(true);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request property: Content-Type application/json");
-        connection.setRequestProperty("Content-Type", "application/json");
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request method: GET");
-        try {
+            connection.setSSLSocketFactory(sslSocketFactory);
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-Xrfkey: " + xrfKey);
+            connection.setRequestProperty("X-Qlik-Xrfkey", xrfKey);
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-User: " + userHeader);
+            connection.setRequestProperty("X-Qlik-User", userHeader);
+            connection.setDoInput(true);
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request property: Content-Type application/json");
+            connection.setRequestProperty("Content-Type", "application/json");
+            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request method: GET");
+
             connection.setRequestMethod("GET");
-        } catch (ProtocolException e) {
-            throw new RuntimeException(e);
-        }
-        try {
             loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Connection response code: " + connection.getResponseCode());
             return connection.getResponseCode();
         } catch (IOException e) {
