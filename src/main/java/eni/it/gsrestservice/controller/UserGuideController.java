@@ -5,7 +5,6 @@ import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,59 +16,38 @@ import java.util.Base64;
 public class UserGuideController {
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    public UserGuideController(Environment environment) {
+        this.environment = environment;
+    }
 
     @GetMapping("/userGuide")
     public ModelAndView userGuide() {
         try {
             initDB();
-            if (initQlikConnector()) {
-                if (DBOracleOperations.isIsAuthenticated()) {
-                    if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
-                        return new ModelAndView("userGuide")
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
-                        return new ModelAndView("userGuide")
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else {
-                        return new ModelAndView("sessionExpired");
-                    }
+            initQlikConnector();
+            if (DBOracleOperations.isIsAuthenticated()) {
+                if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
+                    return new ModelAndView("userGuide")
+                            .addObject("farm_name", Farm.description)
+                            .addObject("farm_environment", Farm.environment)
+                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role);
+                } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
+                    return new ModelAndView("userGuide")
+                            .addObject("farm_name", Farm.description)
+                            .addObject("farm_environment", Farm.environment)
+                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role);
                 } else {
-                    return new ModelAndView("errorLogin").addObject("errorMsg",
-                            ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+                    return new ModelAndView("sessionExpired");
                 }
             } else {
-                if (DBOracleOperations.isIsAuthenticated()) {
-                    if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
-                        return new ModelAndView("userGuide")
-                                .addObject("ping_qlik", 200)
-                                .addObject("farm_name", "PIPPO")
-                                .addObject("farm_environment", "DEV")
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
-                        return new ModelAndView("userGuide")
-                                .addObject("ping_qlik", 200)
-                                .addObject("farm_name", "PIPPO")
-                                .addObject("farm_environment", "DEV")
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    } else {
-                        return new ModelAndView("sessionExpired");
-                    }
-                } else {
-                    return new ModelAndView("errorLogin").addObject("errorMsg",
-                            ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
-                }
+                return new ModelAndView("errorLogin").addObject("errorMsg",
+                        ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
             }
         } catch (Exception e) {
             return new ModelAndView("errorLogin").addObject("errorMsg",
@@ -77,7 +55,7 @@ public class UserGuideController {
         }
     }
 
-    private boolean initQlikConnector() {
+    private void initQlikConnector() {
         qlikSenseConnector.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
@@ -86,7 +64,7 @@ public class UserGuideController {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        return qlikSenseConnector.configureCertificate();
+        qlikSenseConnector.configureCertificate();
     }
 
     private void initDB() {

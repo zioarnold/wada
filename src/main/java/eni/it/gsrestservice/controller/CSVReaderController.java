@@ -9,7 +9,6 @@ import eni.it.gsrestservice.model.LDAPConnector;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.service.CSVReaderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,87 +19,67 @@ import java.util.Base64;
 
 @RestController
 public class CSVReaderController {
-    @Autowired
-    private CSVReaderService csvReaderService;
-    @Autowired
-    private Environment environment;
+    private final CSVReaderService csvReaderService;
+    private final Environment environment;
     private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final RolesListConfig rolesListConfig = new RolesListConfig();
-    private int value;
-    private final String userRoleListJsonFileLocation = environment.getProperty("roles.config.json.path");
+
+    public CSVReaderController(CSVReaderService csvReaderService, Environment environment) {
+        this.csvReaderService = csvReaderService;
+        this.environment = environment;
+    }
 
     @GetMapping(value = "/massiveUploadPage")
     public ModelAndView massiveUploadPage() {
-        try {
-            initDB();
-            initQlikConnector();
-            if (DBOracleOperations.isIsAuthenticated()) {
-                if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
-                    return new ModelAndView("massiveUpload")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
-                    return new ModelAndView("massiveUpload")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else {
-                    return new ModelAndView("sessionExpired");
-                }
+        initDB();
+        initQlikConnector();
+        if (DBOracleOperations.isIsAuthenticated()) {
+            if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
+                return new ModelAndView("massiveUploadPage")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
+                return new ModelAndView("massiveUploadPage")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
             } else {
-                return new ModelAndView("errorLogin").addObject("errorMsg",
-                        ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+                return new ModelAndView("sessionExpired");
             }
-        } catch (Exception e) {
+        } else {
             return new ModelAndView("errorLogin").addObject("errorMsg",
-                    ErrorWadaManagement.E_500_INTERNAL_SERVER.getErrorMsg());
+                    ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
         }
     }
 
-    @GetMapping(value = "/massiveUpload")
-    int uploadFileStatus() {
-        int countRow = CSVReaderService.rowNumbers;
-        value = (int) ((1.401 * 100) / countRow);
-        return value++;
-    }
-
     @RequestMapping(value = "/massiveUpload", method = RequestMethod.POST)
-    public ModelAndView uploadFile(@RequestParam("file") MultipartFile file) {
+    public ModelAndView massiveUpload(@RequestParam("file") MultipartFile file) {
         try {
             initDB();
             initFile();
             resetCounters();
-            if (initQlikConnector()) {
-                if (!file.isEmpty()) {
-                    if (csvReaderService.readDataCheckLdapInsertIntoDB(file.getBytes())) {
-                        return new ModelAndView("uploadSuccess")
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role)
-                                .addObject("users_discarded", LDAPConnector.userNotExistsOnLdap)
-                                .addObject("users_uploaded", DBPostgresOperations.usersUploaded)
-                                .addObject("users_processed", DBPostgresOperations.usersProcessed);
-                    } else {
-                        return new ModelAndView("error")
-                                .addObject("errorMsg", ErrorWadaManagement.E_0007_LDAP_OR_DB_UNAVAILABLE.getErrorMsg())
-                                .addObject("farm_name", Farm.description)
-                                .addObject("farm_environment", Farm.environment)
-                                .addObject("ping_qlik", qlikSenseConnector.ping())
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    }
+            initQlikConnector();
+            if (!file.isEmpty()) {
+                if (csvReaderService.readDataCheckLdapInsertIntoDB(file.getBytes())) {
+                    return new ModelAndView("uploadSuccess")
+                            .addObject("farm_name", Farm.description)
+                            .addObject("farm_environment", Farm.environment)
+                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("user_logged_in", QsAdminUsers.username)
+                            .addObject("user_role_logged_in", QsAdminUsers.role)
+                            .addObject("users_discarded", LDAPConnector.userNotExistsOnLdap)
+                            .addObject("users_uploaded", DBPostgresOperations.usersUploaded)
+                            .addObject("users_processed", DBPostgresOperations.usersProcessed);
                 } else {
                     return new ModelAndView("error")
-                            .addObject("errorMsg", ErrorWadaManagement.E_0008_FILE_IS_EMPTY.getErrorMsg())
+                            .addObject("errorMsg", ErrorWadaManagement.E_0007_LDAP_OR_DB_UNAVAILABLE.getErrorMsg())
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
                             .addObject("ping_qlik", qlikSenseConnector.ping())
@@ -108,47 +87,23 @@ public class CSVReaderController {
                             .addObject("user_role_logged_in", QsAdminUsers.role);
                 }
             } else {
-                if (!file.isEmpty()) {
-                    if (csvReaderService.readDataCheckLdapInsertIntoDB(file.getBytes())) {
-                        return new ModelAndView("uploadSuccess")
-                                .addObject("ping_qlik", 200)
-                                .addObject("farm_name", "PIPPO")
-                                .addObject("farm_environment", "DEV")
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role)
-                                .addObject("users_discarded", LDAPConnector.userNotExistsOnLdap)
-                                .addObject("users_uploaded", DBPostgresOperations.usersUploaded)
-                                .addObject("users_processed", DBPostgresOperations.usersProcessed);
-                    } else {
-                        return new ModelAndView("error")
-                                .addObject("errorMsg", ErrorWadaManagement.E_0007_LDAP_OR_DB_UNAVAILABLE.getErrorMsg())
-                                .addObject("ping_qlik", 200)
-                                .addObject("farm_name", "PIPPO")
-                                .addObject("farm_environment", "DEV")
-                                .addObject("user_logged_in", QsAdminUsers.username)
-                                .addObject("user_role_logged_in", QsAdminUsers.role);
-                    }
-                } else {
-                    return new ModelAndView("error")
-                            .addObject("errorMsg", ErrorWadaManagement.E_0008_FILE_IS_EMPTY.getErrorMsg())
-                            .addObject("ping_qlik", 200)
-                            .addObject("farm_name", "PIPPO")
-                            .addObject("farm_environment", "DEV")
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                }
+                return new ModelAndView("error")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0008_FILE_IS_EMPTY.getErrorMsg())
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseConnector.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
             }
         } catch (Exception e) {
             return new ModelAndView("errorLogin").addObject("errorMsg", e.getLocalizedMessage());
         }
-
     }
 
     private void resetCounters() {
         DBPostgresOperations.resetCounter();
         LDAPConnector.resetCounter();
         CSVReaderService.resetCounter();
-        value = 0;
     }
 
     private void initFile() throws IOException {
@@ -156,7 +111,7 @@ public class CSVReaderController {
                 environment.getProperty("log.discard"),
                 environment.getProperty("log.user.role.discarded"));
         dbPostgresOperations.initFile(environment.getProperty("log.role.exist.for.user"));
-        csvReaderService.setRolesList(rolesListConfig.initRolesList(userRoleListJsonFileLocation));
+        csvReaderService.setRolesList(rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
     }
 
     private void initDB() {
@@ -164,6 +119,7 @@ public class CSVReaderController {
     }
 
     static void initAllDBPostgresOracle(DBPostgresOperations dbPostgresOperations, Environment environment, DBOracleOperations dbOracleOperations) {
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
         dbPostgresOperations.initDB(
                 Farm.dbHost,
                 Farm.dbPort,
@@ -173,7 +129,6 @@ public class CSVReaderController {
                 environment.getProperty("db.tabuser"),
                 environment.getProperty("db.tabattrib")
         );
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
         dbOracleOperations.initDB(
                 environment.getProperty("db.hostname.main"),
                 environment.getProperty("db.port.main"),
@@ -185,7 +140,7 @@ public class CSVReaderController {
         );
     }
 
-    private boolean initQlikConnector() {
+    private void initQlikConnector() {
         qlikSenseConnector.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
@@ -194,6 +149,6 @@ public class CSVReaderController {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        return qlikSenseConnector.configureCertificate();
+        qlikSenseConnector.configureCertificate();
     }
 }

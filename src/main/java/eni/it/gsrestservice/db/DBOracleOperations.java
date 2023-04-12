@@ -292,23 +292,7 @@ public class DBOracleOperations {
                         "FROM " + qsFarms + " " +
                         "WHERE DESCRIZIONE LIKE '" + farmName + "'");
                 while (resultSet.next()) {
-                    Farm.farmId = resultSet.getString("FARMID");
-                    Farm.description = resultSet.getString("DESCRIZIONE");
-                    Farm.came = resultSet.getString("CAME");
-                    Farm.dbUser = resultSet.getString("DBUSER");
-                    Farm.dbPassword = resultSet.getString("DBPASSWORD");
-                    Farm.dbHost = resultSet.getString("DBHOST");
-                    Farm.dbPort = resultSet.getString("DBPORT");
-                    Farm.dbSid = resultSet.getString("DBSID");
-                    Farm.qsHost = resultSet.getString("QSHOST");
-                    Farm.qsHeader = resultSet.getString("QSUSERHEADER");
-                    Farm.qsPathClientJKS = resultSet.getString("QSPATHCLIENT");
-                    Farm.qsPathRootJKS = resultSet.getString("QSPATHROOT");
-                    Farm.qsKeyStorePwd = resultSet.getString("QSKSPASSWD");
-                    Farm.qsXrfKey = resultSet.getString("QSXRFKEY");
-                    Farm.note = resultSet.getString("NOTE");
-                    Farm.environment = resultSet.getString("ENVIRONMENT");
-                    Farm.qsReloadTaskName = resultSet.getString("QSRELOADTASKNAME");
+                    fillFarmData(resultSet);
                 }
                 isSelected = true;
             }
@@ -336,20 +320,9 @@ public class DBOracleOperations {
                 loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
                 loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
                 resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
-                        "QSPATHROOT, QSXRFKEY, QSKSPASSWD, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms);
+                        "QSPATHROOT, QSXRFKEY, QSKSPASSWD, QSXRFKEY, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms);
                 while (resultSet.next()) {
-                    Farm.dbUser = resultSet.getString("DBUSER");
-                    Farm.dbPassword = resultSet.getString("DBPASSWORD");
-                    Farm.dbHost = resultSet.getString("DBHOST");
-                    Farm.dbPort = resultSet.getString("DBPORT");
-                    Farm.dbSid = resultSet.getString("DBSID");
-                    Farm.qsHost = resultSet.getString("QSHOST");
-                    Farm.qsHeader = resultSet.getString("QSUSERHEADER");
-                    Farm.qsPathClientJKS = resultSet.getString("QSPATHCLIENT");
-                    Farm.qsPathRootJKS = resultSet.getString("QSPATHROOT");
-                    Farm.qsKeyStorePwd = resultSet.getString("QSKSPASSWD");
-                    Farm.qsXrfKey = resultSet.getString("QSXRFKEY");
-                    Farm.qsReloadTaskName = resultSet.getString("QSRELOADTASKNAME");
+                    fillFarmData(resultSet);
                 }
                 isInitiated = true;
             }
@@ -362,6 +335,26 @@ public class DBOracleOperations {
         }
         disconnectDBORA();
         return isInitiated;
+    }
+
+    private void fillFarmData(ResultSet resultSet) throws SQLException {
+        Farm.farmId = resultSet.getString("FARMID");
+        Farm.description = resultSet.getString("DESCRIZIONE");
+        Farm.came = resultSet.getString("CAME");
+        Farm.dbUser = resultSet.getString("DBUSER");
+        Farm.dbPassword = resultSet.getString("DBPASSWORD");
+        Farm.dbHost = resultSet.getString("DBHOST");
+        Farm.dbPort = resultSet.getString("DBPORT");
+        Farm.dbSid = resultSet.getString("DBSID");
+        Farm.qsHost = resultSet.getString("QSHOST");
+        Farm.qsHeader = resultSet.getString("QSUSERHEADER");
+        Farm.qsPathClientJKS = resultSet.getString("QSPATHCLIENT");
+        Farm.qsPathRootJKS = resultSet.getString("QSPATHROOT");
+        Farm.qsKeyStorePwd = resultSet.getString("QSKSPASSWD");
+        Farm.qsXrfKey = resultSet.getString("QSXRFKEY");
+        Farm.note = resultSet.getString("NOTE");
+        Farm.environment = resultSet.getString("ENVIRONMENT");
+        Farm.qsReloadTaskName = resultSet.getString("QSRELOADTASKNAME");
     }
 
     public int checkSession(String username) {

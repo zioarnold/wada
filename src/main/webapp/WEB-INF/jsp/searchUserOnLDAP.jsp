@@ -155,7 +155,7 @@
 </nav>
 <br/>
 <div class="container text-center">
-    <form action="/searchUserOnLDAP" method="post">
+    <form action="/searchUserOnLDAP" method="get">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <input class="btn btn-primary" type="submit" value="Cerca"/>
@@ -182,40 +182,25 @@
                     <thead>
                     <tr>
                         <th>
-                            displayName
+                            Nome visualizzato
                         </th>
                         <th>
-                            eniMatricolaNotes
+                            Matricola
                         </th>
                         <th>
-                            name
+                            Nome cognome
                         </th>
                         <th>
-                            mail
+                            E-mail
                         </th>
                         <th>
-                            givenName
+                            Nome
                         </th>
                         <th>
-                            sn
+                            Utenza disabilitata
                         </th>
                         <th>
-                            badPwdCount
-                        </th>
-                        <th>
-                            pwdLastSet
-                        </th>
-                        <th>
-                            userAccountDisabled
-                        </th>
-                        <th>
-                            userDontExpirePassword
-                        </th>
-                        <th>
-                            memberOf
-                        </th>
-                        <th>
-                            ou
+                            Unita` organizzativa
                         </th>
                     </tr>
                     </thead>
@@ -236,17 +221,7 @@
                         </td>
                         <td><%=s.getGivenName() %>
                         </td>
-                        <td><%=s.getSn() %>
-                        </td>
-                        <td><%=s.getBadPwdCount() %>
-                        </td>
-                        <td><%=s.getPwdLastSet() %>
-                        </td>
                         <td><%=s.getUserAccountDisabled() %>
-                        </td>
-                        <td><%=s.getUserDontExpirePassword() %>
-                        </td>
-                        <td><%=s.getMemberOf() %>
                         </td>
                         <td><%=s.getOu() %>
                         </td>

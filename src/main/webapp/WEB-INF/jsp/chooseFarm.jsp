@@ -54,7 +54,6 @@
                     </c:choose>
                     <br>
                     <div>
-                        <%--                        <input type="submit" value="Scegli" class="btn float-right login_btn">--%>
                         <button formaction="/selectFarm" formmethod="get" class="btn float-right login_btn">Scegli
                         </button>
                         <c:choose>

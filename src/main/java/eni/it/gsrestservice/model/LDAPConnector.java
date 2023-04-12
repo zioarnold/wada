@@ -50,8 +50,6 @@ public class LDAPConnector implements EnvironmentAware {
     private static Environment environment;
     private FileOutputStream fileOutputStream;
     public static int userNotExistsOnLdap;
-    private final String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("vds.password")));
-
     public static void resetCounter() {
         userNotExistsOnLdap = 0;
     }
@@ -65,9 +63,11 @@ public class LDAPConnector implements EnvironmentAware {
     }
 
     public List<LDAPUser> searchOnLDAP(String filter) throws IOException {
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("vds.password")));
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         ldapUser = new LDAPUser();
+        userExistsOnLdap.clear();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
         properties.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -99,7 +99,7 @@ public class LDAPConnector implements EnvironmentAware {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(environment.getProperty("vds.baseDN"), "(ENIMatricolaNotes=" + filter + ")", searchControl);
+            answer = initialDirContext.search(environment.getProperty("vds.baseDN"), "(&(objectClass=user)(ENIMatricolaNotes=" + filter + "))", searchControl);
             loggingMisc.printConsole(1, "Connection to LDAP");
             if (answer.hasMore()) {
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " - Connection to LDAP Successful");
@@ -269,6 +269,7 @@ public class LDAPConnector implements EnvironmentAware {
      * @param userID criterio di ricerca x popolare il DB
      */
     public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup) throws IOException {
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("vds.password")));
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
