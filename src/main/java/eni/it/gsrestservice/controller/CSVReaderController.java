@@ -1,5 +1,6 @@
 package eni.it.gsrestservice.controller;
 
+import eni.it.gsrestservice.config.Config;
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.db.DBOracleOperations;
@@ -9,7 +10,6 @@ import eni.it.gsrestservice.model.LDAPConnector;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.service.CSVReaderService;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,15 +20,13 @@ import java.util.Base64;
 @RestController
 public class CSVReaderController {
     private final CSVReaderService csvReaderService;
-    private final Environment environment;
     private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final RolesListConfig rolesListConfig = new RolesListConfig();
 
-    public CSVReaderController(CSVReaderService csvReaderService, Environment environment) {
+    public CSVReaderController(CSVReaderService csvReaderService) {
         this.csvReaderService = csvReaderService;
-        this.environment = environment;
     }
 
     @GetMapping(value = "/massiveUploadPage")
@@ -108,35 +106,35 @@ public class CSVReaderController {
 
     private void initFile() throws IOException {
         csvReaderService.initFile(
-                environment.getProperty("log.discard"),
-                environment.getProperty("log.user.role.discarded"));
-        dbPostgresOperations.initFile(environment.getProperty("log.role.exist.for.user"));
-        csvReaderService.setRolesList(rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
+                Config.logDiscard,
+                Config.logUserRoleDiscarded);
+        dbPostgresOperations.initFile(Config.logRoleExistForUser);
+        csvReaderService.setRolesList(rolesListConfig.initRolesList(Config.rolesConfigJsonPath));
     }
 
     private void initDB() {
-        initAllDBPostgresOracle(dbPostgresOperations, environment, dbOracleOperations);
+        initAllDBPostgresOracle(dbPostgresOperations, dbOracleOperations);
     }
 
-    static void initAllDBPostgresOracle(DBPostgresOperations dbPostgresOperations, Environment environment, DBOracleOperations dbOracleOperations) {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
+    static void initAllDBPostgresOracle(DBPostgresOperations dbPostgresOperations, DBOracleOperations dbOracleOperations) {
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(Config.dbPasswordMain));
         dbPostgresOperations.initDB(
                 Farm.dbHost,
                 Farm.dbPort,
                 Farm.dbSid,
                 Farm.dbUser,
                 Farm.dbPassword,
-                environment.getProperty("db.tabuser"),
-                environment.getProperty("db.tabattrib")
+                Config.dbTabUsersTbl,
+                Config.dbTabAttribTbl
         );
         dbOracleOperations.initDB(
-                environment.getProperty("db.hostname.main"),
-                environment.getProperty("db.port.main"),
-                environment.getProperty("db.sid.main"),
-                environment.getProperty("db.username.main"),
+                Config.dbHostnameMain,
+                Config.dbPortMain,
+                Config.dbSidMain,
+                Config.dbUsernameMain,
                 decodedPassword,
-                environment.getProperty("db.qs.admin.users"),
-                environment.getProperty("db.qs.farms")
+                Config.dbQsAdminUsersTbl,
+                Config.dbQsFarmsTbl
         );
     }
 

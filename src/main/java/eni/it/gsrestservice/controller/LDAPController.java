@@ -1,12 +1,12 @@
 package eni.it.gsrestservice.controller;
 
+import eni.it.gsrestservice.config.Config;
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.LDAPConnector;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +18,6 @@ import java.util.Base64;
 public class LDAPController {
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
-    private final Environment environment;
-
-    public LDAPController(Environment environment) {
-        this.environment = environment;
-    }
 
     @GetMapping("/searchUserOnLDAPPage")
     public ModelAndView searchUserOnLDAPPage() {
@@ -93,15 +88,15 @@ public class LDAPController {
     }
 
     private void initDB() {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(Config.dbPasswordMain));
         dbOracleOperations.initDB(
-                environment.getProperty("db.hostname.main"),
-                environment.getProperty("db.port.main"),
-                environment.getProperty("db.sid.main"),
-                environment.getProperty("db.username.main"),
+                Config.dbHostnameMain,
+                Config.dbPortMain,
+                Config.dbSidMain,
+                Config.dbUsernameMain,
                 decodedPassword,
-                environment.getProperty("db.qs.admin.users"),
-                environment.getProperty("db.qs.farms")
+                Config.dbQsAdminUsersTbl,
+                Config.dbQsFarmsTbl
         );
     }
 }
