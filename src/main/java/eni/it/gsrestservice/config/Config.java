@@ -3,10 +3,12 @@ package eni.it.gsrestservice.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class Config {
     //Vds section
     @Value("${vds.ctx.factory}")
@@ -51,7 +53,6 @@ public class Config {
     public static String dbTabUsersTbl;
     @Value("${db.tabattrib}")
     public static String dbTabAttribTbl;
-
 
     @Bean
     public MultipartResolver multipartResolver() {
