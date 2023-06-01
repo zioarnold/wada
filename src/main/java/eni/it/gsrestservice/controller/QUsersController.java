@@ -1,6 +1,5 @@
 package eni.it.gsrestservice.controller;
 
-import eni.it.gsrestservice.config.Config;
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.db.DBOracleOperations;
@@ -9,6 +8,7 @@ import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.LDAPConnector;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,10 +19,15 @@ public class QUsersController {
     private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
+    private final Environment environment;
     private final RolesListConfig rolesListConfig = new RolesListConfig();
 
+    public QUsersController(Environment environment) {
+        this.environment = environment;
+    }
+
     private void initDB() {
-        CSVReaderController.initAllDBPostgresOracle(dbPostgresOperations, dbOracleOperations);
+        CSVReaderController.initAllDBPostgresOracle(dbPostgresOperations, environment, dbOracleOperations);
     }
 
     @GetMapping("/AllQLIKUsersFromDB")
@@ -118,7 +123,7 @@ public class QUsersController {
                             .addObject("ping_qlik", qlikSenseConnector.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role)
-                            .addObject("rolesList", rolesListConfig.initRolesList(Config.rolesConfigJsonPath));
+                            .addObject("rolesList", rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
                 } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                     return new ModelAndView("singleUploadPage")
                             .addObject("farm_name", Farm.description)
@@ -126,7 +131,7 @@ public class QUsersController {
                             .addObject("ping_qlik", qlikSenseConnector.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role)
-                            .addObject("rolesList", rolesListConfig.initRolesList(Config.rolesConfigJsonPath));
+                            .addObject("rolesList", rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
                 } else {
                     return new ModelAndView("sessionExpired");
                 }
@@ -145,7 +150,7 @@ public class QUsersController {
                                      @RequestParam(required = false, name = "userRole") String userRole,
                                      @RequestParam(required = false, name = "userGroup") String userGroup) throws IOException {
         initDB();
-        dbPostgresOperations.initFile(Config.logRoleExistForUser);
+        dbPostgresOperations.initFile(environment.getProperty("log.role.exist.for.user"));
         new LDAPConnector().searchOnLDAPInsertToDB(userId, userRole, userGroup);
         dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
                 Farm.description + " di " + Farm.environment + " ha censito utente :" + userId.toUpperCase() + " con ruolo: "

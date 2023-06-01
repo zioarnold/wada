@@ -1,11 +1,11 @@
 package eni.it.gsrestservice.controller;
 
-import eni.it.gsrestservice.config.Config;
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,8 +14,13 @@ import java.util.Base64;
 
 @Controller
 public class AssistanceController {
+    private final Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
+
+    public AssistanceController(Environment environment) {
+        this.environment = environment;
+    }
 
     @GetMapping("/assistance")
     public ModelAndView assistance() {
@@ -63,15 +68,15 @@ public class AssistanceController {
     }
 
     private void initDB() {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(Config.dbPasswordMain));
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
         dbOracleOperations.initDB(
-                Config.dbHostnameMain,
-                Config.dbPortMain,
-                Config.dbSidMain,
-                Config.dbUsernameMain,
+                environment.getProperty("db.hostname.main"),
+                environment.getProperty("db.port.main"),
+                environment.getProperty("db.sid.main"),
+                environment.getProperty("db.username.main"),
                 decodedPassword,
-                Config.dbQsAdminUsersTbl,
-                Config.dbQsFarmsTbl
+                environment.getProperty("db.qs.admin.users"),
+                environment.getProperty("db.qs.farms")
         );
     }
 }

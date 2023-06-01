@@ -1,6 +1,5 @@
 package eni.it.gsrestservice.controller;
 
-import eni.it.gsrestservice.config.Config;
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.db.DBOracleOperations;
@@ -8,6 +7,7 @@ import eni.it.gsrestservice.db.DBPostgresOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,8 +19,13 @@ import java.io.Serializable;
 public class ManagementController implements Serializable {
     private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
+    private final Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final RolesListConfig rolesListConfig = new RolesListConfig();
+
+    public ManagementController(Environment environment) {
+        this.environment = environment;
+    }
 
     private void initDB() {
         dbPostgresOperations.initDB(
@@ -29,8 +34,8 @@ public class ManagementController implements Serializable {
                 Farm.dbSid,
                 Farm.dbUser,
                 Farm.dbPassword,
-                Config.dbTabUsersTbl,
-                Config.dbTabAttribTbl
+                environment.getProperty("db.tabuser"),
+                environment.getProperty("db.tabattrib")
         );
     }
 
@@ -68,7 +73,7 @@ public class ManagementController implements Serializable {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("qusers", dbPostgresOperations.getAllUsers())
-                                .addObject("rolesList", rolesListConfig.initRolesList(Config.rolesConfigJsonPath));
+                                .addObject("rolesList", rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
                     }
                 } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
                     if (dbPostgresOperations.getAllUsers().size() == 0) {
@@ -87,7 +92,7 @@ public class ManagementController implements Serializable {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("qusers", dbPostgresOperations.getAllUsers())
-                                .addObject("rolesList", rolesListConfig.initRolesList(Config.rolesConfigJsonPath));
+                                .addObject("rolesList", rolesListConfig.initRolesList(environment.getProperty("roles.config.json.path")));
                     }
                 } else {
                     return new ModelAndView("sessionExpired");
@@ -126,7 +131,7 @@ public class ManagementController implements Serializable {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utente "
                     + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
                     Farm.environment + " ha eseguito questa query: update " +
-                    Config.dbTabAttribTbl + " set value = " + userRole +
+                    environment.getProperty("db.tabattrib") + " set value = " + userRole +
                     " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
@@ -150,7 +155,7 @@ public class ManagementController implements Serializable {
         if (dbPostgresOperations.deleteRoleGroupByUserID(userId, type, value)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
                     + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
-                    + Farm.environment + " ha eseguto la query: delete from " + Config.dbTabAttribTbl
+                    + Farm.environment + " ha eseguto la query: delete from " + environment.getProperty("db.tabattrib")
                     + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value + "')");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
@@ -208,7 +213,7 @@ public class ManagementController implements Serializable {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
                     + QsAdminUsers.username + " su questa farm: " + Farm.description +
                     " di " + Farm.environment + " ha eseguito la query: delete from "
-                    + Config.dbTabUsersTbl + " where userid like " + userId.toUpperCase() + "')");
+                    + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase() + "')");
             return new ModelAndView("redirect:/managementPage")
                     .addObject("ping_qlik", qlikSenseConnector.ping());
         } else {
@@ -254,7 +259,7 @@ public class ManagementController implements Serializable {
         if (dbPostgresOperations.insertIntoAttribGroup(userId, type, userGroup)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
                     Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
-                    + Config.dbTabAttribTbl + " (userid, type, value) VALUES("
+                    + environment.getProperty("db.tabattrib") + " (userid, type, value) VALUES("
                     + userId.toUpperCase() + "," + type + "," + userGroup + ")'");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
@@ -277,7 +282,7 @@ public class ManagementController implements Serializable {
         if (dbPostgresOperations.disableUserById(userId, disableYN)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES( 'Utenza " + QsAdminUsers.username + " su questa farm: "
                     + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
-                    + Config.dbTabUsersTbl + " set user_is_active = " + disableYN
+                    + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
                     + " where userid like " + userId.toUpperCase() + "')");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
@@ -302,7 +307,7 @@ public class ManagementController implements Serializable {
                 if (dbPostgresOperations.synchronizeUserRole(userId, oldRole, getUserRoleByUserId(userId))) {
                     dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su qesta farm: " +
                             Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " +
-                            Config.dbTabUsersTbl + " set value = " + getUserRoleByUserId(userId) +
+                            environment.getProperty("db.tabattrib") + " set value = " + getUserRoleByUserId(userId) +
                             " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
                     return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                             .addObject("ping_qlik", qlikSenseConnector.ping());
