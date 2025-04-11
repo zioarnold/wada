@@ -4,9 +4,16 @@ import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.db.DBPostgresOperations;
+import eni.it.gsrestservice.entities.oracle.QsAdminUser;
+import eni.it.gsrestservice.entities.oracle.QsAuditLog;
+import eni.it.gsrestservice.entities.oracle.QsFarm;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import eni.it.gsrestservice.service.QsAdminUsersService;
+import eni.it.gsrestservice.service.QsAuditLogService;
+import eni.it.gsrestservice.service.QsFarmService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +21,22 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
+@RequiredArgsConstructor
 public class ManagementController implements Serializable {
+    private final QsFarmService qsFarmService;
+    private final QsAdminUsersService qsAdminUsersService;
+    private final QsAuditLogService qsAuditLogService;
+
     private final DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
     private final Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final RolesListConfig rolesListConfig = new RolesListConfig();
-
-    public ManagementController(Environment environment) {
-        this.environment = environment;
-    }
 
     private void initDB() {
         dbPostgresOperations.initDB(
@@ -129,10 +140,10 @@ public class ManagementController implements Serializable {
         initQlikConnector();
         if (dbPostgresOperations.updateRoleByUserID(userId, roleGroup, oldRole, userRole)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUE ('Utente "
-                    + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
-                    Farm.environment + " ha eseguito questa query: update " +
-                    environment.getProperty("db.tabattrib") + " set value = " + userRole +
-                    " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                                           + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
+                                           Farm.environment + " ha eseguito questa query: update " +
+                                           environment.getProperty("db.tabattrib") + " set value = " + userRole +
+                                           " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
         } else {
@@ -154,9 +165,9 @@ public class ManagementController implements Serializable {
         initQlikConnector();
         if (dbPostgresOperations.deleteRoleGroupByUserID(userId, type, value)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
-                    + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
-                    + Farm.environment + " ha eseguto la query: delete from " + environment.getProperty("db.tabattrib")
-                    + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value + "')");
+                                           + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
+                                           + Farm.environment + " ha eseguto la query: delete from " + environment.getProperty("db.tabattrib")
+                                           + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value + "')");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
         } else {
@@ -211,9 +222,9 @@ public class ManagementController implements Serializable {
         initQlikConnector();
         if (dbPostgresOperations.deleteUserID(userId)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utente "
-                    + QsAdminUsers.username + " su questa farm: " + Farm.description +
-                    " di " + Farm.environment + " ha eseguito la query: delete from "
-                    + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase() + "')");
+                                           + QsAdminUsers.username + " su questa farm: " + Farm.description +
+                                           " di " + Farm.environment + " ha eseguito la query: delete from "
+                                           + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase() + "')");
             return new ModelAndView("redirect:/managementPage")
                     .addObject("ping_qlik", qlikSenseConnector.ping());
         } else {
@@ -229,9 +240,10 @@ public class ManagementController implements Serializable {
 
     @RequestMapping(value = "/report", method = RequestMethod.GET)
     public ModelAndView report() throws Exception {
+        List<QsAuditLog> report = qsAuditLogService.findAll();
         initDB();
         initQlikConnector();
-        if (dbOracleOperations.report().size() == 0) {
+        if (report.isEmpty()) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0018_NO_REPORT_EXISTS.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -246,7 +258,7 @@ public class ManagementController implements Serializable {
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("report", dbOracleOperations.report());
+                    .addObject("report", report);
         }
     }
 
@@ -258,9 +270,9 @@ public class ManagementController implements Serializable {
         initQlikConnector();
         if (dbPostgresOperations.insertIntoAttribGroup(userId, type, userGroup)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su questa farm: " +
-                    Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
-                    + environment.getProperty("db.tabattrib") + " (userid, type, value) VALUES("
-                    + userId.toUpperCase() + "," + type + "," + userGroup + ")'");
+                                           Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
+                                           + environment.getProperty("db.tabattrib") + " (userid, type, value) VALUES("
+                                           + userId.toUpperCase() + "," + type + "," + userGroup + ")'");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
         } else {
@@ -281,9 +293,9 @@ public class ManagementController implements Serializable {
         initQlikConnector();
         if (dbPostgresOperations.disableUserById(userId, disableYN)) {
             dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES( 'Utenza " + QsAdminUsers.username + " su questa farm: "
-                    + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
-                    + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
-                    + " where userid like " + userId.toUpperCase() + "')");
+                                           + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
+                                           + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
+                                           + " where userid like " + userId.toUpperCase() + "')");
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseConnector.ping());
         } else {
@@ -306,9 +318,9 @@ public class ManagementController implements Serializable {
             if (getUserRoleByUserId(userId) != null) {
                 if (dbPostgresOperations.synchronizeUserRole(userId, oldRole, getUserRoleByUserId(userId))) {
                     dbOracleOperations.updateAudit("insert into QSAUDITLOG (DESCRIPTION) VALUES ('Utenza " + QsAdminUsers.username + " su qesta farm: " +
-                            Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " +
-                            environment.getProperty("db.tabattrib") + " set value = " + getUserRoleByUserId(userId) +
-                            " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
+                                                   Farm.description + " di " + Farm.environment + " ha eseguto questa query: update " +
+                                                   environment.getProperty("db.tabattrib") + " set value = " + getUserRoleByUserId(userId) +
+                                                   " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase() + "')");
                     return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                             .addObject("ping_qlik", qlikSenseConnector.ping());
                 } else {
@@ -366,10 +378,25 @@ public class ManagementController implements Serializable {
                                    @RequestParam(name = "dbPort") String dbPort,
                                    @RequestParam(name = "qsUserHeader") String qsUserHeader,
                                    @RequestParam(name = "environment") String environment) {
+        QsFarm qsFarm = new QsFarm();
+        qsFarm.setDescription(description);
+        qsFarm.setCame(came);
+        qsFarm.setDbuser(dbUser);
+        qsFarm.setDbpassword(dbPassword);
+        qsFarm.setDbhost(dbHost);
+        qsFarm.setQshost(qsHost);
+        qsFarm.setQspathclient(qsPathClient);
+        qsFarm.setQspathroot(qsPathRoot);
+        qsFarm.setQsxrfkey(qsXrfKey);
+        qsFarm.setQskspasswd(qsKsPassword);
+        qsFarm.setNote(note);
+        qsFarm.setDbsid(dbSid);
+        qsFarm.setDbport(dbPort);
+        qsFarm.setQsuserheader(qsUserHeader);
+        qsFarm.setEnvironment(environment);
         initDB();
         initQlikConnector();
-        if (dbOracleOperations.addNewFarm(description, dbUser, dbPassword, dbHost, qsHost,
-                qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, came)) {
+        if (qsFarmService.create(qsFarm) != null) {
             return new ModelAndView("success")
                     .addObject("successMsg", "Operazione e` andata a buon fine")
                     .addObject("farm_name", Farm.description)
@@ -404,13 +431,28 @@ public class ManagementController implements Serializable {
                                      @RequestParam(name = "dbPort") String dbPort,
                                      @RequestParam(name = "qsUserHeader") String qsUserHeader,
                                      @RequestParam(name = "environment") String environment) {
+        QsFarm qsFarm = new QsFarm();
+        qsFarm.setDescription(description);
+        qsFarm.setCame(came);
+        qsFarm.setDbuser(dbUser);
+        qsFarm.setDbpassword(dbPassword);
+        qsFarm.setDbhost(dbHost);
+        qsFarm.setQshost(qsHost);
+        qsFarm.setQspathclient(qsPathClient);
+        qsFarm.setQspathroot(qsPathRoot);
+        qsFarm.setQsxrfkey(qsXrfKey);
+        qsFarm.setQskspasswd(qsKsPassword);
+        qsFarm.setNote(note);
+        qsFarm.setDbsid(dbSid);
+        qsFarm.setDbport(dbPort);
+        qsFarm.setQsuserheader(qsUserHeader);
+        qsFarm.setEnvironment(environment);
         initDB();
-        if (dbOracleOperations.addNewFarm(description, dbUser, dbPassword, dbHost, qsHost,
-                qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, came)) {
+        if (qsFarmService.create(qsFarm) != null) {
             return new ModelAndView("chooseFarm")
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("farmList", dbOracleOperations.getAllFarms());
+                    .addObject("farmList", qsFarmService.findAllFarms());
         } else {
             return new ModelAndView("errorLogin")
                     .addObject("errorMsg", ErrorWadaManagement.E_9999_UNKNOWN_ERROR.getErrorMsg());
@@ -421,7 +463,7 @@ public class ManagementController implements Serializable {
     public ModelAndView allFarmPage() throws Exception {
         initDB();
         initQlikConnector();
-        if (dbOracleOperations.getAllFarms().size() == 0) {
+        if (qsFarmService.findAllFarms().isEmpty()) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0017_NO_FARM_INSERTED.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -436,15 +478,15 @@ public class ManagementController implements Serializable {
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("all_farm", dbOracleOperations.getAllFarms());
+                    .addObject("all_farm", qsFarmService.findAllFarms());
         }
     }
 
     @RequestMapping("/allAdminsPage")
-    public ModelAndView allAdminsPage() throws Exception {
+    public ModelAndView allAdminsPage() {
         initDB();
         initQlikConnector();
-        if (dbOracleOperations.getAllAdmins().size() == 0) {
+        if (qsAdminUsersService.findAllAdminUsers().isEmpty()) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -459,38 +501,29 @@ public class ManagementController implements Serializable {
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("all_admins", dbOracleOperations.getAllAdmins());
+                    .addObject("all_admins", qsAdminUsersService.findAllAdminUsers());
         }
     }
 
     @GetMapping("/editFarm")
-    public ModelAndView editFarm(@RequestParam(required = false, name = "farmId") String farmId) {
-        initDB();
+    public ModelAndView editFarm(@RequestParam(required = false, name = "farmId") Long farmId) {
+        QsFarm qsFarm = qsFarmService.findById(farmId).orElseThrow(() -> new IllegalArgumentException("No farm found with id " + farmId));
+
         initQlikConnector();
-        if (dbOracleOperations.getFarmDataById(farmId).size() == 0) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        } else {
-            return new ModelAndView("editFarm")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("farm", dbOracleOperations.getFarmDataById(farmId));
-        }
+        return new ModelAndView("editFarm")
+                .addObject("farm_name", Farm.description)
+                .addObject("farm_environment", Farm.environment)
+                .addObject("ping_qlik", qlikSenseConnector.ping())
+                .addObject("user_logged_in", QsAdminUsers.username)
+                .addObject("user_role_logged_in", QsAdminUsers.role)
+                .addObject("farm", new ArrayList<QsFarm>().add(qsFarm));
     }
 
     @GetMapping("/editAdmin")
-    public ModelAndView editAdmin(@RequestParam(required = false, name = "adminId") String adminId) {
-        initDB();
+    public ModelAndView editAdmin(@RequestParam(required = false, name = "adminId") Long adminId) {
+        QsAdminUser qsAdminUser = qsAdminUsersService.findById(adminId).orElseThrow(() -> new NoSuchElementException("No admin found with id " + adminId));
         initQlikConnector();
-        if (dbOracleOperations.getAdminUserDataById(adminId).size() == 0) {
+        if (qsAdminUser == null) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -505,7 +538,7 @@ public class ManagementController implements Serializable {
                     .addObject("ping_qlik", qlikSenseConnector.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("user_admin", dbOracleOperations.getAdminUserDataById(adminId));
+                    .addObject("user_admin", new ArrayList<QsAdminUser>().add(qsAdminUser));
         }
     }
 
@@ -534,53 +567,33 @@ public class ManagementController implements Serializable {
     }
 
     @RequestMapping(value = "/deleteFarm", method = RequestMethod.POST)
-    public ModelAndView deleteFarm(@RequestParam(required = false, name = "farmId") String farmId) {
-        initDB();
+    public ModelAndView deleteFarm(@RequestParam(required = false, name = "farmId") Long farmId) {
+        qsFarmService.deleteById(farmId);
         initQlikConnector();
-        if (dbOracleOperations.deleteFarmById(farmId)) {
-            return new ModelAndView("success")
-                    .addObject("successMsg", "Operazione e` andata a buon fine")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        }
+        return new ModelAndView("success")
+                .addObject("successMsg", "Operazione e` andata a buon fine")
+                .addObject("farm_name", Farm.description)
+                .addObject("farm_environment", Farm.environment)
+                .addObject("ping_qlik", qlikSenseConnector.ping())
+                .addObject("user_logged_in", QsAdminUsers.username)
+                .addObject("user_role_logged_in", QsAdminUsers.role);
     }
 
     @RequestMapping(value = "/deleteAdmin")
-    public ModelAndView deleteAdmin(@RequestParam(required = false, name = "adminId") int id) {
-        initDB();
+    public ModelAndView deleteAdmin(@RequestParam(required = false, name = "adminId") Long id) {
+        qsAdminUsersService.deleteById(id);
         initQlikConnector();
-        if (dbOracleOperations.deleteAdminModerById(id)) {
-            return new ModelAndView("success")
-                    .addObject("successMsg", "Operazione e` andata a buon fine")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        } else {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        }
+        return new ModelAndView("success")
+                .addObject("successMsg", "Operazione e` andata a buon fine")
+                .addObject("farm_name", Farm.description)
+                .addObject("farm_environment", Farm.environment)
+                .addObject("ping_qlik", qlikSenseConnector.ping())
+                .addObject("user_logged_in", QsAdminUsers.username)
+                .addObject("user_role_logged_in", QsAdminUsers.role);
     }
 
     @RequestMapping(value = "/saveFarm", method = RequestMethod.POST)
-    public ModelAndView saveFarm(@RequestParam(required = false, name = "farmId") String farmId,
+    public ModelAndView saveFarm(@RequestParam(required = false, name = "farmId") Long farmId,
                                  @RequestParam(name = "description") String description,
                                  @RequestParam(name = "came") String came,
                                  @RequestParam(name = "dbUser") String dbUser,
@@ -597,11 +610,28 @@ public class ManagementController implements Serializable {
                                  @RequestParam(name = "dbPort") String dbPort,
                                  @RequestParam(name = "qsHeader") String qsUserHeader,
                                  @RequestParam(name = "environment") String environment) {
-        initDB();
+
+        QsFarm qsFarm = qsFarmService.findById(farmId)
+                .orElseThrow(() -> new NoSuchElementException("No Qs Farm is found by: " + farmId + " to update."));
+
+        qsFarm.setDescription(description);
+        qsFarm.setCame(came);
+        qsFarm.setDbuser(dbUser);
+        qsFarm.setDbpassword(dbPassword);
+        qsFarm.setDbhost(dbHost);
+        qsFarm.setQshost(qsHost);
+        qsFarm.setQspathclient(qsPathClient);
+        qsFarm.setQspathroot(qsPathRoot);
+        qsFarm.setQsxrfkey(qsXrfKey);
+        qsFarm.setQskspasswd(qsKsPassword);
+        qsFarm.setNote(note);
+        qsFarm.setDbsid(dbSid);
+        qsFarm.setDbport(dbPort);
+        qsFarm.setQsuserheader(qsUserHeader);
+        qsFarm.setEnvironment(environment);
+
         initQlikConnector();
-        if (dbOracleOperations.updateFarm(farmId, description, dbUser, dbPassword, dbHost, qsHost,
-                qsReloadTaskName, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword,
-                note, dbSid, dbPort, qsUserHeader, environment, came)) {
+        if (qsFarmService.update(qsFarm) != null) {
             return new ModelAndView("success")
                     .addObject("successMsg", "Operazione e` andata a buon fine")
                     .addObject("farm_name", Farm.description)

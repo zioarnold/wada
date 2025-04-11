@@ -3,9 +3,7 @@ package eni.it.gsrestservice.entities.oracle;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
@@ -13,11 +11,16 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "QSFARMS")
 public class QsFarm {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(nullable = false)
+    private Long id;
+
     @Column(name = "FARMID", nullable = false)
     private Long farmid;
 
     @Column(name = "DESCRIZIONE", nullable = false, length = 100)
-    private String descrizione;
+    private String description;
 
     @Column(name = "DBUSER", nullable = false, length = 30)
     private String dbuser;

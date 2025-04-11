@@ -61,7 +61,7 @@ public class LDAPController {
     public ModelAndView searchUserOnLDAP(@RequestParam(required = false, name = "userID") String userID) throws Exception {
         LDAPConnector ldapConnector = new LDAPConnector();
         initQlikConnector();
-        if (ldapConnector.searchOnLDAP(userID).size() != 0) {
+        if (!ldapConnector.searchOnLDAP(userID).isEmpty()) {
             return new ModelAndView("searchUserOnLDAP")
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)

@@ -5,24 +5,27 @@ import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import eni.it.gsrestservice.utility.Utility;
+import eni.it.gsrestservice.service.QsAdminUsersService;
+import eni.it.gsrestservice.service.QsFarmService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Base64;
+import static eni.it.gsrestservice.utility.Utility.MD5;
 
 @RestController
+@RequiredArgsConstructor
 public class LoginController {
+
+    private final QsFarmService qsFarmService;
+    private final QsAdminUsersService qsAdminUsersService;
+
     private final Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
     private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
-
-    public LoginController(Environment environment) {
-        this.environment = environment;
-    }
 
 
     @RequestMapping("/")
@@ -33,7 +36,6 @@ public class LoginController {
     @RequestMapping("/index")
     public ModelAndView index() {
         try {
-            initDB();
             initQlikConnector();
             if (DBOracleOperations.isIsAuthenticated()) {
                 if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
@@ -66,18 +68,13 @@ public class LoginController {
     @RequestMapping("/login")
     public ModelAndView loginPage(@RequestParam(required = false, name = "username") String username,
                                   @RequestParam(required = false, name = "password") String password) {
-        initDB();
-        if (dbOracleOperations.login(username, password)) {
-            if (!QsAdminUsers.password.equals(Utility.MD5(password))) {
-                return new ModelAndView("errorLogin")
-                        .addObject("errorMsg", ErrorWadaManagement.E_0011_USERNAME_PASSWORD_INCORRECT.getErrorMsg());
-            } else {
-                return new ModelAndView("chooseFarm")
-                        .addObject("farmList", dbOracleOperations.getAllFarms());
-            }
+
+        if (qsAdminUsersService.login(username, MD5(password)) != null) {
+            return new ModelAndView("chooseFarm")
+                    .addObject("farmList", qsFarmService.findAllFarms());
         } else {
             return new ModelAndView("errorLogin")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0016_USER_NOT_EXISTS.getErrorMsg());
+                    .addObject("errorMsg", ErrorWadaManagement.E_0011_USERNAME_PASSWORD_INCORRECT.getErrorMsg());
         }
     }
 
@@ -100,8 +97,8 @@ public class LoginController {
 
     @RequestMapping("/selectFarm")
     public ModelAndView selectFarm(@RequestParam(name = "farm") String farmName) {
-        initDB();
-        if (dbOracleOperations.selectFarm(farmName)) {
+
+        if (qsFarmService.findByDescription(farmName).isPresent()) {
             if (dbOracleOperations.initConnector()) {
                 initQlikConnector();
                 return new ModelAndView("index")
@@ -130,18 +127,5 @@ public class LoginController {
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
         qlikSenseConnector.configureCertificate();
-    }
-
-    private void initDB() {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
-        dbOracleOperations.initDB(
-                environment.getProperty("db.hostname.main"),
-                environment.getProperty("db.port.main"),
-                environment.getProperty("db.sid.main"),
-                environment.getProperty("db.username.main"),
-                decodedPassword,
-                environment.getProperty("db.qs.admin.users"),
-                environment.getProperty("db.qs.farms")
-        );
     }
 }
