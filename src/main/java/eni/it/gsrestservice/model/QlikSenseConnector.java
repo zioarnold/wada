@@ -1,8 +1,8 @@
 package eni.it.gsrestservice.model;
 
-import eni.it.gsrestservice.config.LoggingMisc;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -11,18 +11,14 @@ import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
+@Component
 public class QlikSenseConnector {
     private static String xrfKey, host, proxyCert, rootCert, rootCertPwd, userHeader, qsReloadTaskName;
     private static SSLSocketFactory sslSocketFactory;
-    private final LoggingMisc loggingMisc;
 
-    public QlikSenseConnector() {
-        loggingMisc = new LoggingMisc();
-    }
-
-    public void initConnector(final String key, final String host, final String proxyCert,
-                              final String rootCert, final String rootCertPwd, final String userHeader,
-                              final String qsReloadTaskName) {
+    public static void initConnector(final String key, final String host, final String proxyCert,
+                                     final String rootCert, final String rootCertPwd, final String userHeader,
+                                     final String qsReloadTaskName) {
         QlikSenseConnector.xrfKey = key;
         QlikSenseConnector.host = host;
         QlikSenseConnector.proxyCert = proxyCert;
@@ -32,51 +28,34 @@ public class QlikSenseConnector {
         QlikSenseConnector.qsReloadTaskName = qsReloadTaskName;
     }
 
-    public boolean configureCertificate() {
-        boolean isConfigured = false;
+    public static void configureCertificate() {
         try {
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + proxyCert + ": JKS");
             KeyStore keyStore = KeyStore.getInstance("JKS");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance: JKS - successful");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Loading keystore: " + proxyCert);
             keyStore.load(Files.newInputStream(new File(proxyCert).toPath()), rootCertPwd.toCharArray());
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Loading keystore: " + proxyCert + " successful");
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(keyStore, rootCertPwd.toCharArray());
             SSLContext sslContext = SSLContext.getInstance("SSL");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS");
             KeyStore keyStoreTrust = KeyStore.getInstance("JKS");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring keystore instance for " + rootCert + ": JKS - successful");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Loading keystore: " + rootCert);
             keyStoreTrust.load(Files.newInputStream(new File(rootCert).toPath()), rootCertPwd.toCharArray());
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Loading keystore: " + rootCert + " successful");
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStoreTrust);
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring certificates: " + proxyCert + ";" + rootCert);
             sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring certificates: " + proxyCert + ";" + rootCert + " successful");
             sslSocketFactory = sslContext.getSocketFactory();
             System.setProperty("javax.net.ssl.keyStore", proxyCert);
             System.setProperty("javax.net.ssl.keyStorePassword", rootCertPwd);
             System.setProperty("javax.net.ssl.trustStore", rootCert);
             System.setProperty("javax.net.ssl.trustStorePassword", rootCertPwd);
             System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-            isConfigured = true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return isConfigured;
     }
 
     public void setUserRoleByUserId(String userId, String role) throws Exception {
         String spec = "https://" + host + ":4242/qrs/user/full?filter=userId eq '" + userId + "'&xrfkey=" + xrfKey;
         String replace = spec.replace(" ", "%20").replace("'", "%27");
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configuring url: " + replace);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Opening connection");
         HttpsURLConnection connection = (HttpsURLConnection) new URL(replace).openConnection();
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Opening connection successful");
         connection.setSSLSocketFactory(sslSocketFactory);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Configure headers: " + xrfKey + " " + userHeader);
         connection.setRequestProperty("X-Qlik-Xrfkey", xrfKey);
         connection.setRequestProperty("X-Qlik-User", userHeader);
         connection.setDoOutput(true);
@@ -85,7 +64,6 @@ public class QlikSenseConnector {
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestMethod("PUT");
         String data = obtainHttpConnection(connection);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " Getting data: " + data);
         JSONObject jsonObject = new JSONObject(data);
         JSONArray attributes = jsonObject.getJSONArray("attributes");
         for (int i = 0; i < attributes.length(); i++) {
@@ -95,14 +73,12 @@ public class QlikSenseConnector {
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(role);
         jsonObject.put("roles", jsonArray);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " Sending data: " + jsonObject);
     }
 
     public String getUserRoleByUserId(String userId) throws Exception {
         String spec = "https://" + host + ":4242/qrs/user/full?filter=userId eq '" + userId + "'&xrfkey=" + xrfKey;
         String replace = spec.replace(" ", "%20").replace("'", "%27");
         URL url = new URL(replace);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Executing URL: " + replace);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setSSLSocketFactory(sslSocketFactory);
         connection.setRequestProperty("X-Qlik-Xrfkey", xrfKey);
@@ -142,22 +118,15 @@ public class QlikSenseConnector {
 
     public int ping() {
         String pingURL = "https://" + host + ":4242/ssl/ping?xrfkey=" + xrfKey;
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Executing URL: " + pingURL);
         HttpsURLConnection connection;
         try {
             connection = (HttpsURLConnection) new URL(pingURL).openConnection();
             connection.setSSLSocketFactory(sslSocketFactory);
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-Xrfkey: " + xrfKey);
             connection.setRequestProperty("X-Qlik-Xrfkey", xrfKey);
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-User: " + userHeader);
             connection.setRequestProperty("X-Qlik-User", userHeader);
             connection.setDoInput(true);
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request property: Content-Type application/json");
             connection.setRequestProperty("Content-Type", "application/json");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request method: GET");
-
             connection.setRequestMethod("GET");
-            loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Connection response code: " + connection.getResponseCode());
             return connection.getResponseCode();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -168,22 +137,15 @@ public class QlikSenseConnector {
 
     public int startReloadTask() throws IOException {
         String reloadTaskURL = "https://" + host + ":4242/qrs/task/start/synchronous/?name=UDC Sync_usersynctask&xrfkey=" + xrfKey;
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Executing URL: " + reloadTaskURL.replace(" ", "%20"));
         HttpsURLConnection connection = (HttpsURLConnection) new URL(reloadTaskURL.replace(" ", "%20")).openConnection();
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up SSLFactory: " + sslSocketFactory.toString());
         HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-Xrfkey: " + xrfKey);
         connection.setRequestProperty("X-Qlik-Xrfkey", xrfKey);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up header X-Qlik-User: " + userHeader);
         connection.setRequestProperty("X-Qlik-User", userHeader);
         connection.setDoInput(true);
         connection.setDoOutput(true);
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request property: Content-Type application/json");
         connection.setRequestProperty("Content-Type", "application/json");
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Setting up request method: POST");
         connection.setRequestMethod("POST");
         sendData(connection, "");
-        loggingMisc.printConsole(1, QlikSenseConnector.class.getSimpleName() + " - Connection response code: " + connection.getResponseCode());
         return connection.getResponseCode();
     }
 

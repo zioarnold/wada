@@ -7,6 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -26,7 +27,8 @@ public class PostgresConfig {
         dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("spring.datasource.postgres.driver-class-name")));
         dataSource.setUrl(environment.getProperty("spring.datasource.postgres.url"));
         dataSource.setUsername(environment.getProperty("spring.datasource.postgres.username"));
-        dataSource.setPassword(environment.getProperty("spring.datasource.postgres.password"));
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("spring.datasource.postgres.password")));
+        dataSource.setPassword(decodedPassword);
         dataSource.setConnectionProperties(additionalProperties());
         return dataSource;
     }

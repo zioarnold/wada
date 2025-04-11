@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.List;
 
-@SuppressWarnings("DuplicatedCode")
 @Service
 public class CSVReaderService {
 
@@ -38,29 +37,14 @@ public class CSVReaderService {
             rowNumbers = csvReader.count(data);
             String firstRow;
             String[] userID;
-            loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - checking if " + fileUsersNotExists + " exists");
             FileOutputStream fileOutputStream, outputStream;
             if (!fileUsersNotExists.exists() || !userDiscardedByRole.exists()) {
-                loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " not exists");
-                loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " creating");
-                if (fileUsersNotExists.createNewFile() || userDiscardedByRole.createNewFile()) {
-                    loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " creating successful");
-                    loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " opening");
-                    fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
-                    outputStream = new FileOutputStream(userDiscardedByRole, true);
-                    loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " opening successful");
-                } else {
-                    loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " opening");
-                    fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
-                    outputStream = new FileOutputStream(userDiscardedByRole, true);
-                    loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " opening successful");
-                }
-            } else {
-                loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " opening");
-                fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
-                outputStream = new FileOutputStream(userDiscardedByRole, true);
-                loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " opening successful");
+                fileUsersNotExists.createNewFile();
+                userDiscardedByRole.createNewFile();
             }
+            fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
+            outputStream = new FileOutputStream(userDiscardedByRole, true);
+            loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - Files opened successfully");
             while ((firstRow = bufferedReader.readLine()) != null) {
                 userID = firstRow.split(";");
                 for (String role : getRolesList()) {
@@ -75,13 +59,11 @@ public class CSVReaderService {
                     }
                 }
             }
-            loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " closing");
             fileOutputStream.close();
             outputStream.close();
-            loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - " + fileUsersNotExists + " closing successful");
             return true;
         } catch (Exception e) {
-            loggingMisc.printConsole(2, CSVReaderService.class.getSimpleName() + " - Errore generico " + e.getLocalizedMessage());
+            loggingMisc.printConsole(2, CSVReaderService.class.getSimpleName() + " - Error processing CSV file: " + e.getMessage());
             return false;
         }
     }

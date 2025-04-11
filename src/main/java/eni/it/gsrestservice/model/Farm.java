@@ -1,7 +1,16 @@
 package eni.it.gsrestservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Farm {
-    public static String farmId;
+    public static Long farmId;
     public static String description;
     public static String came;
     public static String dbHost;
@@ -18,8 +27,4 @@ public class Farm {
     public static String qsReloadTaskName;
     public static String note;
     public static String environment;
-
-    public Farm() {
-
-    }
 }

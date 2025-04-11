@@ -1,11 +1,12 @@
 package eni.it.gsrestservice.db;
 
 import eni.it.gsrestservice.config.LoggingMisc;
-import eni.it.gsrestservice.model.*;
+import eni.it.gsrestservice.model.QsAdmins;
+import eni.it.gsrestservice.model.QsAudit;
+import eni.it.gsrestservice.model.QsFarms;
 import oracle.jdbc.driver.OracleDriver;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,38 +143,6 @@ public class DBOracleOperations {
         }
     }
 
-    public boolean logout(String username) {
-        connectDBORA();
-        isAuthenticated = true;
-        try {
-            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
-            if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
-            } else {
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
-                statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
-                resultSet = statement.executeQuery("select USERNAME, PASSWORD from " + qsAdminUsers + " where USERNAME like '" + username + "' and PASSWORD like '" + MD5(password) + "'");
-                while (resultSet.next()) {
-                    QsAdminUsers.username = resultSet.getString("USERNAME");
-                    QsAdminUsers.password = resultSet.getString("PASSWORD");
-                }
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + "- update " + qsAdminUsers + " set AUTHENTICATED = 'N' where USERNAME like '" + username + "'");
-                resultSet = statement.executeQuery("update " + qsAdminUsers + " set AUTHENTICATED = 'N' where USERNAME like '" + username + "'");
-                isAuthenticated = false;
-            }
-        } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
-            disconnectDBORA();
-        } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
-            disconnectDBORA();
-        }
-        disconnectDBORA();
-        return isAuthenticated;
-    }
-
     public Connection getConnection() {
         return connection;
     }
@@ -182,88 +151,6 @@ public class DBOracleOperations {
         DBOracleOperations.connection = connection;
     }
 
-    public boolean initConnector() {
-        connectDBORA();
-        boolean isInitiated = false;
-        try {
-            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
-            if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
-            } else {
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
-                statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Executing query");
-                resultSet = statement.executeQuery("select FARMID, DESCRIZIONE, CAME, DBUSER, DBPASSWORD, DBHOST, DBPORT, DBSID, QSHOST, QSPATHCLIENT," +
-                                                   "QSPATHROOT, QSXRFKEY, QSKSPASSWD, QSXRFKEY, NOTE, QSUSERHEADER, ENVIRONMENT, QSRELOADTASKNAME FROM " + qsFarms);
-                while (resultSet.next()) {
-                    fillFarmData(resultSet);
-                }
-                isInitiated = true;
-            }
-        } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
-            disconnectDBORA();
-        } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
-            disconnectDBORA();
-        }
-        disconnectDBORA();
-        return isInitiated;
-    }
-
-    private void fillFarmData(ResultSet resultSet) throws SQLException {
-        Farm.farmId = resultSet.getString("FARMID");
-        Farm.description = resultSet.getString("DESCRIZIONE");
-        Farm.came = resultSet.getString("CAME");
-        Farm.dbUser = resultSet.getString("DBUSER");
-        Farm.dbPassword = resultSet.getString("DBPASSWORD");
-        Farm.dbHost = resultSet.getString("DBHOST");
-        Farm.dbPort = resultSet.getString("DBPORT");
-        Farm.dbSid = resultSet.getString("DBSID");
-        Farm.qsHost = resultSet.getString("QSHOST");
-        Farm.qsHeader = resultSet.getString("QSUSERHEADER");
-        Farm.qsPathClientJKS = resultSet.getString("QSPATHCLIENT");
-        Farm.qsPathRootJKS = resultSet.getString("QSPATHROOT");
-        Farm.qsKeyStorePwd = resultSet.getString("QSKSPASSWD");
-        Farm.qsXrfKey = resultSet.getString("QSXRFKEY");
-        Farm.note = resultSet.getString("NOTE");
-        Farm.environment = resultSet.getString("ENVIRONMENT");
-        Farm.qsReloadTaskName = resultSet.getString("QSRELOADTASKNAME");
-    }
-
-    public int checkSession(String username) {
-        connectDBORA();
-        int isSessionExpired = 0;
-        try {
-            loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Checking if connection is null");
-            if (getConnection() == null) {
-                loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Connection is null. Aborting program");
-            } else {
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Connection is not null. Creating statement");
-                statement = getConnection().createStatement();
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - Creating statement Successful");
-                loggingMisc.printConsole(1, DBOracleOperations.class.getSimpleName() + " - select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME from " + qsAdminUsers + " where USERNAME like '" + username + "'");
-                resultSet = statement.executeQuery("select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED from " + qsAdminUsers + " where USERNAME like '" + username + "'");
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                Date currentTime = new Date(System.currentTimeMillis());
-                String format = simpleDateFormat.format(currentTime);
-                while (resultSet.next()) {
-                    SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                    String session_login_expire_time = simpleDateFormat1.format(resultSet.getDate("SESSION_LOGIN_EXPIRE_TIME"));
-                    isSessionExpired = format.compareTo(session_login_expire_time);
-                }
-            }
-        } catch (SQLSyntaxErrorException ex) {
-            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - Syntax error: " + ex.getLocalizedMessage());
-            disconnectDBORA();
-        } catch (SQLException e) {
-            loggingMisc.printConsole(2, DBOracleOperations.class.getSimpleName() + " - " + e.getSQLState() + " " + e.getLocalizedMessage());
-            disconnectDBORA();
-        }
-        disconnectDBORA();
-        return isSessionExpired;
-    }
 
     public static boolean isIsAuthenticated() {
         return isAuthenticated;

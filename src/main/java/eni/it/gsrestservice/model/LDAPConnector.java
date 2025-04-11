@@ -2,12 +2,10 @@ package eni.it.gsrestservice.model;
 
 import eni.it.gsrestservice.config.LoggingMisc;
 import eni.it.gsrestservice.db.DBPostgresOperations;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.Bean;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.Environment;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -27,7 +25,22 @@ import java.util.Properties;
 @SuppressWarnings({"DuplicatedCode", "ConstantConditions"})
 @Configuration
 @PropertySource("classpath:application.properties")
-public class LDAPConnector implements EnvironmentAware {
+@NoArgsConstructor
+public class LDAPConnector {
+    @Value("${vds.context.factory}")
+    private static String contextFactory;
+    @Value("${vds.baseDN}")
+    private static String baseDN;
+    @Value("${vds.ldapURL}")
+    private static String ldapURL;
+    @Value("${vds.userName}")
+    private static String userName;
+    @Value("${vds.password}")
+    private static String password;
+    @Value("${vds.userRole}")
+    private static String userRole;
+    @Value("${log.discard}")
+    private static String logDiscard;
     private static InitialDirContext initialDirContext;
     private LoggingMisc loggingMisc;
     private Properties properties;
@@ -47,59 +60,51 @@ public class LDAPConnector implements EnvironmentAware {
             ou;
     private LDAPUser ldapUser;
     private final List<LDAPUser> userExistsOnLdap = new ArrayList<>();
-    private static Environment environment;
     private FileOutputStream fileOutputStream;
     public static int userNotExistsOnLdap;
+
     public static void resetCounter() {
         userNotExistsOnLdap = 0;
     }
 
-    public LDAPConnector() {
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer ldapConnectorConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
     public List<LDAPUser> searchOnLDAP(String filter) throws IOException {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("vds.password")));
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(password));
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         ldapUser = new LDAPUser();
         userExistsOnLdap.clear();
-        properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
+        properties.put(Context.PROVIDER_URL, ldapURL);
         properties.put(Context.SECURITY_AUTHENTICATION, "simple");
-        properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
+        properties.put(Context.SECURITY_PRINCIPAL, userName);
         properties.put(Context.SECURITY_CREDENTIALS, decodedPassword);
-        File fileUsersNotExists = new File(environment.getProperty("log.discard"));
+        File fileUsersNotExists = new File(logDiscard);
         if (!fileUsersNotExists.exists()) {
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                    " - Creating file: " + environment.getProperty("log.discard"));
+                                        " - Creating file: " + logDiscard);
             if (fileUsersNotExists.createNewFile()) {
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Creating file: " + environment.getProperty("log.discard") + " successful");
+                                            " - Creating file: " + logDiscard + " successful");
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Opening file: " + environment.getProperty("log.discard"));
+                                            " - Opening file: " + logDiscard);
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Opening file: " + environment.getProperty("log.discard") + " successful");
+                                            " - Opening file: " + logDiscard + " successful");
             } else {
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             }
         } else {
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                    " - Opening file: " + environment.getProperty("log.discard"));
+                                        " - Opening file: " + logDiscard);
             fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                    " - Opening file: " + environment.getProperty("log.discard") + " successful");
+                                        " - Opening file: " + logDiscard + " successful");
         }
         try {
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(environment.getProperty("vds.baseDN"), "(&(objectClass=user)(ENIMatricolaNotes=" + filter + "))", searchControl);
+            answer = initialDirContext.search(baseDN, "(&(objectClass=user)(ENIMatricolaNotes=" + filter + "))", searchControl);
             loggingMisc.printConsole(1, "Connection to LDAP");
             if (answer.hasMore()) {
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " - Connection to LDAP Successful");
@@ -249,18 +254,18 @@ public class LDAPConnector implements EnvironmentAware {
             } else {
                 String userNotExist = "Utenza non esiste sul VDS: " + filter + "\n";
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Writing to file: " + userNotExist);
+                                            " - Writing to file: " + userNotExist);
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
                 fileOutputStream.write(userNotExist.getBytes());
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Writing to file: " + userNotExist + " successful");
+                                            " - Writing to file: " + userNotExist + " successful");
             }
             initialDirContext.close();
             answer.close();
             fileOutputStream.close();
         } catch (NamingException e) {
             loggingMisc.printConsole(2, LDAPConnector.class.getSimpleName() + " - Unable to connect to LDAP, check your properties: "
-                    + e.getExplanation() + " " + e.getLocalizedMessage());
+                                        + e.getExplanation() + " " + e.getLocalizedMessage());
         }
         return userExistsOnLdap;
     }
@@ -269,45 +274,45 @@ public class LDAPConnector implements EnvironmentAware {
      * @param userID criterio di ricerca x popolare il DB
      */
     public void searchOnLDAPInsertToDB(String userID, String userRole, String userGroup) throws IOException {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("vds.password")));
+        String decodedPassword = new String(Base64.getUrlDecoder().decode(password));
         loggingMisc = new LoggingMisc();
         properties = new Properties();
         DBPostgresOperations dbPostgresOperations = new DBPostgresOperations();
         dbPostgresOperations.connectDB();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        properties.put(Context.PROVIDER_URL, environment.getProperty("vds.ldapURL"));
-        properties.put(Context.SECURITY_PRINCIPAL, environment.getProperty("vds.userName"));
+        properties.put(Context.PROVIDER_URL, ldapURL);
+        properties.put(Context.SECURITY_PRINCIPAL, userName);
         properties.put(Context.SECURITY_CREDENTIALS, decodedPassword);
         ldapUser = new LDAPUser();
-        File fileUsersNotExists = new File(environment.getProperty("log.discard"));
+        File fileUsersNotExists = new File(logDiscard);
         loggingMisc.printConsole(1, "");
         if (!fileUsersNotExists.exists()) {
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                    " - Creating file: " + environment.getProperty("log.discard"));
+                                        " - Creating file: " + logDiscard);
             if (fileUsersNotExists.createNewFile()) {
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Creating file: " + environment.getProperty("log.discard") + " successful");
+                                            " - Creating file: " + logDiscard + " successful");
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Opening file: " + environment.getProperty("log.discard"));
+                                            " - Opening file: " + logDiscard);
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Opening file: " + environment.getProperty("log.discard") + " successful");
+                                            " - Opening file: " + logDiscard + " successful");
             } else {
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             }
         } else {
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                    " - Opening file: " + environment.getProperty("log.discard"));
+                                        " - Opening file: " + logDiscard);
             fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                    " - Opening file: " + environment.getProperty("log.discard") + " successful");
+                                        " - Opening file: " + logDiscard + " successful");
         }
         try {
             loggingMisc.printConsole(1, "Properties: " + properties.toString());
             initialDirContext = new InitialDirContext(properties);
             searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            answer = initialDirContext.search(environment.getProperty("vds.baseDN"), "(ENIMatricolaNotes=" + userID + ")", searchControl);
+            answer = initialDirContext.search(baseDN, "(ENIMatricolaNotes=" + userID + ")", searchControl);
             loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " - Connection to LDAP");
             if (answer.hasMore()) {
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() + " - Connection to LDAP Successful");
@@ -486,11 +491,11 @@ public class LDAPConnector implements EnvironmentAware {
                 String userNotExist = "Utenza non esiste sul VDS: " + userID + "\n";
                 userNotExistsOnLdap++;
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Writing to file: " + userNotExist);
+                                            " - Writing to file: " + userNotExist);
                 fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
                 fileOutputStream.write(userNotExist.getBytes());
                 loggingMisc.printConsole(1, LDAPConnector.class.getSimpleName() +
-                        " - Writing to file: " + userNotExist + " successful");
+                                            " - Writing to file: " + userNotExist + " successful");
             }
             initialDirContext.close();
             answer.close();
@@ -499,10 +504,5 @@ public class LDAPConnector implements EnvironmentAware {
         } catch (NamingException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        LDAPConnector.environment = environment;
     }
 }

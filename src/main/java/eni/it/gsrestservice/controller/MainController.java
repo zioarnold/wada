@@ -6,7 +6,7 @@ import eni.it.gsrestservice.entities.oracle.QsAdminUser;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import eni.it.gsrestservice.service.QsAdminUsersService;
+import eni.it.gsrestservice.service.ora.QsAdminUsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -81,7 +81,7 @@ public class MainController {
     }
 
     private void initQlikConnector() {
-        qlikSenseConnector.initConnector(
+        QlikSenseConnector.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
                 Farm.qsPathClientJKS,
@@ -89,6 +89,6 @@ public class MainController {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        qlikSenseConnector.configureCertificate();
+        QlikSenseConnector.configureCertificate();
     }
 }

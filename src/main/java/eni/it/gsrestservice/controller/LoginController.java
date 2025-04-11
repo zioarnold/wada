@@ -2,17 +2,19 @@ package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.db.DBOracleOperations;
+import eni.it.gsrestservice.entities.oracle.QsFarm;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import eni.it.gsrestservice.service.QsAdminUsersService;
-import eni.it.gsrestservice.service.QsFarmService;
+import eni.it.gsrestservice.service.ora.QsAdminUsersService;
+import eni.it.gsrestservice.service.ora.QsFarmService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 import static eni.it.gsrestservice.utility.Utility.MD5;
 
@@ -22,11 +24,7 @@ public class LoginController {
 
     private final QsFarmService qsFarmService;
     private final QsAdminUsersService qsAdminUsersService;
-
-    private final Environment environment;
     private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
-    private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
-
 
     @RequestMapping("/")
     public ModelAndView login() {
@@ -36,16 +34,15 @@ public class LoginController {
     @RequestMapping("/index")
     public ModelAndView index() {
         try {
-            initQlikConnector();
             if (DBOracleOperations.isIsAuthenticated()) {
-                if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
+                if (qsAdminUsersService.checkSession(QsAdminUsers.username) == 1) {
                     return new ModelAndView("index")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
                             .addObject("ping_qlik", qlikSenseConnector.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
+                } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
                     return new ModelAndView("index")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
@@ -80,7 +77,7 @@ public class LoginController {
 
     @RequestMapping("/logout")
     public ModelAndView logout() {
-        if (!dbOracleOperations.logout(QsAdminUsers.username)) {
+        if (!qsAdminUsersService.logout(QsAdminUsers.username)) {
             return new ModelAndView("logout");
         } else {
             return new ModelAndView("error").addObject("errorMsg",
@@ -98,9 +95,9 @@ public class LoginController {
     @RequestMapping("/selectFarm")
     public ModelAndView selectFarm(@RequestParam(name = "farm") String farmName) {
 
-        if (qsFarmService.findByDescription(farmName).isPresent()) {
-            if (dbOracleOperations.initConnector()) {
-                initQlikConnector();
+        Optional<QsFarm> qsFarm = qsFarmService.findByDescription(farmName);
+        if (qsFarm.isPresent()) {
+            if (qsFarmService.initConnector(qsFarm.get())) {
                 return new ModelAndView("index")
                         .addObject("farm_name", Farm.description)
                         .addObject("farm_environment", Farm.environment)
@@ -115,17 +112,5 @@ public class LoginController {
             return new ModelAndView("errorLogin")
                     .addObject("errorMsg", ErrorWadaManagement.E_0012_FARM_SELECT_PROBLEM.getErrorMsg());
         }
-    }
-
-    private void initQlikConnector() {
-        qlikSenseConnector.initConnector(
-                Farm.qsXrfKey,
-                Farm.qsHost,
-                Farm.qsPathClientJKS,
-                Farm.qsPathRootJKS,
-                Farm.qsKeyStorePwd,
-                Farm.qsHeader,
-                Farm.qsReloadTaskName);
-        qlikSenseConnector.configureCertificate();
     }
 }

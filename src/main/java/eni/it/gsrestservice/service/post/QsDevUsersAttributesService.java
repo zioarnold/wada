@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.service;
+package eni.it.gsrestservice.service.post;
 
 
 import eni.it.gsrestservice.db.repos.post.QsDevUsersAttributesRepository;

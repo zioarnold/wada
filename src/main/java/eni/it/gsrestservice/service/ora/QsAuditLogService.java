@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.service;
+package eni.it.gsrestservice.service.ora;
 
 
 import eni.it.gsrestservice.db.repos.ora.QsAuditLogRepository;
@@ -17,6 +17,9 @@ import java.util.List;
 public class QsAuditLogService {
     private final QsAuditLogRepository qsAuditLogRepository;
 
+    public QsAuditLog save(QsAuditLog qsAuditLog) {
+        return qsAuditLogRepository.save(qsAuditLog);
+    }
 
     public List<QsAuditLog> findAll() {
         return qsAuditLogRepository.findAll();

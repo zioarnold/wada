@@ -1,43 +1,36 @@
 package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
-import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.LDAPConnector;
 import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import org.springframework.core.env.Environment;
+import eni.it.gsrestservice.service.ora.QsAdminUsersService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Base64;
-
 @RestController
+@RequiredArgsConstructor
 public class LDAPController {
-    private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
-    private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
-    private final Environment environment;
 
-    public LDAPController(Environment environment) {
-        this.environment = environment;
-    }
+    private final QlikSenseConnector qlikSenseConnector;
+    private final QsAdminUsersService qsAdminUsersService;
 
     @GetMapping("/searchUserOnLDAPPage")
     public ModelAndView searchUserOnLDAPPage() {
         try {
-            initDB();
-            initQlikConnector();
-            if (DBOracleOperations.isIsAuthenticated()) {
-                if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
+            if (qsAdminUsersService.isAuthenticated(QsAdminUsers.username)) {
+                if (qsAdminUsersService.checkSession(QsAdminUsers.username) == 1) {
                     return new ModelAndView("searchUserOnLDAP")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
                             .addObject("ping_qlik", qlikSenseConnector.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
+                } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
                     return new ModelAndView("searchUserOnLDAP")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
@@ -60,7 +53,6 @@ public class LDAPController {
     @GetMapping(value = "/searchUserOnLDAP")
     public ModelAndView searchUserOnLDAP(@RequestParam(required = false, name = "userID") String userID) throws Exception {
         LDAPConnector ldapConnector = new LDAPConnector();
-        initQlikConnector();
         if (!ldapConnector.searchOnLDAP(userID).isEmpty()) {
             return new ModelAndView("searchUserOnLDAP")
                     .addObject("farm_name", Farm.description)
@@ -78,30 +70,5 @@ public class LDAPController {
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role);
         }
-    }
-
-    private void initQlikConnector() {
-        qlikSenseConnector.initConnector(
-                Farm.qsXrfKey,
-                Farm.qsHost,
-                Farm.qsPathClientJKS,
-                Farm.qsPathRootJKS,
-                Farm.qsKeyStorePwd,
-                Farm.qsHeader,
-                Farm.qsReloadTaskName);
-        qlikSenseConnector.configureCertificate();
-    }
-
-    private void initDB() {
-        String decodedPassword = new String(Base64.getUrlDecoder().decode(environment.getProperty("db.password.main")));
-        dbOracleOperations.initDB(
-                environment.getProperty("db.hostname.main"),
-                environment.getProperty("db.port.main"),
-                environment.getProperty("db.sid.main"),
-                environment.getProperty("db.username.main"),
-                decodedPassword,
-                environment.getProperty("db.qs.admin.users"),
-                environment.getProperty("db.qs.farms")
-        );
     }
 }
