@@ -2,7 +2,7 @@ package eni.it.gsrestservice.service.ora;
 
 
 import eni.it.gsrestservice.config.QlikViewSenseConfig;
-import eni.it.gsrestservice.db.repos.ora.QsFarmRepository;
+import eni.it.gsrestservice.repos.ora.QsFarmRepository;
 import eni.it.gsrestservice.entities.oracle.QsFarm;
 import eni.it.gsrestservice.model.Farm;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,6 @@ public class QsFarmService {
 
     public boolean initConnector(QsFarm qsFarm) {
         qlikViewSenseConfig.configureFarm(qsFarm);
-
         Farm.farmId = qsFarm.getFarmid();
         Farm.description = qsFarm.getDescription();
         Farm.came = qsFarm.getCame();

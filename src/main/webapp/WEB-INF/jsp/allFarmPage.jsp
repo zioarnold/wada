@@ -10,7 +10,138 @@
 <html>
 <jsp:include page="header.jsp"/>
 <body>
-<jsp:include page="navbar.jsp"/>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e0e0d1 !important;">
+    <a class="navbar-brand" href="${pageContext.request.contextPath}/index">
+        <img src='<c:url value="${pageContext.request.contextPath}/img/eni-logo.png"/>' alt="WADA ENI"
+             style="height: 20%; width: 20%;"/>WADA <span
+            style="color: yellow">Eni</span>
+    </a>&nbsp;&nbsp;&nbsp;
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="${pageContext.request.contextPath}/index">Home <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <c:choose>
+                <c:when test="${user_role_logged_in.equals('ADMIN')}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/allFarmPage">Farms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/allAdminsPage">Admins</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/report">Report</a>
+                    </li>
+                </c:when>
+                <c:otherwise>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/report">Report</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Users
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
+                            <a class="dropdown-item"
+                               href="${pageContext.request.contextPath}/AllQLIKUsersFromDB">Elenco</a>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/searchUserOnLDAPPage">Ricerca
+                                su AD</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/massiveUploadPage">Caricamento
+                                massivo</a>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/singleUploadPage">Caricamento
+                                singolo</a>
+                        </div>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownHelp" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Help
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownHelp">
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/userGuide">Manuale</a>
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/assistance">Assistenza</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Tools
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownTools">
+                    <a class="dropdown-item" href="${pageContext.request.contextPath}/executeReloadTaskQMC">Esegui
+                        reload task</a>
+                    <%--                    <a class="dropdown-item" href="${pageContext.request.contextPath}/managementPageMassive">Gestione massiva</a>--%>
+                    <%--                    <a class="dropdown-item" href="${pageContext.request.contextPath}/allUsersFromLDAP">Estrazione completa ADLDS</a>--%>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li>
+                <a class="navbar-brand">${farm_name}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li>
+                <a class="navbar-brand">${farm_environment}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li>
+                <c:choose>
+                    <c:when test="${ping_qlik >= 200 && ping_qlik <= 299}">
+                        <a class="navbar-brand"> QS-PING: OK</a>
+                    </c:when>
+                    <c:when test="${ping_qlik >=100 && ping_qlik<=199}">
+                        <a class="navbar-brand"> QS-PING: WARN </a>
+                    </c:when>
+                    <c:when test="${ping_qlik >=300 && ping_qlik<=399}">
+                        <a class="navbar-brand"> QS-PING: WARN </a>
+                    </c:when>
+                    <c:when test="${ping_qlik >= 400 && ping_qlik <= 499}">
+                        <a class="navbar-brand"> QS-PING: KO </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="navbar-brand"> QS-PING: KO </a>
+                    </c:otherwise>
+                </c:choose>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li>
+                <a class="navbar-brand">${user_logged_in}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">|</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a>
+            </li>
+        </ul>
+        <%--        <form class="form-inline my-2 my-lg-0">--%>
+        <%--            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">--%>
+        <%--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>--%>
+        <%--        </form>--%>
+    </div>
+</nav>
 <c:choose>
     <c:when test="${empty all_farm}">
         <div class="container text-center">
@@ -123,26 +254,26 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-add').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
+            const _button = $(e.relatedTarget);
             // console.log(_button, _button.parents("tr"));
-            var _row = _button.parents("tr");
-            var uFarmId = _row.find(".u-farm-id").text().trim();
-            var uDescription = _row.find(".u-description").text().trim();
-            var uEnv = _row.find(".u-env").text().trim();
-            var uDbUser = _row.find(".u-db-user").text().trim();
-            var uDbPwd = _row.find(".u-db-pwd").text().trim();
-            var uDbHost = _row.find(".u-db-host").text().trim();
-            var uDbPort = _row.find(".u-db-port").text().trim();
-            var uDbSid = _row.find(".u-db-sid").text().trim();
-            var uQsHost = _row.find(".u-qs-host").text().trim();
-            var uQsTaskName = _row.find(".u-qs-task-name").text().trim();
-            var uQsPathClient = _row.find(".u-qs-path-client").text().trim();
-            var uQsPathRoot = _row.find(".u-qs-path-root").text().trim();
-            var uQsXrfKey = _row.find(".u-qs-xrf-key").text().trim();
-            var uQsKeyStorePwd = _row.find(".u-qs-key-store-pwd").text().trim();
-            var uQsHeader = _row.find(".u-qs-header").text().trim();
-            var uQsNote = _row.find(".u-note").text().trim();
-            var uQsCame = _row.find(".u-came").text().trim();
+            const _row = _button.parents("tr");
+            const uFarmId = _row.find(".u-farm-id").text().trim();
+            const uDescription = _row.find(".u-description").text().trim();
+            const uEnv = _row.find(".u-env").text().trim();
+            const uDbUser = _row.find(".u-db-user").text().trim();
+            const uDbPwd = _row.find(".u-db-pwd").text().trim();
+            const uDbHost = _row.find(".u-db-host").text().trim();
+            const uDbPort = _row.find(".u-db-port").text().trim();
+            const uDbSid = _row.find(".u-db-sid").text().trim();
+            const uQsHost = _row.find(".u-qs-host").text().trim();
+            const uQsTaskName = _row.find(".u-qs-task-name").text().trim();
+            const uQsPathClient = _row.find(".u-qs-path-client").text().trim();
+            const uQsPathRoot = _row.find(".u-qs-path-root").text().trim();
+            const uQsXrfKey = _row.find(".u-qs-xrf-key").text().trim();
+            const uQsKeyStorePwd = _row.find(".u-qs-key-store-pwd").text().trim();
+            const uQsHeader = _row.find(".u-qs-header").text().trim();
+            const uQsNote = _row.find(".u-note").text().trim();
+            const uQsCame = _row.find(".u-came").text().trim();
             // console.log(_invoiceAmt, _chequeAmt);
             $(this).find(".u-farm-id").val(uFarmId);
             $(this).find(".u-description").val(uDescription);

@@ -1,7 +1,7 @@
 package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.db.repos.post.QsUsersRepository;
+import eni.it.gsrestservice.repos.post.QsUsersRepository;
 import eni.it.gsrestservice.entities.mapper.QsUsersAttrMapper;
 import eni.it.gsrestservice.entities.postgres.QsUser;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;

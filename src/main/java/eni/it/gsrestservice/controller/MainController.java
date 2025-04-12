@@ -19,7 +19,7 @@ import static eni.it.gsrestservice.utility.Utility.MD5;
 @RequiredArgsConstructor
 public class MainController {
     private final QsAdminUsersService qsAdminUsersService;
-    private final QlikSenseService qlikSenseService = new QlikSenseService();
+    private final QlikSenseService qlikSenseService;
 
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     public ModelAndView addAdmin(@RequestParam(name = "username") String username,

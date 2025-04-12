@@ -2,11 +2,13 @@ package eni.it.gsrestservice.service;
 
 import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.model.CSVReader;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 
+@Slf4j
 @Service
 public class CSVReaderService {
 
@@ -17,7 +19,7 @@ public class CSVReaderService {
     private static File fileUsersNotExists;
     @Value("${log.user.role.discarded}")
     private static File userDiscardedByRole;
-    public static int rowNumbers, userRoleDiscarded, usersProcessed, usersUploaded;
+    public static int rowNumbers, userRoleDiscarded, usersUploaded;
 
     public CSVReaderService(RolesListConfig rolesListConfig, LDAPService ldapService) {
         this.rolesListConfig = rolesListConfig;
@@ -38,8 +40,9 @@ public class CSVReaderService {
             String[] userId;
             FileOutputStream fileOutputStream, outputStream;
             if (!fileUsersNotExists.exists() || !userDiscardedByRole.exists()) {
-                fileUsersNotExists.createNewFile();
-                userDiscardedByRole.createNewFile();
+                if (!fileUsersNotExists.createNewFile() || userDiscardedByRole.createNewFile()) {
+                    log.error("Unable to create files{} and {} ", fileUsersNotExists.getName(), userDiscardedByRole.getName());
+                }
             }
             fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             outputStream = new FileOutputStream(userDiscardedByRole, true);

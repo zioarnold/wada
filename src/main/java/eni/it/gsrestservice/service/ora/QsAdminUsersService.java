@@ -1,7 +1,7 @@
 package eni.it.gsrestservice.service.ora;
 
 
-import eni.it.gsrestservice.db.repos.ora.QsAdminUserRepository;
+import eni.it.gsrestservice.repos.ora.QsAdminUserRepository;
 import eni.it.gsrestservice.entities.oracle.QsAdminUser;
 import eni.it.gsrestservice.model.QsAdminUsers;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.db.repos.ora;
+package eni.it.gsrestservice.repos.ora;
 
 
 import eni.it.gsrestservice.entities.oracle.QsAdminUser;

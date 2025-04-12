@@ -1,7 +1,7 @@
 package eni.it.gsrestservice.service.ora;
 
 
-import eni.it.gsrestservice.db.repos.ora.QsAuditLogRepository;
+import eni.it.gsrestservice.repos.ora.QsAuditLogRepository;
 import eni.it.gsrestservice.entities.oracle.QsAuditLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

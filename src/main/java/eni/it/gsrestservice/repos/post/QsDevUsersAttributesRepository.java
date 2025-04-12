@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.db.repos.post;
+package eni.it.gsrestservice.repos.post;
 
 
 import eni.it.gsrestservice.entities.postgres.QsDevUsersAttrib;

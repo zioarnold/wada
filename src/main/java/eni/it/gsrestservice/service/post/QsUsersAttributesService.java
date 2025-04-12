@@ -1,7 +1,7 @@
 package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.db.repos.post.QsUsersAttributesRepository;
+import eni.it.gsrestservice.repos.post.QsUsersAttributesRepository;
 import eni.it.gsrestservice.entities.oracle.QsAuditLog;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import eni.it.gsrestservice.model.Farm;

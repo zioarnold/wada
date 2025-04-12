@@ -5,13 +5,11 @@
   Time: 23:15
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
     <meta about="Made by UID0931174 aka Zaki"/>
     <title>Eni Qlik Tool User Management</title>
     <link rel="stylesheet" href="css/bootstrap.css"/>
@@ -33,7 +31,7 @@
                     <%--                    <form action="/renewSession" method="post">--%>
                     <%--                        <input type="submit" value="Rinnova" class="btn float-left login_btn" style="margin-right: 50px;">--%>
                     <%--                    </form>--%>
-                    <form action="/" method="post">
+                        <form action="${pageContext.request.contextPath}/" method="post">
                         <input type="submit" value="Login" class="btn float-right login_btn" style="margin-left: 50px;">
                     </form>
                 </div>
