@@ -2,14 +2,14 @@ package eni.it.gsrestservice.service.post;
 
 
 import eni.it.gsrestservice.db.repos.post.QsUsersRepository;
+import eni.it.gsrestservice.entities.mapper.QsUsersAttrMapper;
 import eni.it.gsrestservice.entities.postgres.QsUser;
-import eni.it.gsrestservice.entities.postgres.QsUsersAttrMapper;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
+import eni.it.gsrestservice.service.QlikSenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * @author Zio Arnold aka Arni
@@ -21,19 +21,20 @@ public class QsUsersService {
     private final QsUsersRepository qsUsersRepository;
     private final QsUsersAttributesService qsUsersAttributesService;
     private final QsUsersAttrMapper mapper;
-
-    public QsUser findById(Long id) {
-        return qsUsersRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Unable to find user with id:" + id));
-    }
+    private final QlikSenseService qlikSenseService;
 
     public QsUser findByUserId(String id) {
         return qsUsersRepository.findByUserid(id);
     }
 
     public QsUsersAttrMapper findUserRoleByUserID(String id) {
-        QsUser byUserid = qsUsersRepository.findByUserid(id);
-        QsUsersAttrib userTypeByUserId = qsUsersAttributesService.findByUserId(id);
-        return mapper.map(byUserid, userTypeByUserId);
+        try {
+            QsUser byUserid = qsUsersRepository.findByUserid(id);
+            QsUsersAttrib userTypeByUserId = qsUsersAttributesService.findByUserId(id);
+            return mapper.map(byUserid, userTypeByUserId, qlikSenseService.getUserRoleByUserId(id));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public long getTotalUsers() {

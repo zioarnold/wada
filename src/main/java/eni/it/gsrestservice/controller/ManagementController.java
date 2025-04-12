@@ -15,6 +15,7 @@ import eni.it.gsrestservice.service.ora.QsFarmService;
 import eni.it.gsrestservice.service.post.QsUsersAttributesService;
 import eni.it.gsrestservice.service.post.QsUsersService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,8 @@ public class ManagementController implements Serializable {
     private final QlikSenseService qlikSenseService;
     private final RolesListConfig rolesListConfig;
 
-    private final String tabAttribute = environment.getProperty("db.tabattrib");
+    @Value("${db.db.tabattrib}")
+    private String tabAttribute;
 
     @GetMapping("/managementPage")
     public ModelAndView managementPage() {
@@ -276,9 +278,10 @@ public class ManagementController implements Serializable {
     @RequestMapping(value = "/managementPageSyncTypeRole")
     public ModelAndView managementPageSyncTypeRole(@RequestParam(required = false, name = "userId") String userId,
                                                    @RequestParam(required = false, name = "oldRole") String oldRole) throws Exception {
-        if (!getUserRoleByUserId(userId).equalsIgnoreCase("")) {
-            if (getUserRoleByUserId(userId) != null) {
-                if (qsUsersAttributesService.updateUserRole(userId, oldRole, getUserRoleByUserId(userId), tabAttribute)) {
+        String userRoleByUserId = qlikSenseService.getUserRoleByUserId(userId);
+        if (!userRoleByUserId.equalsIgnoreCase("")) {
+            if (!userRoleByUserId.equals("null")) {
+                if (qsUsersAttributesService.updateUserRole(userId, oldRole, userRoleByUserId, tabAttribute)) {
 
                     return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                             .addObject("ping_qlik", qlikSenseService.ping());
@@ -336,22 +339,8 @@ public class ManagementController implements Serializable {
                                    @RequestParam(name = "dbPort") String dbPort,
                                    @RequestParam(name = "qsUserHeader") String qsUserHeader,
                                    @RequestParam(name = "environment") String environment) {
-        QsFarm qsFarm = new QsFarm();
-        qsFarm.setDescription(description);
-        qsFarm.setCame(came);
-        qsFarm.setDbuser(dbUser);
-        qsFarm.setDbpassword(dbPassword);
-        qsFarm.setDbhost(dbHost);
-        qsFarm.setQshost(qsHost);
-        qsFarm.setQspathclient(qsPathClient);
-        qsFarm.setQspathroot(qsPathRoot);
-        qsFarm.setQsxrfkey(qsXrfKey);
-        qsFarm.setQskspasswd(qsKsPassword);
-        qsFarm.setNote(note);
-        qsFarm.setDbsid(dbSid);
-        qsFarm.setDbport(dbPort);
-        qsFarm.setQsuserheader(qsUserHeader);
-        qsFarm.setEnvironment(environment);
+
+        QsFarm qsFarm = ex(description, came, dbUser, dbPassword, dbHost, qsHost, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment);
 
         if (qsFarmService.create(qsFarm) != null) {
             return new ModelAndView("success")
@@ -372,7 +361,7 @@ public class ManagementController implements Serializable {
         }
     }
 
-    @RequestMapping(value = "/createFarmDB", method = RequestMethod.POST)
+    @RequestMapping("/createFarm")
     public ModelAndView createFarmDB(@RequestParam(name = "description") String description,
                                      @RequestParam(name = "came") String came,
                                      @RequestParam(name = "dbUser") String dbUser,
@@ -388,23 +377,7 @@ public class ManagementController implements Serializable {
                                      @RequestParam(name = "dbPort") String dbPort,
                                      @RequestParam(name = "qsUserHeader") String qsUserHeader,
                                      @RequestParam(name = "environment") String environment) {
-        QsFarm qsFarm = new QsFarm();
-        qsFarm.setDescription(description);
-        qsFarm.setCame(came);
-        qsFarm.setDbuser(dbUser);
-        qsFarm.setDbpassword(dbPassword);
-        qsFarm.setDbhost(dbHost);
-        qsFarm.setQshost(qsHost);
-        qsFarm.setQspathclient(qsPathClient);
-        qsFarm.setQspathroot(qsPathRoot);
-        qsFarm.setQsxrfkey(qsXrfKey);
-        qsFarm.setQskspasswd(qsKsPassword);
-        qsFarm.setNote(note);
-        qsFarm.setDbsid(dbSid);
-        qsFarm.setDbport(dbPort);
-        qsFarm.setQsuserheader(qsUserHeader);
-        qsFarm.setEnvironment(environment);
-
+        QsFarm qsFarm = ex(description, came, dbUser, dbPassword, dbHost, qsHost, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment);
         if (qsFarmService.create(qsFarm) != null) {
             return new ModelAndView("chooseFarm")
                     .addObject("user_logged_in", QsAdminUsers.username)
@@ -558,26 +531,7 @@ public class ManagementController implements Serializable {
                                  @RequestParam(name = "dbPort") String dbPort,
                                  @RequestParam(name = "qsHeader") String qsUserHeader,
                                  @RequestParam(name = "environment") String environment) {
-
-        QsFarm qsFarm = qsFarmService.findById(farmId)
-                .orElseThrow(() -> new NoSuchElementException("No Qs Farm is found by: " + farmId + " to update."));
-
-        qsFarm.setDescription(description);
-        qsFarm.setCame(came);
-        qsFarm.setDbuser(dbUser);
-        qsFarm.setDbpassword(dbPassword);
-        qsFarm.setDbhost(dbHost);
-        qsFarm.setQshost(qsHost);
-        qsFarm.setQsreloadtaskname(qsReloadTaskName);
-        qsFarm.setQspathclient(qsPathClient);
-        qsFarm.setQspathroot(qsPathRoot);
-        qsFarm.setQsxrfkey(qsXrfKey);
-        qsFarm.setQskspasswd(qsKsPassword);
-        qsFarm.setNote(note);
-        qsFarm.setDbsid(dbSid);
-        qsFarm.setDbport(dbPort);
-        qsFarm.setQsuserheader(qsUserHeader);
-        qsFarm.setEnvironment(environment);
+        QsFarm qsFarm = updateFarm(farmId, description, came, dbUser, dbPassword, dbHost, qsHost, qsReloadTaskName, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment);
         if (qsFarmService.update(qsFarm) != null) {
             return new ModelAndView("success")
                     .addObject("successMsg", "Operazione e` andata a buon fine")
@@ -597,7 +551,69 @@ public class ManagementController implements Serializable {
         }
     }
 
-    private String getUserRoleByUserId(String userId) throws Exception {
-        return qlikSenseService.getUserRoleByUserId(userId);
+    private QsFarm ex(@RequestParam(name = "description") String description,
+                      @RequestParam(name = "came") String came,
+                      @RequestParam(name = "dbUser") String dbUser,
+                      @RequestParam(name = "dbPassword") String dbPassword,
+                      @RequestParam(name = "dbHost") String dbHost,
+                      @RequestParam(name = "qsHost") String qsHost,
+                      @RequestParam(name = "qsPathClient") String qsPathClient,
+                      @RequestParam(name = "qsPathRoot") String qsPathRoot,
+                      @RequestParam(name = "qsXrfKey") String qsXrfKey,
+                      @RequestParam(name = "qsKsPassword") String qsKsPassword,
+                      @RequestParam(required = false, name = "note") String note,
+                      @RequestParam(name = "dbSid") String dbSid,
+                      @RequestParam(name = "dbPort") String dbPort,
+                      @RequestParam(name = "qsUserHeader") String qsUserHeader,
+                      @RequestParam(name = "environment") String environment) {
+        QsFarm qsFarm = new QsFarm();
+        qsFarm.setDescription(description);
+        qsFarm.setCame(came);
+        qsFarm.setDbuser(dbUser);
+        qsFarm.setDbpassword(dbPassword);
+        qsFarm.setDbhost(dbHost);
+        qsFarm.setQshost(qsHost);
+        return commonQsData(qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, qsFarm);
+    }
+
+    private QsFarm commonQsData(@RequestParam(name = "qsPathClient") String qsPathClient, @RequestParam(name = "qsPathRoot") String qsPathRoot, @RequestParam(name = "qsXrfKey") String qsXrfKey, @RequestParam(name = "qsKsPassword") String qsKsPassword, @RequestParam(required = false, name = "note") String note, @RequestParam(name = "dbSid") String dbSid, @RequestParam(name = "dbPort") String dbPort, @RequestParam(name = "qsUserHeader") String qsUserHeader, @RequestParam(name = "environment") String environment, QsFarm qsFarm) {
+        qsFarm.setQspathclient(qsPathClient);
+        qsFarm.setQspathroot(qsPathRoot);
+        qsFarm.setQsxrfkey(qsXrfKey);
+        qsFarm.setQskspasswd(qsKsPassword);
+        qsFarm.setNote(note);
+        qsFarm.setDbsid(dbSid);
+        qsFarm.setDbport(dbPort);
+        qsFarm.setQsuserheader(qsUserHeader);
+        qsFarm.setEnvironment(environment);
+        return qsFarm;
+    }
+
+    private QsFarm updateFarm(@RequestParam(required = false, name = "farmId") String farmId,
+                              @RequestParam(name = "description") String description,
+                              @RequestParam(name = "came") String came,
+                              @RequestParam(name = "dbUser") String dbUser,
+                              @RequestParam(name = "dbPassword") String dbPassword,
+                              @RequestParam(name = "dbHost") String dbHost,
+                              @RequestParam(name = "qsHost") String qsHost,
+                              @RequestParam(name = "qsReloadTaskName") String qsReloadTaskName,
+                              @RequestParam(name = "qsPathClient") String qsPathClient,
+                              @RequestParam(name = "qsPathRoot") String qsPathRoot,
+                              @RequestParam(name = "qsXrfKey") String qsXrfKey,
+                              @RequestParam(name = "qsKsPassword") String qsKsPassword,
+                              @RequestParam(required = false, name = "note") String note,
+                              @RequestParam(name = "dbSid") String dbSid,
+                              @RequestParam(name = "dbPort") String dbPort,
+                              @RequestParam(name = "qsUserHeader") String qsUserHeader,
+                              @RequestParam(name = "environment") String environment) {
+        QsFarm qsFarm = qsFarmService.findById(farmId).orElseThrow(() -> new IllegalArgumentException("No farm found with id " + farmId));
+        qsFarm.setDescription(description);
+        qsFarm.setCame(came);
+        qsFarm.setDbuser(dbUser);
+        qsFarm.setDbpassword(dbPassword);
+        qsFarm.setDbhost(dbHost);
+        qsFarm.setQshost(qsHost);
+        qsFarm.setQsreloadtaskname(qsReloadTaskName);
+        return commonQsData(qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, qsFarm);
     }
 }

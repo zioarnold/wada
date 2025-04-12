@@ -1,6 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="eni.it.gsrestservice.model.QsAudit" %>
-<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: UID0931174
@@ -8,8 +6,7 @@
   Time: 16:07
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%List<QsAudit> report = (List<QsAudit>) request.getAttribute("report"); %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 <html>
 <head>
@@ -19,11 +16,11 @@
     <meta http-equiv="Cache-Control" content="no-cache"/>
     <meta about="Made by UID0931174 aka Zaki"/>
     <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link type="text/javascript" href="js/bootstrap.js"/>
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/background.css"/>
+    <link type="text/javascript" href="${pageContext.request.contextPath}/js/bootstrap.js"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/ico/favicon.ico"/>
     <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
@@ -48,18 +45,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <%
-                    for (QsAudit s : report) {
-                %>
-                <tr>
-                    <td class="u-user"><%=s.getId()%>
-                    </td>
-                    <td><%=s.getLog()%>
-                    </td>
-                    <td><%=s.getDate()%>
-                    </td>
-                </tr>
-                <% } %>
+                <c:forEach items="${report}" var="r">
+                    <tr>
+                        <td class="u-user">${r.id}</td>
+                        <td>${r.description}</td>
+                        <td>${r.executionData}</td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
@@ -76,8 +68,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#myTable').dataTable({

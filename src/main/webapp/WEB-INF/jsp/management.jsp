@@ -1,5 +1,3 @@
-<%@ page import="eni.it.gsrestservice.model.QUsers" %>
-<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: arn81
@@ -10,26 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
-<% //noinspection unchecked
-    List<String> rolesList = (List<String>) request.getAttribute("rolesList");%>
 <html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-    <meta http-equiv="pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
-    <meta about="Made by UID0931174 aka Zaki"/>
-    <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}css/bootstrap.css"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}css/background.css"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}css/all.css"/>
-    <link type="text/javascript" href="${pageContext.request.contextPath}js/jquery-2.1.1.js">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-    <link type="text/javascript" href="${pageContext.request.contextPath}js/bootstrap.js"/>
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}ico/favicon.ico"/>
-    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-</head>
+<jsp:include page="header_management.jsp"/>
 <body>
 <jsp:include page="navbar.jsp"/>
 <br/>
@@ -119,31 +99,55 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>${quser_filter.type}</td>
-                            <td>${quser_filter.value}</td>
-                        </tr>
-
-                        <tr>
-                            <%
-                                for (QUsers u : quser_filter) {
-                            %>
-                            <td class="u-role"><%=u.getType()%>
-                            </td>
-                            <%
-                                if (quser_filter.value.equals("organizzazione") || u.getType().equals("email")) {
-                            %>
-                            <td><%=u.getValue()%>
-                            </td>
-                            <td></td>
-                            <td><input type="submit" name="nonEditButton" class="btn btn-dark btn-sm"
-                                       value="Non modificabile"/></td>
-                            <%
-                            } else if (u.getType().equals("ruolo")) {
-                            %>
-                            <td class="u-value"><%=u.getValue()%>
-                            </td>
-                            <td><%=u.getNewUserRole()%>
-                            </td>
+                            <td class="u-role">${quser_filter.type}</td>
+                            <c:choose>
+                                <c:when
+                                        test="${quser_filter.value.equals('organizzazione') || quser_filter.value.equals('email')}">
+                                    <td>${quser_filter.value}</td>
+                                    <td></td>
+                                    <td><input type="submit" name="nonEditButton" class="btn btn-dark btn-sm"
+                                               value="Non modificabile"/></td>
+                                </c:when>
+                                <c:when test="${quser_filter.type.equals('ruolo')}">
+                                    <td class="u-value">${quser_filter.value}</td>
+                                    <td>${quser_filter.userNewRole}</td>
+                                    <td>
+                                        <!-- Button trigger edit modal -->
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                data-target="#con-close-modal-user-rule">
+                                            Modifica
+                                        </button>
+                                        |
+                                        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                                                data-target="#con-close-modal-sync-user-role">
+                                            Sync
+                                        </button>
+                                    </td>
+                                    <td class="u-user" hidden>${quser_filter.userId}</td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td class="u-value">${quser_filter.value}</td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                                data-target="#con-close-modal-user-group">
+                                            Modifica
+                                        </button>
+                                        |
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                data-target="#con-close-modal-delete">
+                                            Elimina
+                                        </button>
+                                        |
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                                data-target="#con-close-modal-add">Aggiungi
+                                        </button>
+                                    </td>
+                                    <td class="u-user" hidden>${quser_filter.userId} </td>
+                                </c:otherwise>
+                            </c:choose>
+                            <td>${quser_filter.userNewRole}</td>
                             <td>
                                 <!-- Button trigger edit modal -->
                                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
@@ -156,39 +160,7 @@
                                     Sync
                                 </button>
                             </td>
-                            <td class="u-user" hidden><%=u.getUserId()%>
-                            </td>
-                            <%
-                            } else {
-                            %>
-                            <td class="u-value"><%=u.getValue()%>
-                            </td>
-                            <td>
-
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                        data-target="#con-close-modal-user-group">
-                                    Modifica
-                                </button>
-                                |
-                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                        data-target="#con-close-modal-delete">
-                                    Elimina
-                                </button>
-                                |
-                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#con-close-modal-add">Aggiungi
-                                </button>
-
-                            </td>
-                            <td class="u-user" hidden>
-                            </td>
-                            <%}%>
                         </tr>
-                        <%
-                            }
-                        %>
                         </tbody>
                     </table>
                 </div>
@@ -296,7 +268,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/managementPageEditTypeRole" method="post">
+            <form action="${pageContext.request.contextPath}/managementPageEditTypeRole" method="post">
                 <div class="modal-body">
                     <label>Utenza
                         <input type="text" name="userId" class="form-control input-group input-group-sm u-user"
@@ -373,7 +345,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/managementPageAddTypeRole" method="post">
+            <form action="${pageContext.request.contextPath}/managementPageAddTypeRole" method="post">
                 <div class="modal-body">
                     <label>Utenza
                         <input type="text" name="userId" class="form-control input-group input-group-sm u-user"
@@ -439,18 +411,18 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#con-close-modal-user-group').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
+            const _button = $(e.relatedTarget);
             // console.log(_button, _button.parents("tr"));
-            var _row = _button.parents("tr");
-            var uRole = _row.find(".u-role").text().trim();
-            var uValue = _row.find(".u-value").text().trim();
-            var uUser = _row.find(".u-user").text().trim();
+            const _row = _button.parents("tr");
+            const uRole = _row.find(".u-role").text().trim();
+            const uValue = _row.find(".u-value").text().trim();
+            const uUser = _row.find(".u-user").text().trim();
             // console.log(_invoiceAmt, _chequeAmt);
             $(this).find(".u-role").val(uRole);
             $(this).find(".u-value").val(uValue);
@@ -462,12 +434,12 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-user-rule').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
+            const _button = $(e.relatedTarget);
             // console.log(_button, _button.parents("tr"));
-            var _row = _button.parents("tr");
-            var uRole = _row.find(".u-role").text().trim();
-            var uValue = _row.find(".u-value").text().trim();
-            var uUser = _row.find(".u-user").text().trim();
+            const _row = _button.parents("tr");
+            const uRole = _row.find(".u-role").text().trim();
+            const uValue = _row.find(".u-value").text().trim();
+            const uUser = _row.find(".u-user").text().trim();
             // console.log(_invoiceAmt, _chequeAmt);
             $(this).find(".u-role").val(uRole);
             $(this).find(".u-value").val(uValue);
@@ -479,12 +451,12 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-delete').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
+            const _button = $(e.relatedTarget);
             // console.log(_button, _button.parents("tr"));
-            var _row = _button.parents("tr");
-            var uRole = _row.find(".u-role").text().trim();
-            var uValue = _row.find(".u-value").text().trim();
-            var uUser = _row.find(".u-user").text().trim();
+            const _row = _button.parents("tr");
+            const uRole = _row.find(".u-role").text().trim();
+            const uValue = _row.find(".u-value").text().trim();
+            const uUser = _row.find(".u-user").text().trim();
             // console.log(_invoiceAmt, _chequeAmt);
             $(this).find(".u-role").val(uRole);
             $(this).find(".u-value").val(uValue);
@@ -496,10 +468,10 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-user-delete').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
+            const _button = $(e.relatedTarget);
             // console.log(_button, _button.parents("tr"));
-            var _row = _button.parents("tr");
-            var uUser = _row.find(".u-user").text().trim();
+            const _row = _button.parents("tr");
+            const uUser = _row.find(".u-user").text().trim();
             // console.log(_invoiceAmt, _chequeAmt);
             $(this).find(".u-user").val(uUser);
         });
@@ -509,11 +481,11 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-add').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
+            const _button = $(e.relatedTarget);
             // console.log(_button, _button.parents("tr"));
-            var _row = _button.parents("tr");
-            var uUser = _row.find(".u-user").text().trim();
-            var uRole = _row.find(".u-role").text().trim();
+            const _row = _button.parents("tr");
+            const uUser = _row.find(".u-user").text().trim();
+            const uRole = _row.find(".u-role").text().trim();
             // console.log(_invoiceAmt, _chequeAmt);
             $(this).find(".u-user").val(uUser);
             $(this).find(".u-role").val(uRole);
@@ -524,10 +496,10 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-sync-user-role').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
-            var _row = _button.parents("tr");
-            var uUser = _row.find(".u-user").text().trim();
-            var uValue = _row.find(".u-value").text().trim();
+            const _button = $(e.relatedTarget);
+            const _row = _button.parents("tr");
+            const uUser = _row.find(".u-user").text().trim();
+            const uValue = _row.find(".u-value").text().trim();
             $(this).find(".u-user").val(uUser);
             $(this).find(".u-value").val(uValue);
         });

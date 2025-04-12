@@ -22,7 +22,8 @@
         <div class="container text-center">
             <h2>Utenza non e' presente sul DB!</h2>
             <h3>Digitare nuovamente la matricola</h3>
-            <form action="/showUserType" method="post" style="text-transform: uppercase">
+            <form action="${pageContext.request.contextPath}/showUserType" method="post"
+                  style="text-transform: uppercase">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <input class="btn btn-primary" type="submit" value="Cerca"/>
@@ -38,7 +39,8 @@
     <c:otherwise>
         <div class="container text-center" id="userDiv">
             <h2>Ruoli dell'utente</h2>
-            <form action="/showUserType" method="post" style="text-transform: uppercase">
+            <form action="${pageContext.request.contextPath}/showUserType" method="post"
+                  style="text-transform: uppercase">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <input class="btn btn-primary" type="submit" value="Cerca"/>

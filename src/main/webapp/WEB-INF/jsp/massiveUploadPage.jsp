@@ -24,10 +24,12 @@
     <br>
     <h5>Qualora utenza esista sull'ADLDS, tale utenza verra' censita come abilitata.</h5>
     <br>
-    <h5>Per gestire un'utenza singolarmente, <a href="/searchQUserOnDBPage">Clicca qui</a></h5>
+    <h5>Per gestire un'utenza singolarmente, <a href="${pageContext.request.contextPath}/searchQUserOnDBPage">Clicca
+        qui</a></h5>
     <br>
     <h4>Il formato deve essere il seguente: USERID;RUOLO;GRUPPO</h4>
-    <form action="/massiveUpload" method="post" enctype="multipart/form-data" id="uploadForm">
+    <form action="${pageContext.request.contextPath}/massiveUpload" method="post" enctype="multipart/form-data"
+          id="uploadForm">
         <input id="input-b2" name="file" type="file" data-show-preview="false">
     </form>
     <%--    <div id='loadingmessage' style='display:none'>--%>

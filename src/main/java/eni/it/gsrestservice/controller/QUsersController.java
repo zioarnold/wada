@@ -77,8 +77,8 @@ public class QUsersController {
     }
 
     @RequestMapping("/searchQUserOnDB")
-    public ModelAndView searchQUserOnDB(@RequestParam(required = false, name = "quser_filter") Long userId) {
-        if (qsUsersService.findById(userId) == null) {
+    public ModelAndView searchQUserOnDB(@RequestParam(required = false, name = "quser_filter") String userId) {
+        if (qsUsersService.findByUserId(userId) == null) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0010_USER_IS_NOT_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -93,7 +93,8 @@ public class QUsersController {
                     .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("quser_filter", qsUsersService.findById(userId));
+                    .addObject("quser_filter", qsUsersService.findByUserId(userId))
+                    .addObject("other_data", qsUsersAttributesService.findUserTypeByUserId(userId));
         }
     }
 

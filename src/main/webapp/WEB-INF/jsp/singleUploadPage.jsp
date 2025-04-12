@@ -1,6 +1,4 @@
-<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<% List<String> rolesList = (List<String>) request.getAttribute("rolesList"); %>
 <!doctype html>
 <html lang="it">
 <head>
@@ -20,7 +18,7 @@
 <body>
 <jsp:include page="navbar.jsp"/>
 <div class="container text-center">
-    <form class="form-horizontal" action="/singleUpload" method="post">
+    <form class="form-horizontal" action="${pageContext.request.contextPath}/singleUpload" method="post">
         <div class="form-group">
             <label class="col-sm-2 control-label">Inserisci matricola
                 <input class="form-control" name="userId" type="text">
@@ -35,13 +33,9 @@
                             <option>SuperUserAM</option>
                         </c:when>
                         <c:otherwise>
-                            <%
-                                for (String s : rolesList) {
-                            %>
-                            <option>
-                                <%=s%>
-                            </option>
-                            <% } %>
+                            <c:forEach items="${rolesList}" var="rl">
+                                <option>${rl}</option>
+                            </c:forEach>
                         </c:otherwise>
                     </c:choose>
                 </select>

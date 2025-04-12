@@ -1,6 +1,8 @@
-package eni.it.gsrestservice.entities.postgres;
+package eni.it.gsrestservice.entities.mapper;
 
 
+import eni.it.gsrestservice.entities.postgres.QsUser;
+import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -22,8 +24,9 @@ public class QsUsersAttrMapper {
     private String type;
     private String value;
     private OffsetDateTime attributeDataLastModify;
+    private String userNewRole;
 
-    public QsUsersAttrMapper map(QsUser qsUser, QsUsersAttrib qsUsersAttrib) {
+    public QsUsersAttrMapper map(QsUser qsUser, QsUsersAttrib qsUsersAttrib, String userRoleByUserId) {
         QsUsersAttrMapper qsUsersAttrMapper = new QsUsersAttrMapper();
         qsUsersAttrMapper.setUserId(qsUser.getUserid());
         qsUsersAttrMapper.setName(qsUser.getName());
@@ -32,6 +35,7 @@ public class QsUsersAttrMapper {
         qsUsersAttrMapper.setType(qsUsersAttrib.getType());
         qsUsersAttrMapper.setValue(qsUsersAttrib.getValue());
         qsUsersAttrMapper.setAttributeDataLastModify(qsUsersAttrib.getDataLastModify());
+        qsUsersAttrMapper.setUserNewRole(userRoleByUserId);
         return qsUsersAttrMapper;
     }
 }
