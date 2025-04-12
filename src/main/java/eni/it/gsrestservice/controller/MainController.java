@@ -1,11 +1,10 @@
 package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
-import eni.it.gsrestservice.db.DBOracleOperations;
 import eni.it.gsrestservice.entities.oracle.QsAdminUser;
 import eni.it.gsrestservice.model.Farm;
-import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import eni.it.gsrestservice.service.QlikSenseService;
 import eni.it.gsrestservice.service.ora.QsAdminUsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,7 @@ import static eni.it.gsrestservice.utility.Utility.MD5;
 @RequiredArgsConstructor
 public class MainController {
     private final QsAdminUsersService qsAdminUsersService;
-    private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
-    private final DBOracleOperations dbOracleOperations = new DBOracleOperations();
+    private final QlikSenseService qlikSenseService = new QlikSenseService();
 
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     public ModelAndView addAdmin(@RequestParam(name = "username") String username,
@@ -38,7 +36,7 @@ public class MainController {
             return new ModelAndView("success")
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
                     .addObject("successMsg", "Utenza creata");
@@ -52,24 +50,20 @@ public class MainController {
     public ModelAndView addAdminPage() {
         try {
             initQlikConnector();
-            if (DBOracleOperations.isIsAuthenticated()) {
-                if (dbOracleOperations.checkSession(QsAdminUsers.username) == 1) {
-                    return new ModelAndView("addAdminPage")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (dbOracleOperations.checkSession(QsAdminUsers.username) == -1) {
-                    return new ModelAndView("addAdminPage")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else {
-                    return new ModelAndView("sessionExpired");
-                }
+            if (qsAdminUsersService.isAuthenticated(QsAdminUsers.username) || qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
+                return new ModelAndView("addAdminPage")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseService.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
+            } else if (qsAdminUsersService.isAuthenticated(QsAdminUsers.username) || qsAdminUsersService.checkSession(QsAdminUsers.username) == 1) {
+                return new ModelAndView("addAdminPage")
+                        .addObject("farm_name", Farm.description)
+                        .addObject("farm_environment", Farm.environment)
+                        .addObject("ping_qlik", qlikSenseService.ping())
+                        .addObject("user_logged_in", QsAdminUsers.username)
+                        .addObject("user_role_logged_in", QsAdminUsers.role);
             } else {
                 return new ModelAndView("errorLogin").addObject("errorMsg",
                         ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
@@ -81,7 +75,7 @@ public class MainController {
     }
 
     private void initQlikConnector() {
-        QlikSenseConnector.initConnector(
+        QlikSenseService.initConnector(
                 Farm.qsXrfKey,
                 Farm.qsHost,
                 Farm.qsPathClientJKS,
@@ -89,6 +83,6 @@ public class MainController {
                 Farm.qsKeyStorePwd,
                 Farm.qsHeader,
                 Farm.qsReloadTaskName);
-        QlikSenseConnector.configureCertificate();
+        QlikSenseService.configureCertificate();
     }
 }

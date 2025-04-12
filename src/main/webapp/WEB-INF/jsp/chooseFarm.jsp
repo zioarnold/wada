@@ -1,30 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="java.util.List" %>
-<%@ page import="eni.it.gsrestservice.model.QsFarms" %><%--
-  Created by IntelliJ IDEA.
+<%-- Created by IntelliJ IDEA.
   User: UID0931174
   Date: 18/10/2019
   Time: 11:31
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    List<QsFarms> farmList = (List<QsFarms>) request.getAttribute("farmList"); %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
-    <meta about="Made by UID0931174 aka Zaki"/>
-    <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/custom.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
-    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-</head>
+<jsp:include page="header.jsp"/>
 <body>
 <div class="container">
     <div class="d-flex justify-content-center h-100">
@@ -37,18 +20,14 @@
                     <c:choose>
                         <c:when test="${empty farmList}">
                             <span style="color:whitesmoke">Nessuna farm censita!</span>
-                            <a href="/">Login</a>
+                            <a href="${pageContext.request.contextPath}/">Login</a>
                         </c:when>
                         <c:otherwise>
                             <%--suppress HtmlFormInputWithoutLabel --%>
                             <select name="farm" class="form-control">
-                                <%
-                                    for (QsFarms s : farmList) {
-                                %>
-                                <option>
-                                    <%=s.getDescription()%>
-                                </option>
-                                <% } %>
+                                <c:forEach items="${farmList}" var="farm">
+                                    <option value="${farm.description}">${farm.description}</option>
+                                </c:forEach>
                             </select>
                         </c:otherwise>
                     </c:choose>

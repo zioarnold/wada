@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static eni.it.gsrestservice.utility.Utility.MD5;
+
 /**
  * @author Zio Arnold aka Arni
  * @created 11/04/2025 - 14:53 </br>
@@ -20,7 +22,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class QsAdminUsersService {
-    private static boolean authenticated = false;
 
     private final QsAdminUserRepository qsAdminUserRepository;
 
@@ -60,7 +61,6 @@ public class QsAdminUsersService {
     }
 
     public boolean isAuthenticated(String username) {
-        authenticated = true;
         return Objects.equals(qsAdminUserRepository.findByAuthenticatedAndUsername(username), "Y");
     }
 
@@ -72,5 +72,14 @@ public class QsAdminUsersService {
         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         String session_login_expire_time = simpleDateFormat1.format(qsAdminUser.getSessionLoginExpireTime());
         return format.compareTo(session_login_expire_time);
+    }
+
+    public boolean resetPassword(String adminId, String password) {
+        try {
+            qsAdminUserRepository.updatePasswordByUsername(adminId, MD5(password));
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

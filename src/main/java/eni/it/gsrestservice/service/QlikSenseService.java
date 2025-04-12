@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.model;
+package eni.it.gsrestservice.service;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,20 +12,20 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 
 @Component
-public class QlikSenseConnector {
+public class QlikSenseService {
     private static String xrfKey, host, proxyCert, rootCert, rootCertPwd, userHeader, qsReloadTaskName;
     private static SSLSocketFactory sslSocketFactory;
 
     public static void initConnector(final String key, final String host, final String proxyCert,
                                      final String rootCert, final String rootCertPwd, final String userHeader,
                                      final String qsReloadTaskName) {
-        QlikSenseConnector.xrfKey = key;
-        QlikSenseConnector.host = host;
-        QlikSenseConnector.proxyCert = proxyCert;
-        QlikSenseConnector.rootCert = rootCert;
-        QlikSenseConnector.rootCertPwd = rootCertPwd;
-        QlikSenseConnector.userHeader = userHeader;
-        QlikSenseConnector.qsReloadTaskName = qsReloadTaskName;
+        QlikSenseService.xrfKey = key;
+        QlikSenseService.host = host;
+        QlikSenseService.proxyCert = proxyCert;
+        QlikSenseService.rootCert = rootCert;
+        QlikSenseService.rootCertPwd = rootCertPwd;
+        QlikSenseService.userHeader = userHeader;
+        QlikSenseService.qsReloadTaskName = qsReloadTaskName;
     }
 
     public static void configureCertificate() {
@@ -47,7 +47,7 @@ public class QlikSenseConnector {
             System.setProperty("javax.net.ssl.trustStorePassword", rootCertPwd);
             System.setProperty("javax.net.ssl.trustStoreType", "JKS");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw new IllegalStateException("Error configuring certificate", ex);
         }
     }
 

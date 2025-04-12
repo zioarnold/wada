@@ -11,7 +11,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <% //noinspection unchecked
-    List<QUsers> quser_filter = (List<QUsers>) request.getAttribute("quser_filter");
     List<String> rolesList = (List<String>) request.getAttribute("rolesList");%>
 <html lang="it">
 <head>
@@ -21,13 +20,13 @@
     <meta http-equiv="Cache-Control" content="no-cache"/>
     <meta about="Made by UID0931174 aka Zaki"/>
     <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link rel="stylesheet" href="css/all.css"/>
-    <link type="text/javascript" href="js/jquery-2.1.1.js">
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-    <link type="text/javascript" href="js/bootstrap.js"/>
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}css/bootstrap.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}css/background.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}css/all.css"/>
+    <link type="text/javascript" href="${pageContext.request.contextPath}js/jquery-2.1.1.js">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+    <link type="text/javascript" href="${pageContext.request.contextPath}js/bootstrap.js"/>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}ico/favicon.ico"/>
     <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
@@ -36,7 +35,8 @@
 <br/>
 <div class="container">
     <div class="input-group mb-3">
-        <form action="/managementPageShowUserData" method="post" style="text-transform: uppercase">
+        <form action="${pageContext.request.contextPath}/managementPageShowUserData" method="post"
+              style="text-transform: uppercase">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <input class="btn btn-primary" type="submit" value="Cerca"/>
@@ -80,11 +80,11 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td class="u-user"><%=quser_filter.get(0).getUserId()%>
+                            <td class="u-user">${quser_filter.userid}
                             </td>
-                            <td class="u-name-delete"><%=quser_filter.get(0).getName()%>
+                            <td class="u-name-delete">${quser_filter.name}
                             </td>
-                            <td class="u-is-active-delete"><%=quser_filter.get(0).getUserIsActive()%>
+                            <td class="u-is-active-delete">${quser_filter.userIsActive}
                             </td>
                             <td>
                                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
@@ -119,13 +119,18 @@
                         </thead>
                         <tbody>
                         <tr>
+                            <td>${quser_filter.type}</td>
+                            <td>${quser_filter.value}</td>
+                        </tr>
+
+                        <tr>
                             <%
                                 for (QUsers u : quser_filter) {
                             %>
                             <td class="u-role"><%=u.getType()%>
                             </td>
                             <%
-                                if (u.getType().equals("organizzazione") || u.getType().equals("email")) {
+                                if (quser_filter.value.equals("organizzazione") || u.getType().equals("email")) {
                             %>
                             <td><%=u.getValue()%>
                             </td>
@@ -177,7 +182,7 @@
                                 </button>
 
                             </td>
-                            <td class="u-user" hidden><%=u.getUserId()%>
+                            <td class="u-user" hidden>
                             </td>
                             <%}%>
                         </tr>
@@ -202,7 +207,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/managementPageSyncTypeRole" method="post">
+            <form action="${pageContext.request.contextPath}/managementPageSyncTypeRole" method="post">
                 <div class="modal-body">
                     Sicuro di voler sincronizzare?
                     <hr>
@@ -237,7 +242,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/managementPageEditTypeRole" method="post">
+            <form action="${pageContext.request.contextPath}/managementPageEditTypeRole" method="post">
                 <div class="modal-body">
                     <label>Utenza
                         <input type="text" name="userId" class="form-control input-group input-group-sm u-user"
@@ -261,13 +266,9 @@
                                     <option>SuperUserAM</option>
                                 </c:when>
                                 <c:otherwise>
-                                    <%
-                                        for (String s : rolesList) {
-                                    %>
-                                    <option>
-                                        <%=s%>
-                                    </option>
-                                    <% } %>
+                                    <c:forEach items="rolesList" var="rl">
+                                        <option>${rl}</option>
+                                    </c:forEach>
                                 </c:otherwise>
                             </c:choose>
                         </select>

@@ -2,8 +2,8 @@ package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.model.Farm;
-import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import eni.it.gsrestservice.service.QlikSenseService;
 import eni.it.gsrestservice.service.ora.QsAdminUsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class AssistanceController {
 
     private final QsAdminUsersService qsAdminUsersService;
-    private final QlikSenseConnector qlikSenseConnector = new QlikSenseConnector();
+    private final QlikSenseService qlikSenseService = new QlikSenseService();
 
     @GetMapping("/assistance")
     public ModelAndView assistance() {
@@ -25,14 +25,14 @@ public class AssistanceController {
                     return new ModelAndView("assistance")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("ping_qlik", qlikSenseService.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role);
                 } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
                     return new ModelAndView("assistance")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("ping_qlik", qlikSenseService.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role);
                 } else {

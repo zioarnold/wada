@@ -1,5 +1,10 @@
 package eni.it.gsrestservice.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class LDAPUser {
     private String displayName;
     private String name;
@@ -14,7 +19,7 @@ public class LDAPUser {
     private String memberOf;
     private String ou;
 
-    LDAPUser() {
+    public LDAPUser() {
 
     }
 
@@ -66,101 +71,5 @@ public class LDAPUser {
                 ", memberOf='" + memberOf + '\'' +
                 ", ou='" + ou + '\'' +
                 '}';
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getENIMatricolaNotes() {
-        return ENIMatricolaNotes;
-    }
-
-    void setENIMatricolaNotes(String ENIMatricolaNotes) {
-        this.ENIMatricolaNotes = ENIMatricolaNotes;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getGivenName() {
-        return givenName;
-    }
-
-    void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
-    public String getSn() {
-        return sn;
-    }
-
-    void setSn(String sn) {
-        this.sn = sn;
-    }
-
-    public String getBadPwdCount() {
-        return badPwdCount;
-    }
-
-    void setBadPwdCount(String badPwdCount) {
-        this.badPwdCount = badPwdCount;
-    }
-
-    public String getPwdLastSet() {
-        return pwdLastSet;
-    }
-
-    void setPwdLastSet(String pwdLastSet) {
-        this.pwdLastSet = pwdLastSet;
-    }
-
-    public String getUserAccountDisabled() {
-        return userAccountDisabled;
-    }
-
-    void setUserAccountDisabled(String userAccountDisabled) {
-        this.userAccountDisabled = userAccountDisabled;
-    }
-
-    public String getUserDontExpirePassword() {
-        return userDontExpirePassword;
-    }
-
-    void setUserDontExpirePassword(String userDontExpirePassword) {
-        this.userDontExpirePassword = userDontExpirePassword;
-    }
-
-    public String getMemberOf() {
-        return memberOf;
-    }
-
-    void setMemberOf(String memberOf) {
-        this.memberOf = memberOf;
-    }
-
-    public String getOu() {
-        return ou;
-    }
-
-    void setOu(String ou) {
-        this.ou = ou;
     }
 }

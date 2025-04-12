@@ -1,28 +1,27 @@
 package eni.it.gsrestservice.service;
 
-import eni.it.gsrestservice.config.LoggingMisc;
+import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.model.CSVReader;
-import eni.it.gsrestservice.model.LDAPConnector;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.List;
 
 @Service
 public class CSVReaderService {
 
     private final CSVReader csvReader = new CSVReader();
-    private final LDAPConnector ldapConnector = new LDAPConnector();
-
+    private final RolesListConfig rolesListConfig;
+    private final LDAPService ldapService;
+    @Value("${log.discard}")
     private static File fileUsersNotExists;
+    @Value("${log.user.role.discarded}")
     private static File userDiscardedByRole;
-    public static int rowNumbers;
-    public static int userRoleDiscarded;
-    private final LoggingMisc loggingMisc;
-    private List<String> rolesList;
+    public static int rowNumbers, userRoleDiscarded, usersProcessed, usersUploaded;
 
-    public CSVReaderService() {
-        loggingMisc = new LoggingMisc();
+    public CSVReaderService(RolesListConfig rolesListConfig, LDAPService ldapService) {
+        this.rolesListConfig = rolesListConfig;
+        this.ldapService = ldapService;
     }
 
     public void read(byte[] data) {
@@ -36,7 +35,7 @@ public class CSVReaderService {
             csvReader.setContent(new String(data));
             rowNumbers = csvReader.count(data);
             String firstRow;
-            String[] userID;
+            String[] userId;
             FileOutputStream fileOutputStream, outputStream;
             if (!fileUsersNotExists.exists() || !userDiscardedByRole.exists()) {
                 fileUsersNotExists.createNewFile();
@@ -44,18 +43,16 @@ public class CSVReaderService {
             }
             fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
             outputStream = new FileOutputStream(userDiscardedByRole, true);
-            loggingMisc.printConsole(1, CSVReaderService.class.getSimpleName() + " - Files opened successfully");
             while ((firstRow = bufferedReader.readLine()) != null) {
-                userID = firstRow.split(";");
-                for (String role : getRolesList()) {
-                    if (!userID[1].equals(role)) {
-                        String userNotExist = "Utente: " + userID[0] + " scartato causa: " + userID[1] + " e` diverso da: " + role + "\n";
+                userId = firstRow.split(";");
+                for (String role : rolesListConfig.getList()) {
+                    if (!userId[1].equals(role)) {
+                        String userNotExist = "Utente: " + userId[0] + " scartato causa: " + userId[1] + " e` diverso da: " + role + "\n";
+                        userRoleDiscarded++;
                         outputStream.write(userNotExist.getBytes());
                     } else {
-                        csvReader.setUserID(userID[0]);//Matricola
-                        csvReader.setRole(userID[1]);//Ruolo
-                        csvReader.setGroup(userID[2]);//Gruppo
-                        ldapConnector.searchOnLDAPInsertToDB(userID[0], userID[1], userID[2]);
+                        ldapService.searchOnLDAPInsertToDB(userId[0], userId[1], userId[2]);
+                        usersUploaded++;
                     }
                 }
             }
@@ -63,25 +60,12 @@ public class CSVReaderService {
             outputStream.close();
             return true;
         } catch (Exception e) {
-            loggingMisc.printConsole(2, CSVReaderService.class.getSimpleName() + " - Error processing CSV file: " + e.getMessage());
             return false;
         }
     }
 
     public static void resetCounter() {
-        CSVReaderService.userRoleDiscarded = 0;
-    }
-
-    public void initFile(String fileUsersNotExists, String userDiscardedByRole) {
-        CSVReaderService.fileUsersNotExists = new File(fileUsersNotExists);
-        CSVReaderService.userDiscardedByRole = new File(userDiscardedByRole);
-    }
-
-    private List<String> getRolesList() {
-        return rolesList;
-    }
-
-    public void setRolesList(List<String> rolesList) {
-        this.rolesList = rolesList;
+        userRoleDiscarded = 0;
+        usersUploaded = 0;
     }
 }

@@ -8,32 +8,20 @@
 --%>
 <!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
-    <meta about="Made by UID0931174 aka Zaki"/>
-    <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link type="text/javascript" href="js/bootstrap.js"/>
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
-    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-</head>
+<jsp:include page="header.jsp"/>
 <body>
 <jsp:include page="navbar.jsp"/>
 <c:choose>
     <c:when test="${empty all_farm}">
         <div class="container text-center">
-            <h2>Nessun record e` presente! Clicca su -> <a href="/addNewFarmPage"><span class="fa fa-plus"></span></a>
+            <h2>Nessun record e` presente! Clicca su -> <a
+                    href="${pageContext.request.contextPath}/addNewFarmPage"><span class="fa fa-plus"></span></a>
                 per aggiungere FARM</h2>
         </div>
     </c:when>
     <c:otherwise>
-        <h2 class="text-center">Elenco FARM, clicca su -> <a href="/addNewFarmPage"><span class="fa fa-plus"></span></a>
+        <h2 class="text-center">Elenco FARM, clicca su -> <a
+                href="${pageContext.request.contextPath}/addNewFarmPage"><span class="fa fa-plus"></span></a>
             per aggiungere FARM</h2>
         <hr>
         <div class="table-responsive">
@@ -64,27 +52,29 @@
                 <tbody>
                 <c:forEach var="farm" items="${all_farm}">
                     <tr>
-                        <td class="u-farm-id">${farm.farmId}</td>
+                        <td class="u-farm-id">${farm.farmid}</td>
                         <td class="u-description">${farm.description}</td>
                         <td class="u-env">${farm.environment}</td>
-                        <td class="u-db-host">${farm.dbHost}</td>
-                        <td class="u-db-port">${farm.dbPort}</td>
-                        <td class="u-db-sid">${farm.dbSid}</td>
-                        <td class="u-qs-host">${farm.qsHost}</td>
+                        <td class="u-db-host">${farm.dbhost}</td>
+                        <td class="u-db-port">${farm.dbport}</td>
+                        <td class="u-db-sid">${farm.dbsid}</td>
+                        <td class="u-qs-host">${farm.qshost}</td>
                         <td class="u-came">${farm.came} </td>
-                        <td class="u-db-user" hidden>${farm.dbUser}</td>
-                        <td class="u-db-pwd" hidden>${farm.dbPassword}</td>
-                        <td class="u-qs-task-name" hidden>${farm.qsReloadTaskName}</td>
-                        <td class="u-qs-path-client" hidden>${farm.qsPathClientJKS}</td>
-                        <td class="u-qs-path-root" hidden>${farm.qsPathRootJKS}</td>
-                        <td class="u-qs-xrf-key" hidden>${farm.qsXrfKey}</td>
-                        <td class="u-qs-key-store-pwd" hidden>${farm.qsKeyStorePwd}</td>
-                        <td class="u-qs-header" hidden>${farm.qsHeader}</td>
+                        <td class="u-db-user" hidden>${farm.dbuser}</td>
+                        <td class="u-db-pwd" hidden>${farm.dbpassword}</td>
+                        <td class="u-qs-task-name" hidden>${farm.qsreloadtaskname}</td>
+                        <td class="u-qs-path-client" hidden>${farm.qspathclient}</td>
+                        <td class="u-qs-path-root" hidden>${farm.qspathroot}</td>
+                        <td class="u-qs-xrf-key" hidden>${farm.qsxrfkey}</td>
+                        <td class="u-qs-key-store-pwd" hidden>${farm.qskspasswd}</td>
+                        <td class="u-qs-header" hidden>${farm.qsuserheader}</td>
                         <td class="u-note" hidden>${farm.note}</td>
                         <td>
-                            <a href="/editFarm?farmId=${farm.farmId}"><span class="fa fa-pencil"></span></a>
+                            <a href="${pageContext.request.contextPath}/editFarm?farmId=${farm.farmid}"><span
+                                    class="fa fa-pencil"></span></a>
                         </td>
-                        <td><a href="/deleteFarm?farmId=${farm.farmId}"><span class="fa fa-trash"></span></a></td>
+                        <td><a href="${pageContext.request.contextPath}/deleteFarm?farmId=${farm.farmid}"><span
+                                class="fa fa-trash"></span></a></td>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -103,9 +93,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#myTable').dataTable({

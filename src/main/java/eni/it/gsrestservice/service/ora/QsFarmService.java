@@ -25,8 +25,8 @@ public class QsFarmService {
         return qsFarmRepository.findAll();
     }
 
-    public Optional<QsFarm> findById(Long id) {
-        return qsFarmRepository.findById(id);
+    public Optional<QsFarm> findById(String id) {
+        return qsFarmRepository.findByFarmid(id);
     }
 
     public QsFarm create(QsFarm qsFarm) {

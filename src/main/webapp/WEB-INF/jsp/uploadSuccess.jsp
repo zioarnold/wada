@@ -20,7 +20,6 @@
 <div class="container text-center">
     <h4>Caricamento del file e' avvenuto con successo!</h4>
     Numero utenti caricati: <%=request.getAttribute("users_uploaded")%>
-    Numero utenti processati: <%=request.getAttribute("users_processed")%>
     Numero utenti scartati : <%=request.getAttribute("users_discarded")%>
 </div>
 <!-- Optional JavaScript -->

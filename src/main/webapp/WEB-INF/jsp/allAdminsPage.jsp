@@ -1,5 +1,3 @@
-<%@ page import="eni.it.gsrestservice.model.QsAdmins" %>
-<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -8,36 +6,23 @@
   Time: 21:42
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%List<QsAdmins> qsAdmins = (List<QsAdmins>) request.getAttribute("all_admins"); %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
-    <meta about="Made by UID0931174 aka Zaki"/>
-    <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link type="text/javascript" href="js/bootstrap.js"/>
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
-    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-</head>
+<jsp:include page="header.jsp"/>
 <body>
 <jsp:include page="navbar.jsp"/>
 <c:choose>
     <c:when test="${empty all_admins}">
         <div class="container text-center">
-            <h2>Nessun record e` presente! Clicca su -> <a href="/addAdminPage"><span class="fa fa-plus"></span></a> per
+            <h2>Nessun record e` presente! Clicca su -> <a href="${pageContext.request.contextPath}/addAdminPage"><span
+                    class="fa fa-plus"></span></a> per
                 aggiungere un moder o un admin</h2>
         </div>
     </c:when>
     <c:otherwise>
-        <h2 class="text-center">Elenco Admins/Moders, clicca su -> <a href="/addAdminPage"><span
+        <h2 class="text-center">Elenco Admins/Moders, clicca su -> <a
+                href="${pageContext.request.contextPath}/addAdminPage"><span
                 class="fa fa-plus"></span></a>
             per aggiungere un moder o un admin</h2>
         <hr>
@@ -55,24 +40,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <%
-                    for (QsAdmins s : qsAdmins) {
-                %>
-                <tr>
-                    <td><%=s.getId()%>
-                    </td>
-                    <td><%=s.getUsername()%>
-                    </td>
-                    <td><%=s.getAuth()%>
-                    </td>
-                    <td><%=s.getRole()%>
-                    </td>
-                    <td><%=s.getCurrentSessionLoginTime()%>
-                    </td>
-                    <td><a href="/editAdmin?adminId=<%=s.getId()%>"><span class="fa fa-pencil"></span></a></td>
-                    <td><a href="/deleteAdmin?adminId=<%=s.getId()%>"><span class="fa fa-trash"></span></a></td>
-                </tr>
-                <% } %>
+
+                <c:forEach items="${all_admins}" var="user">
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.authenticated}</td>
+                        <td>${user.role}</td>
+                        <td>${user.currentSessionLoginTime}</td>
+                        <td><a href="${pageContext.request.contextPath}/editAdmin?adminId=${user.id}"><span
+                                class="fa fa-pencil"></span></a></td>
+                        <td><a href="/${pageContext.request.contextPath}/deleteAdmin?adminId=${user.id}"><span
+                                class="fa fa-trash"></span></a></td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>

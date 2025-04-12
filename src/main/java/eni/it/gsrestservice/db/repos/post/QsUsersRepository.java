@@ -3,6 +3,8 @@ package eni.it.gsrestservice.db.repos.post;
 
 import eni.it.gsrestservice.entities.postgres.QsUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +13,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface QsUsersRepository extends JpaRepository<QsUser, Long> {
+    @Modifying
+    @Query(value = "DELETE FROM qs_users WHERE userid = :userId", nativeQuery = true)
+    void deleteUserID(String userId);
+
+    QsUser findByUserid(String userid);
+
+    QsUser findUserRoleByUserid(String userid);
 }

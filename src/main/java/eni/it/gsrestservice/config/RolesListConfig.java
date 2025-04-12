@@ -20,6 +20,9 @@ import java.util.List;
 public class RolesListConfig {
     private final List<String> list;
 
+    @Value("${log.role.exist.for.user}")
+    public static String roleExist;
+
     @Value("${roles.config.json.path}")
     private String rolesFilePath;
 

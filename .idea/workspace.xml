@@ -4,33 +4,54 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Refactor database operations and services integration&#10;&#10;Integrated service layer for improved separation of concerns and code maintainability. Replaced direct database operations in controllers with service calls, implemented new repository interfaces, and refactored redundant or outdated methods. Simplifies logic and prepares codebase for further scalability.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/QlikViewSenseConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Refactor services and remove deprecated functionality&#10;&#10;Removed unused QsAdminUsersService class and simplified file handling in CSVReaderService. Migrated DB operations to service-based architecture, ensuring better separation of concerns. Replaced redundant database initialization and Qlik connector setup logic in controllers with streamlined service calls. Updated configurations for better property management.">
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/header.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/QlikViewSenseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/QlikViewSenseConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/RolesListConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/RolesListConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LDAPController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/DBOracleOperations.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/DBOracleOperations.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/DBOracleOperations.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/DBPostgresOperations.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsAdminUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsAdminUserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsFarmRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsFarmRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsUsersAttributesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsUsersAttributesRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsUsersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsUsersRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/Farm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/Farm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/QsAdminUsersService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/QsAuditLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAuditLogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/QsDevUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsDevUsersAttributesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/QsFarmService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPConnector.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QlikSenseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/QlikSenseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/LDAPService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/LDAPService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addAdminPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addAdminPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addFarmPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allAdminsPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allAdminsPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allQUsersFromDB.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allQUsersFromDB.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allUsersFromLDAP.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allUsersFromLDAP.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/chooseFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/chooseFarm.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/createFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/createFarm.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editAdmin.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editFarm.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/error.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/error.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/errorLogin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/errorLogin.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/logout.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/logout.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/management.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/management.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchUserOnLDAP.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchUserOnLDAP.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/uploadSuccess.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/uploadSuccess.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,10 +163,10 @@
         <option value="HTML File" />
         <option value="JavaScript File" />
         <option value="CSS File" />
-        <option value="Jsp File" />
         <option value="com.intellij.jpb.JpaEntity" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="Jsp File" />
       </list>
     </option>
   </component>
@@ -460,7 +481,8 @@
       <workItem from="1739888505059" duration="884000" />
       <workItem from="1739980709761" duration="829000" />
       <workItem from="1744372596330" duration="5848000" />
-      <workItem from="1744379897837" duration="5465000" />
+      <workItem from="1744379897837" duration="7807000" />
+      <workItem from="1744457885616" duration="13306000" />
     </task>
     <task id="LOCAL-00002" summary="spring ldap boot added">
       <created>1569512608466</created>
@@ -805,7 +827,7 @@
       <option name="project" value="LOCAL" />
       <updated>1681317090042</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -851,7 +873,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="external property to init driver added" />
     <MESSAGE value="parametrized tables performed" />
     <MESSAGE value="unnecessary dependencies removed, internal application.properties&#10;simplified. to make work the app you have the specify&#10;--spring.config.location=file:///C:/temp/application.properties&#10;so it will override the internal application.properties and work correct" />
     <MESSAGE value="get all users table dynamic search added" />
@@ -876,7 +897,8 @@
     <MESSAGE value="Dependencies update" />
     <MESSAGE value="Add Oracle and PostgreSQL support with JPA configurations&#10;&#10;Introduced entity classes and Hibernate configuration for Oracle and PostgreSQL databases. Updated dependencies and application properties to enable JPA integration and database-specific settings. This facilitates multi-database support and improves project flexibility." />
     <MESSAGE value="Refactor database operations and services integration&#10;&#10;Integrated service layer for improved separation of concerns and code maintainability. Replaced direct database operations in controllers with service calls, implemented new repository interfaces, and refactored redundant or outdated methods. Simplifies logic and prepares codebase for further scalability." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor database operations and services integration&#10;&#10;Integrated service layer for improved separation of concerns and code maintainability. Replaced direct database operations in controllers with service calls, implemented new repository interfaces, and refactored redundant or outdated methods. Simplifies logic and prepares codebase for further scalability." />
+    <MESSAGE value="Refactor services and remove deprecated functionality&#10;&#10;Removed unused QsAdminUsersService class and simplified file handling in CSVReaderService. Migrated DB operations to service-based architecture, ensuring better separation of concerns. Replaced redundant database initialization and Qlik connector setup logic in controllers with streamlined service calls. Updated configurations for better property management." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor services and remove deprecated functionality&#10;&#10;Removed unused QsAdminUsersService class and simplified file handling in CSVReaderService. Migrated DB operations to service-based architecture, ensuring better separation of concerns. Replaced redundant database initialization and Qlik connector setup logic in controllers with streamlined service calls. Updated configurations for better property management." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

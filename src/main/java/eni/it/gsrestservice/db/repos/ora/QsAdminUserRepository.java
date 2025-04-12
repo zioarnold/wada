@@ -3,6 +3,7 @@ package eni.it.gsrestservice.db.repos.ora;
 
 import eni.it.gsrestservice.entities.oracle.QsAdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,8 @@ public interface QsAdminUserRepository extends JpaRepository<QsAdminUser, Long> 
     QsAdminUser checkSession(String username);
 
     QsAdminUser findByUsername(String username);
+
+    @Modifying
+    @Query(value = "UPDATE QSADMINUSERS a SET a.PASSWORD = :password WHERE a.ID = :username", nativeQuery = true)
+    void updatePasswordByUsername(String username, String password);
 }

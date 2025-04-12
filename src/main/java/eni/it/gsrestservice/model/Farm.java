@@ -1,14 +1,10 @@
 package eni.it.gsrestservice.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Farm {
     public static Long farmId;
     public static String description;

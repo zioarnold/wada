@@ -1,5 +1,3 @@
-<%@ page import="eni.it.gsrestservice.model.LDAPUser" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
@@ -7,13 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge"/>
     <meta about="Made by UID0931174 aka Zaki"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
     <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link type="text/javascript" href="js/bootstrap.js"/>
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/background.css"/>
+    <link type="text/javascript" href="${pageContext.request.contextPath}/js/bootstrap.js"/>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/ico/favicon.ico"/>
     <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
@@ -21,7 +17,7 @@
 <jsp:include page="navbar.jsp"/>
 <br/>
 <div class="container text-center">
-    <form action="/searchUserOnLDAP" method="get">
+    <form action="<c:url value="/searchUserOnLDAP"/>" method="get">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <input class="btn btn-primary" type="submit" value="Cerca"/>
@@ -70,29 +66,18 @@
                         </th>
                     </tr>
                     </thead>
-                    <%
-                        ArrayList<LDAPUser> std = (ArrayList<LDAPUser>) request.getAttribute("userIDDATA");
-                        for (LDAPUser s : std) {
-                    %>
                     <tbody>
-                    <tr>
-                        <td>
-                            <%=s.getDisplayName()%>
-                        </td>
-                        <td><%=s.getENIMatricolaNotes() %>
-                        </td>
-                        <td><%=s.getName() %>
-                        </td>
-                        <td><%=s.getMail() %>
-                        </td>
-                        <td><%=s.getGivenName() %>
-                        </td>
-                        <td><%=s.getUserAccountDisabled() %>
-                        </td>
-                        <td><%=s.getOu() %>
-                        </td>
-                    </tr>
-                    <%}%>
+                    <c:forEach items="${userIDDATA}" var="user">
+                        <tr>
+                            <td>${user.displayName}</td>
+                            <td>${user.ENIMatricolaNotes}</td>
+                            <td>${user.name}</td>
+                            <td>${user.mail}</td>
+                            <td>${user.givenName}</td>
+                            <td>${user.userAccountDisabled}</td>
+                            <td>${user.ou}</td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>

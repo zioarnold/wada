@@ -14,4 +14,6 @@ import java.util.Optional;
 @Repository
 public interface QsFarmRepository extends JpaRepository<QsFarm, Long> {
     Optional<QsFarm> findByDescription(String farmName);
+
+    Optional<QsFarm> findByFarmid(String farmId);
 }

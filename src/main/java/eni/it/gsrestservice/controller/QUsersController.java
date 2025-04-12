@@ -6,9 +6,9 @@ import eni.it.gsrestservice.entities.oracle.QsAuditLog;
 import eni.it.gsrestservice.entities.postgres.QsUser;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import eni.it.gsrestservice.model.Farm;
-import eni.it.gsrestservice.model.LDAPConnector;
-import eni.it.gsrestservice.model.QlikSenseConnector;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import eni.it.gsrestservice.service.LDAPService;
+import eni.it.gsrestservice.service.QlikSenseService;
 import eni.it.gsrestservice.service.ora.QsAdminUsersService;
 import eni.it.gsrestservice.service.ora.QsAuditLogService;
 import eni.it.gsrestservice.service.post.QsUsersAttributesService;
@@ -24,12 +24,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class QUsersController {
-    private final QlikSenseConnector qlikSenseConnector;
+    private final QlikSenseService qlikSenseService;
     private final RolesListConfig rolesListConfig;
     private final QsUsersAttributesService qsUsersAttributesService;
     private final QsUsersService qsUsersService;
     private final QsAdminUsersService qsAdminUsersService;
     private final QsAuditLogService qsAuditLogService;
+    private final LDAPService ldapService;
 
 
     @GetMapping("/AllQLIKUsersFromDB")
@@ -40,17 +41,38 @@ public class QUsersController {
                     .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role);
         } else {
             return new ModelAndView("allQUsersFromDB")
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
                     .addObject("qusers", qsUsers);
+        }
+    }
+
+    @RequestMapping("/searchUserOnLDAP")
+    public ModelAndView searchUserOnLDAP(@RequestParam(required = false, name = "userID") String userId) throws IOException {
+        if (ldapService.searchOnLDAP(userId).isEmpty()) {
+            return new ModelAndView("error")
+                    .addObject("errorMsg", ErrorWadaManagement.E_0009_USER_NOT_IN_LDAP.getErrorMsg())
+                    .addObject("farm_name", Farm.description)
+                    .addObject("farm_environment", Farm.environment)
+                    .addObject("ping_qlik", qlikSenseService.ping())
+                    .addObject("user_logged_in", QsAdminUsers.username)
+                    .addObject("user_role_logged_in", QsAdminUsers.role);
+        } else {
+            return new ModelAndView("searchUserOnLDAP")
+                    .addObject("farm_name", Farm.description)
+                    .addObject("farm_environment", Farm.environment)
+                    .addObject("ping_qlik", qlikSenseService.ping())
+                    .addObject("user_logged_in", QsAdminUsers.username)
+                    .addObject("user_role_logged_in", QsAdminUsers.role)
+                    .addObject("userIDDATA", ldapService.searchOnLDAP(userId));
         }
     }
 
@@ -61,14 +83,14 @@ public class QUsersController {
                     .addObject("errorMsg", ErrorWadaManagement.E_0010_USER_IS_NOT_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role);
         } else {
             return new ModelAndView("searchQUserOnDB")
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
                     .addObject("quser_filter", qsUsersService.findById(userId));
@@ -83,18 +105,29 @@ public class QUsersController {
                     .addObject("errorMsg", ErrorWadaManagement.E_0010_USER_IS_NOT_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role);
         } else {
             return new ModelAndView("showUserType")
                     .addObject("farm_name", Farm.description)
                     .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseConnector.ping())
+                    .addObject("ping_qlik", qlikSenseService.ping())
                     .addObject("user_logged_in", QsAdminUsers.username)
                     .addObject("user_role_logged_in", QsAdminUsers.role)
                     .addObject("other_data", userTypeByUserId);
         }
+    }
+
+    @GetMapping("/allUsersFromLDAP")
+    public ModelAndView allUsersFromLDAP() {
+        return new ModelAndView("allUsersFromLDAP")
+                .addObject("farm_name", Farm.description)
+                .addObject("farm_environment", Farm.environment)
+                .addObject("ping_qlik", qlikSenseService.ping())
+                .addObject("user_logged_in", QsAdminUsers.username)
+                .addObject("user_role_logged_in", QsAdminUsers.role)
+                .addObject("ldapusers", ldapService.findAll());
     }
 
     @GetMapping("/searchQUserOnDBPage")
@@ -102,7 +135,7 @@ public class QUsersController {
         return new ModelAndView("searchQUserOnDB")
                 .addObject("farm_name", Farm.description)
                 .addObject("farm_environment", Farm.environment)
-                .addObject("ping_qlik", qlikSenseConnector.ping())
+                .addObject("ping_qlik", qlikSenseService.ping())
                 .addObject("user_logged_in", QsAdminUsers.username)
                 .addObject("user_role_logged_in", QsAdminUsers.role);
     }
@@ -115,7 +148,7 @@ public class QUsersController {
                     return new ModelAndView("singleUploadPage")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("ping_qlik", qlikSenseService.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role)
                             .addObject("rolesList", rolesListConfig.getList());
@@ -123,7 +156,7 @@ public class QUsersController {
                     return new ModelAndView("singleUploadPage")
                             .addObject("farm_name", Farm.description)
                             .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseConnector.ping())
+                            .addObject("ping_qlik", qlikSenseService.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role)
                             .addObject("rolesList", rolesListConfig.getList());
@@ -144,7 +177,7 @@ public class QUsersController {
     public ModelAndView singleUpload(@RequestParam(required = false, name = "userId") String userId,
                                      @RequestParam(required = false, name = "userRole") String userRole,
                                      @RequestParam(required = false, name = "userGroup") String userGroup) throws IOException {
-        new LDAPConnector().searchOnLDAPInsertToDB(userId, userRole, userGroup);
+        ldapService.searchOnLDAPInsertToDB(userId, userRole, userGroup);
         QsAuditLog qsAuditLog = new QsAuditLog();
         qsAuditLog.setDescription("Utenza " + QsAdminUsers.username + " su questa farm: " +
                                   Farm.description + " di " + Farm.environment + " ha censito utente :" + userId.toUpperCase() + " con ruolo: "

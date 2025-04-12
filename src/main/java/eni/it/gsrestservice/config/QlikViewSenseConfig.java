@@ -2,7 +2,7 @@ package eni.it.gsrestservice.config;
 
 
 import eni.it.gsrestservice.entities.oracle.QsFarm;
-import eni.it.gsrestservice.model.QlikSenseConnector;
+import eni.it.gsrestservice.service.QlikSenseService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class QlikViewSenseConfig {
     public void configureFarm(QsFarm farm) {
-        QlikSenseConnector.initConnector(
+        QlikSenseService.initConnector(
                 farm.getQsxrfkey(),
                 farm.getQshost(),
                 farm.getQspathclient(),
@@ -21,6 +21,6 @@ public class QlikViewSenseConfig {
                 farm.getQsuserheader(),
                 farm.getQsreloadtaskname()
         );
-        QlikSenseConnector.configureCertificate();
+        QlikSenseService.configureCertificate();
     }
 }

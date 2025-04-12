@@ -1,24 +1,7 @@
-<%@ page import="eni.it.gsrestservice.model.QUsers" %>
-<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%List<QUsers> qUsers = (List<QUsers>) request.getAttribute("qusers"); %>
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Cache-Control" content="no-cache"/>
-    <meta about="Made by UID0931174 aka Zaki"/>
-    <title>Eni Qlik Tool User Management</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/background.css"/>
-    <link type="text/javascript" href="js/bootstrap.js"/>
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
-    <link rel="shortcut icon" href="ico/favicon.ico"/>
-    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
-</head>
+<jsp:include page="header.jsp"/>
 <body>
 <jsp:include page="navbar.jsp"/>
 <c:choose>
@@ -50,26 +33,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <%
-                        for (QUsers s : qUsers) {
-                    %>
-                    <tr>
-                        <td class="u-user"><%=s.getUserId()%>
-                        </td>
-                        <td><%=s.getName()%>
-                        </td>
-                        <td><%=s.getUserIsActive()%> |
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                    data-target="#con-close-modal-disable-user">
-                                Modifica
-                            </button>
-                        </td>
-                        <td>
-                            <a href="/managementPageShowUserData?quser_filter=<%=s.getUserId()%>">
-                                Mostrami altri dati </a>
-                        </td>
-                    </tr>
-                    <% } %>
+                    <c:forEach items="${qusers}" var="qu">
+                        <tr>
+                            <td>${qu.userid}</td>
+                            <td>${qu.name}</td>
+                            <td>${qu.userIsActive}</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/managementPageShowUserData?quser_filter=${}">
+                                    Mostrami altri dati </a></td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#con-close-modal-disable-user">
+                                    Modifica
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -87,7 +66,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/managementPageDisableUser" method="post">
+            <form action="${pageContext.request.contextPath}/managementPageDisableUser" method="post">
                 <div class="modal-body">
                     Y - Utenza abilitata, N - Utenza disabilitata
                     <label>Utenza
@@ -122,9 +101,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#myTable').dataTable({
@@ -152,9 +131,9 @@
 <script>
     $(document).ready(function () {
         $('#con-close-modal-disable-user').on('show.bs.modal', function (e) {
-            var _button = $(e.relatedTarget);
-            var _row = _button.parents("tr");
-            var uUser = _row.find(".u-user").text().trim();
+            const _button = $(e.relatedTarget);
+            const _row = _button.parents("tr");
+            const uUser = _row.find(".u-user").text().trim();
             $(this).find(".u-user").val(uUser);
         });
     });
