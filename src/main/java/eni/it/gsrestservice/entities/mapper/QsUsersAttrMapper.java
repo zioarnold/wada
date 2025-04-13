@@ -5,7 +5,6 @@ import eni.it.gsrestservice.entities.postgres.QsUser;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
 
@@ -15,7 +14,6 @@ import java.time.OffsetDateTime;
  */
 @Setter
 @Getter
-@Component
 public class QsUsersAttrMapper {
     private String userId;
     private String name;

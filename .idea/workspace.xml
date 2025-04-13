@@ -4,51 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Refactor JSPs and controllers to streamline paths and logic&#10;&#10;Updated JSP files to use `pageContext.request.contextPath` for dynamic paths and replaced scriptlets with JSTL tags as part of modernization efforts. Refactored controllers by introducing helper methods for reusability and concise role/user handling, while improving code readability and maintainability.">
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Update PostgreSQL driver to version 42.3.3&#10;&#10;Upgraded the PostgreSQL JDBC dependency from 42.2.27 to 42.3.3 in the pom.xml file. This ensures compatibility with recent database updates and includes important bug fixes and performance improvements.">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/oracle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/postgres.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/LoggingMisc.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsAdminUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsAdminUserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsAuditLogRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsAuditLogRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsFarmRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsFarmRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/ora/QsFarmsTmpRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsFarmsTmpRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsDevUsersAttributesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsDevUsersAttributesRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsDevUsersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsDevUsersRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsUsersAttributesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsUsersAttributesRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/db/repos/post/QsUsersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsUsersRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QUsers.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QsAdmins.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QsFarms.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/RolesListConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/RolesListConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/mapper/QsUsersAttrMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/mapper/QsUsersAttrMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAuditLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAuditLogService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsDevUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsDevUsersAttributesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addAdminPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addAdminPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/addFarmPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allAdminsPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allAdminsPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allQUsersFromDB.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allQUsersFromDB.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allUsersFromLDAP.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allUsersFromLDAP.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/assistance.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editAdmin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editAdmin.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editFarm.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/error.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/error.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/errorLogin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/errorLogin.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/management.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/management.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/massiveUploadPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/massiveUploadPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/navbar.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/navbar.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/report.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/report.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchQUserOnDB.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchQUserOnDB.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchUserOnLDAP.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchUserOnLDAP.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/showUserType.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/showUserType.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/singleUploadPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/singleUploadPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/success.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/success.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/uploadSuccess.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/uploadSuccess.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/userGuide.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/userGuide.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,8 +181,9 @@
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
+        <option name="customMavenHome" value="S:\apache-maven-3.9.1" />
         <option name="localRepository" value="E:\.m2\repository" />
-        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
         <option name="userSettingsFile" value="E:\.m2\settings.xml" />
       </MavenGeneralSettings>
     </option>
@@ -230,48 +204,56 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.gs-rest-service [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.gs-rest-service [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.gs-rest-service [package].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;S:/JavaProjects/wada/src/main/webapp&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;MavenSettings&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;73e2d207480a483bf999300184aa3c00&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.gs-rest-service [clean,install...].executor": "Run",
+    "Maven.gs-rest-service [clean,install].executor": "Run",
+    "Maven.gs-rest-service [clean].executor": "Run",
+    "Maven.gs-rest-service [compile].executor": "Run",
+    "Maven.gs-rest-service [install].executor": "Run",
+    "Maven.gs-rest-service [mvn,clean,install...].executor": "Run",
+    "Maven.gs-rest-service [mvn,clean:install...].executor": "Run",
+    "Maven.gs-rest-service [package].executor": "Run",
+    "Maven.gs-rest-service [spring-boot:run].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.GsRestServiceApplication.executor": "Run",
+    "WebServerToolWindowFactoryState": "false",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "S:/JavaProjects/wada/src/lib",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.49770114",
+    "settings.editor.selected.configurable": "MavenSettings",
+    "spring.configuration.checksum": "73e2d207480a483bf999300184aa3c00",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;,
-      &quot;oracle&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql",
+      "oracle"
     ],
-    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/&quot;: [
-      &quot;PostgreSQL&quot;
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/": [
+      "PostgreSQL"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="S:\JavaProjects\wada\src\lib" />
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -282,7 +264,7 @@
       <recent name="S:\JavaProjects\wada\sql\oracle" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.gs-rest-service [spring-boot:run]">
+  <component name="RunManager" selected="Spring Boot.GsRestServiceApplication">
     <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
       <option name="appName" />
       <option name="appServicePlanName" />
@@ -328,7 +310,26 @@
     </configuration>
     <configuration name="gs-rest-service [spring-boot:run]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
-        <option name="myGeneralSettings" />
+        <option name="myGeneralSettings">
+          <MavenGeneralSettings>
+            <option name="alwaysUpdateSnapshots" value="false" />
+            <option name="checksumPolicy" value="NOT_SET" />
+            <option name="customMavenHome" />
+            <option name="emulateTerminal" value="false" />
+            <option name="failureBehavior" value="NOT_SET" />
+            <option name="localRepository" value="E:/.m2/repository" />
+            <option name="mavenHome" value="Bundled (Maven 3)" />
+            <option name="mavenHomeTypeForPersistence" value="BUNDLED3" />
+            <option name="nonRecursive" value="false" />
+            <option name="outputLevel" value="INFO" />
+            <option name="printErrorStackTraces" value="false" />
+            <option name="showDialogWithAdvancedSettings" value="false" />
+            <option name="threads" />
+            <option name="useMavenConfig" value="true" />
+            <option name="userSettingsFile" value="E:/.m2/settings.xml" />
+            <option name="workOffline" value="false" />
+          </MavenGeneralSettings>
+        </option>
         <option name="myRunnerSettings" />
         <option name="myRunnerParameters">
           <MavenRunnerParameters>
@@ -479,7 +480,8 @@
       <workItem from="1739980709761" duration="829000" />
       <workItem from="1744372596330" duration="5848000" />
       <workItem from="1744379897837" duration="7807000" />
-      <workItem from="1744457885616" duration="19741000" />
+      <workItem from="1744457885616" duration="21300000" />
+      <workItem from="1744548569311" duration="8467000" />
     </task>
     <task id="LOCAL-00002" summary="spring ldap boot added">
       <created>1569512608466</created>
@@ -824,7 +826,7 @@
       <option name="project" value="LOCAL" />
       <updated>1681317090042</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -870,8 +872,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="get all users table dynamic search added" />
-    <MESSAGE value="dynamic search adjusted into whole column" />
     <MESSAGE value="new dataTablesAPI added." />
     <MESSAGE value="bootstrap modal added with form action inside: edit buttons implemented" />
     <MESSAGE value="progress bar implemented" />
@@ -895,7 +895,9 @@
     <MESSAGE value="Refactor services and remove deprecated functionality&#10;&#10;Removed unused QsAdminUsersService class and simplified file handling in CSVReaderService. Migrated DB operations to service-based architecture, ensuring better separation of concerns. Replaced redundant database initialization and Qlik connector setup logic in controllers with streamlined service calls. Updated configurations for better property management." />
     <MESSAGE value="TODO: Fix most of items and code." />
     <MESSAGE value="Refactor JSPs and controllers to streamline paths and logic&#10;&#10;Updated JSP files to use `pageContext.request.contextPath` for dynamic paths and replaced scriptlets with JSTL tags as part of modernization efforts. Refactored controllers by introducing helper methods for reusability and concise role/user handling, while improving code readability and maintainability." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor JSPs and controllers to streamline paths and logic&#10;&#10;Updated JSP files to use `pageContext.request.contextPath` for dynamic paths and replaced scriptlets with JSTL tags as part of modernization efforts. Refactored controllers by introducing helper methods for reusability and concise role/user handling, while improving code readability and maintainability." />
+    <MESSAGE value="Remove unused files and improve CSVReaderService logging&#10;&#10;Deleted obsolete Java models, JSP files, and configuration classes to clean up the project. Enhanced `CSVReaderService` by adding error logs for failed file creation, improving debugging and maintainability." />
+    <MESSAGE value="Update PostgreSQL driver to version 42.3.3&#10;&#10;Upgraded the PostgreSQL JDBC dependency from 42.2.27 to 42.3.3 in the pom.xml file. This ensures compatibility with recent database updates and includes important bug fixes and performance improvements." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update PostgreSQL driver to version 42.3.3&#10;&#10;Upgraded the PostgreSQL JDBC dependency from 42.2.27 to 42.3.3 in the pom.xml file. This ensures compatibility with recent database updates and includes important bug fixes and performance improvements." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

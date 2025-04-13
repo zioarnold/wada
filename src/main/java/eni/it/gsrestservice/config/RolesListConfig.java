@@ -4,8 +4,7 @@ import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,11 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
-@ConfigurationProperties(prefix = "roles")
+@Component
 @Getter
 public class RolesListConfig {
-    private final List<String> list;
 
     @Value("${log.role.exist.for.user}")
     public static String roleExist;
@@ -26,18 +23,9 @@ public class RolesListConfig {
     @Value("${roles.config.json.path}")
     private String rolesFilePath;
 
-    public RolesListConfig() {
-        this.list = new ArrayList<>();
-        try {
-            initRolesList(rolesFilePath);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to initialize roles list", e);
-        }
-    }
-
-    private void initRolesList(String path) throws IOException {
-        list.clear();
-        File rolesFile = new File(path);
+    public List<String> initRolesList() throws IOException {
+        List<String> list = new ArrayList<>();
+        File rolesFile = new File(rolesFilePath);
         try (BufferedReader reader = new BufferedReader(new FileReader(rolesFile))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line;
@@ -50,5 +38,6 @@ public class RolesListConfig {
                 list.add(roles.getString(i));
             }
         }
+        return list;
     }
 }

@@ -48,7 +48,7 @@ public class CSVReaderService {
             outputStream = new FileOutputStream(userDiscardedByRole, true);
             while ((firstRow = bufferedReader.readLine()) != null) {
                 userId = firstRow.split(";");
-                for (String role : rolesListConfig.getList()) {
+                for (String role : rolesListConfig.initRolesList()) {
                     if (!userId[1].equals(role)) {
                         String userNotExist = "Utente: " + userId[0] + " scartato causa: " + userId[1] + " e` diverso da: " + role + "\n";
                         userRoleDiscarded++;

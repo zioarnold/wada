@@ -1,10 +1,10 @@
 package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.repos.post.QsUsersRepository;
 import eni.it.gsrestservice.entities.mapper.QsUsersAttrMapper;
 import eni.it.gsrestservice.entities.postgres.QsUser;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
+import eni.it.gsrestservice.repos.post.QsUsersRepository;
 import eni.it.gsrestservice.service.QlikSenseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,6 @@ import java.util.List;
 public class QsUsersService {
     private final QsUsersRepository qsUsersRepository;
     private final QsUsersAttributesService qsUsersAttributesService;
-    private final QsUsersAttrMapper mapper;
     private final QlikSenseService qlikSenseService;
 
     public QsUser findByUserId(String id) {
@@ -31,7 +30,7 @@ public class QsUsersService {
         try {
             QsUser byUserid = qsUsersRepository.findByUserid(id);
             QsUsersAttrib userTypeByUserId = qsUsersAttributesService.findByUserId(id);
-            return mapper.map(byUserid, userTypeByUserId, qlikSenseService.getUserRoleByUserId(id));
+            return new QsUsersAttrMapper().map(byUserid, userTypeByUserId, qlikSenseService.getUserRoleByUserId(id));
         } catch (Exception e) {
             return null;
         }

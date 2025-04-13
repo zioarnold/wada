@@ -152,7 +152,7 @@ public class QUsersController {
                             .addObject("ping_qlik", qlikSenseService.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role)
-                            .addObject("rolesList", rolesListConfig.getList());
+                            .addObject("rolesList", rolesListConfig.initRolesList());
                 } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
                     return new ModelAndView("singleUploadPage")
                             .addObject("farm_name", Farm.description)
@@ -160,7 +160,7 @@ public class QUsersController {
                             .addObject("ping_qlik", qlikSenseService.ping())
                             .addObject("user_logged_in", QsAdminUsers.username)
                             .addObject("user_role_logged_in", QsAdminUsers.role)
-                            .addObject("rolesList", rolesListConfig.getList());
+                            .addObject("rolesList", rolesListConfig.initRolesList());
                 } else {
                     return new ModelAndView("sessionExpired");
                 }

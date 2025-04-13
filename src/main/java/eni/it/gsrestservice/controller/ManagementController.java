@@ -61,7 +61,7 @@ public class ManagementController implements Serializable {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("qusers", qsUsersService.findAll())
-                                .addObject("rolesList", rolesListConfig.getList());
+                                .addObject("rolesList", rolesListConfig.initRolesList());
                     }
                 } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
                     if (qsUsersService.findAll().isEmpty()) {
@@ -80,7 +80,7 @@ public class ManagementController implements Serializable {
                                 .addObject("user_logged_in", QsAdminUsers.username)
                                 .addObject("user_role_logged_in", QsAdminUsers.role)
                                 .addObject("qusers", qsUsersService.findAll())
-                                .addObject("rolesList", rolesListConfig.getList());
+                                .addObject("rolesList", rolesListConfig.initRolesList());
                     }
                 } else {
                     return new ModelAndView("sessionExpired");
