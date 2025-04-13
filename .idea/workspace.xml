@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDataSourceProperties.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDbConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDbConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" afterDir="false" />
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies.">
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -194,54 +188,54 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.gs-rest-service [clean,install...].executor": "Run",
-    "Maven.gs-rest-service [clean,install].executor": "Run",
-    "Maven.gs-rest-service [clean].executor": "Run",
-    "Maven.gs-rest-service [compile].executor": "Run",
-    "Maven.gs-rest-service [install].executor": "Run",
-    "Maven.gs-rest-service [mvn,clean,install...].executor": "Run",
-    "Maven.gs-rest-service [mvn,clean:install...].executor": "Run",
-    "Maven.gs-rest-service [package].executor": "Run",
-    "Maven.gs-rest-service [spring-boot:run].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "1231",
-    "RequestMappingsPanelWidth1": "1230",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Spring Boot.GsRestServiceApplication.executor": "Run",
-    "WebServerToolWindowFactoryState": "false",
-    "database.data.extractors.current.export.id": "SQL Inserts",
-    "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "S:/JavaProjects/wada/src/lib",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.49770114",
-    "settings.editor.selected.configurable": "com.intellij.jpb.viewMode",
-    "spring.configuration.checksum": "73e2d207480a483bf999300184aa3c00",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.gs-rest-service [clean,install...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [clean,install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [mvn,clean,install...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [mvn,clean:install...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.gs-rest-service [spring-boot:run].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.GsRestServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;S:/JavaProjects/wada/src/lib&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.49770114&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.jpb.viewMode&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;73e2d207480a483bf999300184aa3c00&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql",
-      "oracle"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;,
+      &quot;oracle&quot;
     ],
-    "com.intellij.ide.scratch.LRUPopupBuilder$1/": [
-      "PostgreSQL"
+    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/&quot;: [
+      &quot;PostgreSQL&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="S:\JavaProjects\wada\src\lib" />
@@ -472,7 +466,7 @@
       <workItem from="1744372596330" duration="5848000" />
       <workItem from="1744379897837" duration="7807000" />
       <workItem from="1744457885616" duration="21300000" />
-      <workItem from="1744548569311" duration="19563000" />
+      <workItem from="1744548569311" duration="20060000" />
     </task>
     <task id="LOCAL-00002" summary="spring ldap boot added">
       <created>1569512608466</created>
@@ -817,7 +811,7 @@
       <option name="project" value="LOCAL" />
       <updated>1681317090042</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -863,8 +857,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="progress bar implemented" />
-    <MESSAGE value="qlikconnector performed" />
     <MESSAGE value="modal fade class removed, caused a bug with preventing to reopen modals&#10;and navigate in navbar" />
     <MESSAGE value="bugfix bootstrap-modal-js-fade, update user role from qmc to db performed" />
     <MESSAGE value="QSUM renamed to WADA" />
@@ -888,7 +880,9 @@
     <MESSAGE value="Update PostgreSQL driver to version 42.3.3&#10;&#10;Upgraded the PostgreSQL JDBC dependency from 42.2.27 to 42.3.3 in the pom.xml file. This ensures compatibility with recent database updates and includes important bug fixes and performance improvements." />
     <MESSAGE value="Refactor roles list initialization and update dependencies&#10;&#10;Replaced static roles list initialization with a dynamic method in `RolesListConfig` for improved flexibility. Added CORS configuration in `Config`, updated Maven dependencies for Oracle and Spring Boot, and enhanced repository settings for better compatibility." />
     <MESSAGE value="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup." />
+    <MESSAGE value="Remove Oracle configurations and update dependency handling.&#10;&#10;Oracle-related configurations, properties, and classes were removed to streamline the application. Updated `OracleDbConfig` to decode Base64 passwords directly via the `Environment`, improving security and flexibility. Adjusted dependency management to reflect the changes in the data source setup." />
+    <MESSAGE value="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
