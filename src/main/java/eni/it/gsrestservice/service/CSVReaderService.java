@@ -3,28 +3,27 @@ package eni.it.gsrestservice.service;
 import eni.it.gsrestservice.config.RolesListConfig;
 import eni.it.gsrestservice.model.CSVReader;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 
 @Slf4j
-@Service
+@Component
 public class CSVReaderService {
 
     private final CSVReader csvReader = new CSVReader();
-    private final RolesListConfig rolesListConfig;
-    private final LDAPService ldapService;
-    @Value("${log.discard}")
-    private static File fileUsersNotExists;
-    @Value("${log.user.role.discarded}")
-    private static File userDiscardedByRole;
-    public static int rowNumbers, userRoleDiscarded, usersUploaded;
+    @Autowired
+    private RolesListConfig rolesListConfig;
+    @Autowired
+    private LDAPService ldapService;
 
-    public CSVReaderService(RolesListConfig rolesListConfig, LDAPService ldapService) {
-        this.rolesListConfig = rolesListConfig;
-        this.ldapService = ldapService;
-    }
+    @Value("${log.discard}")
+    private File fileUsersNotExists;
+    @Value("${log.user.role.discarded}")
+    private File userDiscardedByRole;
+    public static int rowNumbers, userRoleDiscarded, usersUploaded;
 
     public void read(byte[] data) {
         csvReader.setContent(new String(data));

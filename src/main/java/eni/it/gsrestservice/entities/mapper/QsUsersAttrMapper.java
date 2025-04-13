@@ -26,7 +26,7 @@ public class QsUsersAttrMapper {
 
     public QsUsersAttrMapper map(QsUser qsUser, QsUsersAttrib qsUsersAttrib, String userRoleByUserId) {
         QsUsersAttrMapper qsUsersAttrMapper = new QsUsersAttrMapper();
-        qsUsersAttrMapper.setUserId(qsUser.getUserid());
+        qsUsersAttrMapper.setUserId(qsUser.getUserId());
         qsUsersAttrMapper.setName(qsUser.getName());
         qsUsersAttrMapper.setUserIsActive(qsUser.getUserIsActive());
         qsUsersAttrMapper.setUserDataLastModify(qsUser.getDataLastModify());

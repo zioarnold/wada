@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -22,6 +22,6 @@ public class QsAuditLog {
     private String description;
 
     @Column(name = "EXECUTION_DATA", nullable = false)
-    private LocalDate executionData;
+    private OffsetDateTime executionData;
 
 }

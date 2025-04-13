@@ -1,11 +1,13 @@
 package eni.it.gsrestservice.service.ora;
 
 
-import eni.it.gsrestservice.repos.ora.QsAdminUserRepository;
 import eni.it.gsrestservice.entities.oracle.QsAdminUser;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import lombok.RequiredArgsConstructor;
+import eni.it.gsrestservice.repos.ora.QsAdminUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -20,10 +22,14 @@ import static eni.it.gsrestservice.utility.Utility.MD5;
  * @created 11/04/2025 - 14:53 </br>
  */
 @Service
-@RequiredArgsConstructor
 public class QsAdminUsersService {
 
-    private final QsAdminUserRepository qsAdminUserRepository;
+    @Autowired
+    @Qualifier("oracleTransactionManager")
+    private PlatformTransactionManager oracleTxManager;
+
+    @Autowired
+    private QsAdminUserRepository qsAdminUserRepository;
 
     public List<QsAdminUser> findAllAdminUsers() {
         return qsAdminUserRepository.findAll();
@@ -74,7 +80,7 @@ public class QsAdminUsersService {
         return format.compareTo(session_login_expire_time);
     }
 
-    public boolean resetPassword(String adminId, String password) {
+    public boolean resetPassword(Long adminId, String password) {
         try {
             qsAdminUserRepository.updatePasswordByUsername(adminId, MD5(password));
             return true;

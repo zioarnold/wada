@@ -2,9 +2,9 @@ package eni.it.gsrestservice.service.ora;
 
 
 import eni.it.gsrestservice.config.QlikViewSenseConfig;
-import eni.it.gsrestservice.repos.ora.QsFarmRepository;
 import eni.it.gsrestservice.entities.oracle.QsFarm;
 import eni.it.gsrestservice.model.Farm;
+import eni.it.gsrestservice.repos.ora.QsFarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class QsFarmService {
     }
 
     public Optional<QsFarm> findById(String id) {
-        return qsFarmRepository.findByFarmid(id);
+        return qsFarmRepository.findByFarmId(id);
     }
 
     public QsFarm create(QsFarm qsFarm) {
@@ -37,7 +37,7 @@ public class QsFarmService {
         qsFarmRepository.delete(qsFarm);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         qsFarmRepository.deleteById(id);
     }
 
@@ -51,23 +51,23 @@ public class QsFarmService {
 
     public boolean initConnector(QsFarm qsFarm) {
         qlikViewSenseConfig.configureFarm(qsFarm);
-        Farm.farmId = qsFarm.getFarmid();
+        Farm.farmId = qsFarm.getFarmId();
         Farm.description = qsFarm.getDescription();
         Farm.came = qsFarm.getCame();
-        Farm.dbUser = qsFarm.getDbuser();
-        Farm.dbPassword = qsFarm.getDbpassword();
-        Farm.dbHost = qsFarm.getDbhost();
-        Farm.dbPort = qsFarm.getDbport();
-        Farm.dbSid = qsFarm.getDbsid();
-        Farm.qsHost = qsFarm.getQshost();
-        Farm.qsHeader = qsFarm.getQsuserheader();
-        Farm.qsPathClientJKS = qsFarm.getQspathclient();
-        Farm.qsPathRootJKS = qsFarm.getQspathroot();
-        Farm.qsKeyStorePwd = qsFarm.getQskspasswd();
-        Farm.qsXrfKey = qsFarm.getQsxrfkey();
+        Farm.dbUser = qsFarm.getDbUser();
+        Farm.dbPassword = qsFarm.getDbPassword();
+        Farm.dbHost = qsFarm.getDbHost();
+        Farm.dbPort = qsFarm.getDbPort();
+        Farm.dbSid = qsFarm.getDbSid();
+        Farm.qsHost = qsFarm.getQsHost();
+        Farm.qsHeader = qsFarm.getQsUserHeader();
+        Farm.qsPathClientJKS = qsFarm.getQsPathClient();
+        Farm.qsPathRootJKS = qsFarm.getQsPathRoot();
+        Farm.qsKeyStorePwd = qsFarm.getQsKsPasswd();
+        Farm.qsXrfKey = qsFarm.getQsXrfKey();
         Farm.note = qsFarm.getNote();
         Farm.environment = qsFarm.getEnvironment();
-        Farm.qsReloadTaskName = qsFarm.getQsreloadtaskname();
+        Farm.qsReloadTaskName = qsFarm.getQsReloadTaskName();
         return true;
     }
 }

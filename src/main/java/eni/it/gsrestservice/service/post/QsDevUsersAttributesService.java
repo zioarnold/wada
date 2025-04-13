@@ -1,8 +1,8 @@
 package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.repos.post.QsDevUsersAttributesRepository;
 import eni.it.gsrestservice.entities.postgres.QsDevUsersAttrib;
+import eni.it.gsrestservice.repos.post.QsDevUsersAttributesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

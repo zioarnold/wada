@@ -18,7 +18,7 @@ import java.util.List;
 public class RolesListConfig {
 
     @Value("${log.role.exist.for.user}")
-    public static String roleExist;
+    public String roleExist;
 
     @Value("${roles.config.json.path}")
     private String rolesFilePath;

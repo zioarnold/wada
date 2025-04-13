@@ -24,6 +24,6 @@ public interface QsAdminUserRepository extends JpaRepository<QsAdminUser, Long> 
     QsAdminUser findByUsername(String username);
 
     @Modifying
-    @Query(value = "UPDATE QSADMINUSERS a SET a.PASSWORD = :password WHERE a.ID = :username", nativeQuery = true)
-    void updatePasswordByUsername(String username, String password);
+    @Query(value = "UPDATE QSADMINUSERS a SET a.PASSWORD = :password WHERE a.ID = :adminId", nativeQuery = true)
+    void updatePasswordByUsername(Long adminId, String password);
 }

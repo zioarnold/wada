@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -100,8 +100,8 @@ public class QUsersController {
 
     @RequestMapping(value = "/showUserType", method = RequestMethod.GET)
     public ModelAndView showUserType(@RequestParam(name = "quser") String userId) {
-        List<QsUsersAttrib> userTypeByUserId = qsUsersAttributesService.findUserTypeByUserId(userId);
-        if (userTypeByUserId.isEmpty()) {
+        QsUsersAttrib userTypeByUserId = qsUsersAttributesService.findUserTypeByUserId(userId);
+        if (userTypeByUserId == null) {
             return new ModelAndView("error")
                     .addObject("errorMsg", ErrorWadaManagement.E_0010_USER_IS_NOT_ON_DB.getErrorMsg())
                     .addObject("farm_name", Farm.description)
@@ -183,7 +183,7 @@ public class QUsersController {
         qsAuditLog.setDescription("Utenza " + QsAdminUsers.username + " su questa farm: " +
                                   Farm.description + " di " + Farm.environment + " ha censito utente :" + userId.toUpperCase() + " con ruolo: "
                                   + userRole + " e con il gruppo: " + userGroup);
-        qsAuditLog.setExecutionData(LocalDate.now());
+        qsAuditLog.setExecutionData(OffsetDateTime.now());
         qsAuditLogService.save(qsAuditLog);
         return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId);
     }

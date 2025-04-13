@@ -220,12 +220,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="quser" items="${other_data}">
                         <tr>
-                            <td>${quser.type}</td>
-                            <td>${quser.value}</td>
+                            <td>${other_data.type}</td>
+                            <td>${other_data.value}</td>
                         </tr>
-                    </c:forEach>
                     </tbody>
                 </table>
             </div>

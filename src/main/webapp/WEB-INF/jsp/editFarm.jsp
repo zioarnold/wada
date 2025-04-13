@@ -158,7 +158,7 @@
                     <div class="form-group col-md-6">
                         <label for="farmId"><b>Id</b></label>
                         <input type="text" name="farmId" id="farmId" class="form-control form-control-sm"
-                               value="${farm.farmid}" readonly required/>
+                               value="${farm.farmId}" readonly required/>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="description"><b>Descrizione</b></label>
@@ -176,65 +176,65 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dbUser"><b>DB User</b></label>
-                        <input type="text" name="dbUser" id="dbUser" value="${farm.dbuser}"
+                        <input type="text" name="dbUser" id="dbUser" value="${farm.dbUser}"
                                class="form-control form-control-sm" required/>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dbPassword"><b>DB Pwd</b></label>
-                        <input type="password" name="dbPassword" id="dbPassword" value="${farm.dbpassword}"
+                        <input type="password" name="dbPassword" id="dbPassword" value="${farm.dbPassword}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dbHost"><b>DB Host</b></label>
-                        <input type="text" name="dbHost" id="dbHost" value="${farm.dbhost}"
+                        <input type="text" name="dbHost" id="dbHost" value="${farm.dbHost}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dbPort"><b>DB Port</b></label>
-                        <input type="text" name="dbPort" id="dbPort" value="${farm.dbpassword}"
+                        <input type="text" name="dbPort" id="dbPort" value="${farm.dbPassword}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="dbSid"><b>DB SID</b></label>
-                        <input type="text" name="dbSid" id="dbSid" value="${farm.dbsid}"
+                        <input type="text" name="dbSid" id="dbSid" value="${farm.dbSid}"
                                class="form-control form-control-sm" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="qsHost"><b>QS Host</b></label>
-                        <input type="text" name="qsHost" id="qsHost" value="${farm.qshost}}"
+                        <input type="text" name="qsHost" id="qsHost" value="${farm.qsHost}}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="qsReloadTaskName"><b>QS RTN</b></label>
                         <input type="text" name="qsReloadTaskName" id="qsReloadTaskName"
-                               value="${farm.qsreloadtaskname}" class="form-control form-control-sm" required>
+                               value="${farm.qsReloadTaskName}" class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="qsPathClientJKS"><b>QS ClientJKS</b></label>
                         <input type="text" name="qsPathClientJKS" id="qsPathClientJKS"
-                               value="${farm.qspathclient}"
+                               value="${farm.qsPathClient}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="qsPathRootJKS"><b>QS RootJKS</b></label>
-                        <input type="text" name="qsPathRootJKS" id="qsPathRootJKS" value="${farm.qspathroot}"
+                        <input type="text" name="qsPathRootJKS" id="qsPathRootJKS" value="${farm.qsPathRoot}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="qsXrfKey"><b>QS XrfKey</b></label>
-                        <input type="text" name="qsXrfKey" id="qsXrfKey" value="${farm.qsxrfkey}"
+                        <input type="text" name="qsXrfKey" id="qsXrfKey" value="${farm.qsXrfKey}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="qsKeyStorePwd"><b>QS KsPwd</b></label>
-                        <input type="text" name="qsKeyStorePwd" id="qsKeyStorePwd" value="${farm.qskspasswd}"
+                        <input type="text" name="qsKeyStorePwd" id="qsKeyStorePwd" value="${farm.qsKsPasswd}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="qsHeader"><b>QS Header</b></label>
-                        <input type="text" name="qsHeader" id="qsHeader" value="${farm.qsuserheader}"
+                        <input type="text" name="qsHeader" id="qsHeader" value="${farm.qsUserHeader}"
                                class="form-control form-control-sm" required>
                     </div>
                     <div class="form-group col-md-6">

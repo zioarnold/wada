@@ -17,7 +17,7 @@ public interface QsUsersRepository extends JpaRepository<QsUser, Long> {
     @Query(value = "DELETE FROM qs_users WHERE userid = :userId", nativeQuery = true)
     void deleteUserID(String userId);
 
-    QsUser findByUserid(String userid);
+    QsUser findByUserId(String userid);
 
-    QsUser findUserRoleByUserid(String userid);
+    QsUser findUserRoleByUserId(String userid);
 }

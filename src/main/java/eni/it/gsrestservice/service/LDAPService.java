@@ -66,7 +66,6 @@ public class LDAPService {
         String decodedPassword = new String(Base64.getUrlDecoder().decode(password));
 
         Properties properties = new Properties();
-        LDAPUser ldapUser = new LDAPUser();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
         properties.put(Context.PROVIDER_URL, ldapURL);
         properties.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -79,8 +78,8 @@ public class LDAPService {
             SearchControls searchControl = new SearchControls();
             searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
             NamingEnumeration<SearchResult> answer = initialDirContext.search(baseDN, "(&(objectClass=user)(ENIMatricolaNotes=" + filter + "))", searchControl);
-
             do {
+                LDAPUser ldapUser = new LDAPUser();
                 SearchResult result = answer.next();
                 if (result.getAttributes().get("displayName") == null) {
                     ldapUser.setDisplayName("N/A");
@@ -154,17 +153,7 @@ public class LDAPService {
     }
 
     private FileOutputStream checkFileExistence(File fileUsersNotExists) throws IOException {
-        FileOutputStream fileOutputStream;
-        if (!fileUsersNotExists.exists()) {
-            if (fileUsersNotExists.createNewFile()) {
-                fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
-            } else {
-                fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
-            }
-        } else {
-            fileOutputStream = new FileOutputStream(fileUsersNotExists, true);
-        }
-        return fileOutputStream;
+        return new FileOutputStream(fileUsersNotExists, true);
     }
 
     /**
@@ -192,14 +181,14 @@ public class LDAPService {
                             String displayNameReplaced = result.getAttributes().get("displayName").toString().replace("'", "''");
                             QsUser qsUser = new QsUser();
                             qsUser.setUserIsActive("Y");
-                            qsUser.setUserid(result.getAttributes().get("ENIMatricolaNotes").get().toString());
+                            qsUser.setUserId(result.getAttributes().get("ENIMatricolaNotes").get().toString());
                             qsUser.setName(displayNameReplaced);
                             qsUser.setDataLastModify(OffsetDateTime.now());
                             qsUsersService.create(qsUser);
                         } else {
                             QsUser qsUser = new QsUser();
                             qsUser.setUserIsActive("Y");
-                            qsUser.setUserid(result.getAttributes().get("ENIMatricolaNotes").get().toString());
+                            qsUser.setUserId(result.getAttributes().get("ENIMatricolaNotes").get().toString());
                             qsUser.setName(result.getAttributes().get("displayName").toString());
                             qsUser.setDataLastModify(OffsetDateTime.now());
                             qsUsersService.create(qsUser);
@@ -207,7 +196,7 @@ public class LDAPService {
                     } else {
                         QsUser qsUser = new QsUser();
                         qsUser.setUserIsActive("Y");
-                        qsUser.setUserid(result.getAttributes().get("ENIMatricolaNotes").toString());
+                        qsUser.setUserId(result.getAttributes().get("ENIMatricolaNotes").toString());
                         qsUser.setName(result.getAttributes().get("displayName").toString());
                         qsUser.setDataLastModify(OffsetDateTime.now());
                         qsUsersService.create(qsUser);
@@ -215,7 +204,7 @@ public class LDAPService {
                     if (result.getAttributes().get("mail") == null) {
                         QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
                         qsUsersAttrib.setType("email");
-                        qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                        qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                         qsUsersAttrib.setValue("N/A");
                         qsUsersAttributesService.create(qsUsersAttrib, tabAttribute);
                     } else {
@@ -224,38 +213,38 @@ public class LDAPService {
 
                             QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
                             qsUsersAttrib.setType("email");
-                            qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                            qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                             qsUsersAttrib.setValue(mailReplaced);
                             qsUsersAttributesService.create(qsUsersAttrib, tabAttribute);
                         } else {
                             QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
                             qsUsersAttrib.setType("email");
-                            qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                            qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                             qsUsersAttrib.setValue(result.getAttributes().get("mail").toString());
                             qsUsersAttributesService.create(qsUsersAttrib, tabAttribute);
                         }
                     }
                     if (result.getAttributes().get("ou") == null) {
                         QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
-                        qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                        qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                         qsUsersAttrib.setType("organizzazione");
                         qsUsersAttrib.setValue("N/A");
                         qsUsersAttributesService.create(qsUsersAttrib, tabAttribute);
                     } else {
                         QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
-                        qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                        qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                         qsUsersAttrib.setType("organizzazione");
                         qsUsersAttrib.setValue(result.getAttributes().get("ou").toString());
                         qsUsersAttributesService.create(qsUsersAttrib, tabAttribute);
                     }
                     QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
                     qsUsersAttrib.setType("gruppo");
-                    qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                    qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                     qsUsersAttrib.setValue(userGroup);
                     qsUsersAttributesService.createOrUpdate(qsUsersAttrib);
                     qsUsersAttrib = new QsUsersAttrib();
                     qsUsersAttrib.setType("ruolo");
-                    qsUsersAttrib.setUserid(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()));
+                    qsUsersAttrib.setUserId(qsUsersService.findByUserId(result.getAttributes().get("ENIMatricolaNotes").toString()).getUserId());
                     qsUsersAttrib.setValue(userRole);
                     qsUsersAttributesService.createOrUpdate(qsUsersAttrib);
                 } while (answer.hasMore());
@@ -278,7 +267,6 @@ public class LDAPService {
         List<LDAPUser> userExistsOnLdap = new ArrayList<>();
         String decodedPassword = new String(Base64.getUrlDecoder().decode(password));
         Properties properties = new Properties();
-        LDAPUser ldapUser = new LDAPUser();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
         properties.put(Context.PROVIDER_URL, ldapURL);
         properties.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -291,6 +279,7 @@ public class LDAPService {
         searchControl.setSearchScope(SearchControls.SUBTREE_SCOPE);
         NamingEnumeration<SearchResult> answer = initialDirContext.search(baseDN, "(&(objectClass=user))", searchControl);
         do {
+            LDAPUser ldapUser = new LDAPUser();
             SearchResult result = answer.next();
             if (result.getAttributes().get("displayName") == null) {
                 ldapUser.setDisplayName("N/A");

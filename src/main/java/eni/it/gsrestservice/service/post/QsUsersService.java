@@ -18,17 +18,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QsUsersService {
-    private final QsUsersRepository qsUsersRepository;
-    private final QsUsersAttributesService qsUsersAttributesService;
     private final QlikSenseService qlikSenseService;
+    private final QsUsersAttributesService qsUsersAttributesService;
+    private final QsUsersRepository qsUsersRepository;
 
     public QsUser findByUserId(String id) {
-        return qsUsersRepository.findByUserid(id);
+        return qsUsersRepository.findByUserId(id);
     }
 
     public QsUsersAttrMapper findUserRoleByUserID(String id) {
         try {
-            QsUser byUserid = qsUsersRepository.findByUserid(id);
+            QsUser byUserid = qsUsersRepository.findByUserId(id);
             QsUsersAttrib userTypeByUserId = qsUsersAttributesService.findByUserId(id);
             return new QsUsersAttrMapper().map(byUserid, userTypeByUserId, qlikSenseService.getUserRoleByUserId(id));
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class QsUsersService {
     }
 
     public QsUser create(QsUser qsUser) {
-        if (findByUserId(qsUser.getUserid()) == null) {
+        if (findByUserId(qsUser.getUserId()) == null) {
             return qsUsersRepository.save(qsUser);
         }
         return null;

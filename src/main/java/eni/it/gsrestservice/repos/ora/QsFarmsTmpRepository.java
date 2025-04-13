@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @created 11/04/2025 - 14:48 </br>
  */
 @Repository
-public interface QsFarmsTmpRepository extends JpaRepository<QsFarmsTmp, Long> {
+public interface QsFarmsTmpRepository extends JpaRepository<QsFarmsTmp, String> {
 }

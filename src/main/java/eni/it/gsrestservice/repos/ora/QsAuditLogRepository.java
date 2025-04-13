@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @created 11/04/2025 - 14:47 </br>
  */
 @Repository
-public interface QsAuditLogRepository extends JpaRepository<QsAuditLog, Long> {
+public interface QsAuditLogRepository extends JpaRepository<QsAuditLog, String> {
 }

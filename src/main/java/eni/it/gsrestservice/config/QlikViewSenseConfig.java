@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 public class QlikViewSenseConfig {
     public void configureFarm(QsFarm farm) {
         QlikSenseService.initConnector(
-                farm.getQsxrfkey(),
-                farm.getQshost(),
-                farm.getQspathclient(),
-                farm.getQspathroot(),
-                farm.getQskspasswd(),
-                farm.getQsuserheader(),
-                farm.getQsreloadtaskname()
+                farm.getQsXrfKey(),
+                farm.getQsHost(),
+                farm.getQsPathClient(),
+                farm.getQsPathRoot(),
+                farm.getQsKsPasswd(),
+                farm.getQsUserHeader(),
+                farm.getQsReloadTaskName()
         );
         QlikSenseService.configureCertificate();
     }

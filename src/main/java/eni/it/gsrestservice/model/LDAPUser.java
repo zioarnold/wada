@@ -1,10 +1,14 @@
 package eni.it.gsrestservice.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LDAPUser {
     private String displayName;
     private String name;
@@ -19,10 +23,6 @@ public class LDAPUser {
     private String memberOf;
     private String ou;
 
-    public LDAPUser() {
-
-    }
-
     public LDAPUser(LDAPUser ldapUser) {
         this.displayName = ldapUser.displayName;
         this.ENIMatricolaNotes = ldapUser.ENIMatricolaNotes;
@@ -36,23 +36,6 @@ public class LDAPUser {
         this.userDontExpirePassword = ldapUser.userDontExpirePassword;
         this.memberOf = ldapUser.memberOf;
         this.ou = ldapUser.ou;
-    }
-
-    public LDAPUser(String displayName, String ENIMatricolaNotes, String name, String mail,
-                    String givenName, String sn, String badPwdCount, String pwdLastSet,
-                    String userAccountDisabled, String userDontExpirePassword, String memberOf, String ou) {
-        this.displayName = displayName;
-        this.ENIMatricolaNotes = ENIMatricolaNotes;
-        this.name = name;
-        this.mail = mail;
-        this.givenName = givenName;
-        this.sn = sn;
-        this.badPwdCount = badPwdCount;
-        this.pwdLastSet = pwdLastSet;
-        this.userAccountDisabled = userAccountDisabled;
-        this.userDontExpirePassword = userDontExpirePassword;
-        this.memberOf = memberOf;
-        this.ou = ou;
     }
 
     @Override

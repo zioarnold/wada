@@ -183,28 +183,28 @@
                 <tbody>
                 <c:forEach var="farm" items="${all_farm}">
                     <tr>
-                        <td class="u-farm-id">${farm.farmid}</td>
+                        <td class="u-farm-id">${farm.farmId}</td>
                         <td class="u-description">${farm.description}</td>
                         <td class="u-env">${farm.environment}</td>
-                        <td class="u-db-host">${farm.dbhost}</td>
-                        <td class="u-db-port">${farm.dbport}</td>
-                        <td class="u-db-sid">${farm.dbsid}</td>
-                        <td class="u-qs-host">${farm.qshost}</td>
+                        <td class="u-db-host">${farm.dbHost}</td>
+                        <td class="u-db-port">${farm.dbPort}</td>
+                        <td class="u-db-sid">${farm.dbSid}</td>
+                        <td class="u-qs-host">${farm.qsHost}</td>
                         <td class="u-came">${farm.came} </td>
-                        <td class="u-db-user" hidden>${farm.dbuser}</td>
-                        <td class="u-db-pwd" hidden>${farm.dbpassword}</td>
-                        <td class="u-qs-task-name" hidden>${farm.qsreloadtaskname}</td>
-                        <td class="u-qs-path-client" hidden>${farm.qspathclient}</td>
-                        <td class="u-qs-path-root" hidden>${farm.qspathroot}</td>
-                        <td class="u-qs-xrf-key" hidden>${farm.qsxrfkey}</td>
-                        <td class="u-qs-key-store-pwd" hidden>${farm.qskspasswd}</td>
-                        <td class="u-qs-header" hidden>${farm.qsuserheader}</td>
+                        <td class="u-db-user" hidden>${farm.dbUser}</td>
+                        <td class="u-db-pwd" hidden>${farm.dbPassword}</td>
+                        <td class="u-qs-task-name" hidden>${farm.qsReloadTaskName}</td>
+                        <td class="u-qs-path-client" hidden>${farm.qsPathClient}</td>
+                        <td class="u-qs-path-root" hidden>${farm.qsPathRoot}</td>
+                        <td class="u-qs-xrf-key" hidden>${farm.qsXrfKey}</td>
+                        <td class="u-qs-key-store-pwd" hidden>${farm.qsKsPasswd}</td>
+                        <td class="u-qs-header" hidden>${farm.qsUserHeader}</td>
                         <td class="u-note" hidden>${farm.note}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/editFarm?farmId=${farm.farmid}"><span
+                            <a href="${pageContext.request.contextPath}/editFarm?farmId=${farm.farmId}"><span
                                     class="fa fa-pencil"></span></a>
                         </td>
-                        <td><a href="${pageContext.request.contextPath}/deleteFarm?farmId=${farm.farmid}"><span
+                        <td><a href="${pageContext.request.contextPath}/deleteFarm?farmId=${farm.farmId}"><span
                                 class="fa fa-trash"></span></a></td>
                     </tr>
                 </c:forEach>

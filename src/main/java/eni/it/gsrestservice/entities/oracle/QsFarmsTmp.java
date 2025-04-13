@@ -3,9 +3,7 @@ package eni.it.gsrestservice.entities.oracle;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
@@ -13,50 +11,55 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "QSFARMSTMP")
 public class QsFarmsTmp {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(nullable = false)
+    private Long id;
+
     @Column(name = "FARMID", nullable = false)
-    private Long farmid;
+    private Long farmId;
 
     @Column(name = "DESCRIZIONE", nullable = false, length = 100)
-    private String descrizione;
+    private String description;
 
     @Column(name = "DBUSER", nullable = false, length = 30)
-    private String dbuser;
+    private String dbUser;
 
     @Column(name = "DBPASSWORD", nullable = false, length = 30)
-    private String dbpassword;
+    private String dbPassword;
 
     @Column(name = "DBHOST", nullable = false, length = 100)
-    private String dbhost;
+    private String dbHost;
 
     @Column(name = "QSHOST", nullable = false, length = 100)
-    private String qshost;
+    private String qsHost;
 
     @Column(name = "QSPATHCLIENT", nullable = false, length = 200)
-    private String qspathclient;
+    private String qsPathClient;
 
     @Column(name = "QSPATHROOT", nullable = false, length = 200)
-    private String qspathroot;
+    private String qsPathRoot;
 
     @Column(name = "QSXRFKEY", nullable = false, length = 200)
-    private String qsxrfkey;
+    private String qsXrfKey;
 
     @Column(name = "QSKSPASSWD", nullable = false, length = 30)
-    private String qskspasswd;
+    private String qsKsPasswd;
 
     @Column(name = "NOTE", length = 100)
     private String note;
 
     @Column(name = "DATALASTMODIFY")
-    private LocalDate datalastmodify;
+    private LocalDate dateLastModify;
 
     @Column(name = "DBSID", nullable = false, length = 30)
-    private String dbsid;
+    private String dbSid;
 
     @Column(name = "DBPORT", nullable = false, length = 10)
-    private String dbport;
+    private String dbPort;
 
     @Column(name = "QSUSERHEADER", nullable = false, length = 100)
-    private String qsuserheader;
+    private String qsUserHeader;
 
     @Column(name = "ENVIRONMENT", nullable = false, length = 5)
     private String environment;
@@ -65,6 +68,6 @@ public class QsFarmsTmp {
     private String came;
 
     @Column(name = "QSRELOADTASKNAME", length = 100)
-    private String qsreloadtaskname;
+    private String qsReloadTaskName;
 
 }

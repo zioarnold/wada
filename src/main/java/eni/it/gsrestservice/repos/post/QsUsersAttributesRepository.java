@@ -1,7 +1,6 @@
 package eni.it.gsrestservice.repos.post;
 
 
-import eni.it.gsrestservice.entities.postgres.QsUser;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,23 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * @author Zio Arnold aka Arni
  * @created 11/04/2025 - 14:40 </br>
  */
 @Repository
 public interface QsUsersAttributesRepository extends JpaRepository<QsUsersAttrib, Long> {
-    @Query(value = "SELECT userid,type,value FROM qs_dev_users_attrib WHERE userid = :userId", nativeQuery = true)
-    List<QsUsersAttrib> findByUserid(String userid);
 
     @Query(value = "SELECT userid,type,value FROM qs_dev_users_attrib WHERE userid = :userId", nativeQuery = true)
-    QsUsersAttrib findByUserId(String userid);
-
-    @Modifying
-    @Query(value = "UPDATE qs_dev_users_attrib set value =:userRole WHERE value = :oldRole and type ='gruppo' and userid = :userId", nativeQuery = true)
-    void update(String userId, String roleGroup, String oldRole, String userRole);
+    QsUsersAttrib findByUserId(String userId);
 
     @Modifying
     @Query(value = "DELETE FROM qs_users_attrib WHERE userid = :userId AND type = :type AND value = :value", nativeQuery = true)
@@ -39,6 +30,6 @@ public interface QsUsersAttributesRepository extends JpaRepository<QsUsersAttrib
 
     @Transactional
     @Modifying
-    @Query("update QsUsersAttrib q set q.value = ?3 where q.userid = ?2 and q.value = ?2")
-    void updateTypeAndUseridByValue(String type, QsUser userid, String value);
+    @Query("update QsUsersAttrib q set q.value = ?3 where q.userId = ?2 and q.value = ?2")
+    void updateTypeAndUseridByValue(String type, String userid, String value);
 }

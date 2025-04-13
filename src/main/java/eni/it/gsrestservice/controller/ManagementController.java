@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -110,15 +110,15 @@ public class ManagementController implements Serializable {
     public ModelAndView managementPageEditTypeRole(@RequestParam(required = false, name = "userId") String userId,
                                                    @RequestParam(required = false, name = "roleGroup") String roleGroup,
                                                    @RequestParam(required = false, name = "oldRole") String oldRole,
-                                                   @RequestParam(required = false, name = "newUserRole") String userRole) {
-        if (qsUsersAttributesService.updateRoleByUserId(userId, roleGroup, oldRole, userRole)) {
+                                                   @RequestParam(required = false, name = "newUserRole") String newUserRole) {
+        if (qsUsersAttributesService.updateRoleByUserId(userId, roleGroup, newUserRole)) {
             QsAuditLog qsAuditLog = new QsAuditLog();
             qsAuditLog.setDescription("Utente "
                                       + QsAdminUsers.username + " su questa farm: " + Farm.description + " di " +
                                       Farm.environment + " ha eseguito questa query: update " +
-                                      tabAttribute + " set value = " + userRole +
+                                      tabAttribute + " set value = " + newUserRole +
                                       " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase());
-            qsAuditLog.setExecutionData(LocalDate.now());
+            qsAuditLog.setExecutionData(OffsetDateTime.now());
             qsAuditLogService.save(qsAuditLog);
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseService.ping());
@@ -143,7 +143,7 @@ public class ManagementController implements Serializable {
                                       + QsAdminUsers.username + " su questa farm: " + Farm.description + " di "
                                       + Farm.environment + " ha eseguto la query: delete from " + tabAttribute
                                       + " where userid like " + userId.toUpperCase() + " and type like " + type + " and value like " + value);
-            qsAuditLog.setExecutionData(LocalDate.now());
+            qsAuditLog.setExecutionData(OffsetDateTime.now());
             qsAuditLogService.save(qsAuditLog);
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseService.ping());
@@ -200,7 +200,7 @@ public class ManagementController implements Serializable {
                                       + QsAdminUsers.username + " su questa farm: " + Farm.description +
                                       " di " + Farm.environment + " ha eseguito la query: delete from "
                                       + environment.getProperty("db.tabuser") + " where userid like " + userId.toUpperCase());
-            qsAuditLog.setExecutionData(LocalDate.now());
+            qsAuditLog.setExecutionData(OffsetDateTime.now());
             qsAuditLogService.save(qsAuditLog);
             return new ModelAndView("redirect:/managementPage")
                     .addObject("ping_qlik", qlikSenseService.ping());
@@ -242,7 +242,7 @@ public class ManagementController implements Serializable {
                                                   @RequestParam(required = false, name = "type") String type,
                                                   @RequestParam(required = false, name = "userGroup") String userGroup) {
         QsUsersAttrib qsUsersAttrib = new QsUsersAttrib();
-        qsUsersAttrib.setUserid(qsUsersService.findByUserId(userId));
+        qsUsersAttrib.setUserId(qsUsersService.findByUserId(userId).getUserId());
         qsUsersAttrib.setType(type);
         qsUsersAttrib.setValue(userGroup);
         qsUsersAttributesService.create(qsUsersAttrib, tabAttribute);
@@ -260,7 +260,7 @@ public class ManagementController implements Serializable {
                                       + Farm.description + " di " + Farm.environment + " ha eseguto questa query: update "
                                       + environment.getProperty("db.tabuser") + " set user_is_active = " + disableYN
                                       + " where userid like " + userId.toUpperCase());
-            qsAuditLog.setExecutionData(LocalDate.now());
+            qsAuditLog.setExecutionData(OffsetDateTime.now());
             qsAuditLogService.save(qsAuditLog);
             return new ModelAndView("redirect:/managementPageShowUserData?quser_filter=" + userId)
                     .addObject("ping_qlik", qlikSenseService.ping());
@@ -468,7 +468,7 @@ public class ManagementController implements Serializable {
     }
 
     @PostMapping("/resetPassword")
-    public ModelAndView resetPassword(@RequestParam(required = false, name = "adminId") String adminId,
+    public ModelAndView resetPassword(@RequestParam(required = false, name = "adminId") Long adminId,
                                       @RequestParam(required = false, name = "resetPwd") String password) {
         if (qsAdminUsersService.resetPassword(adminId, password)) {
             return new ModelAndView("success")
@@ -490,7 +490,7 @@ public class ManagementController implements Serializable {
     }
 
     @RequestMapping(value = "/deleteFarm", method = RequestMethod.POST)
-    public ModelAndView deleteFarm(@RequestParam(required = false, name = "farmId") Long farmId) {
+    public ModelAndView deleteFarm(@RequestParam(required = false, name = "farmId") String farmId) {
         qsFarmService.deleteById(farmId);
         return new ModelAndView("success")
                 .addObject("successMsg", "Operazione e` andata a buon fine")
@@ -569,22 +569,22 @@ public class ManagementController implements Serializable {
         QsFarm qsFarm = new QsFarm();
         qsFarm.setDescription(description);
         qsFarm.setCame(came);
-        qsFarm.setDbuser(dbUser);
-        qsFarm.setDbpassword(dbPassword);
-        qsFarm.setDbhost(dbHost);
-        qsFarm.setQshost(qsHost);
+        qsFarm.setDbUser(dbUser);
+        qsFarm.setDbPassword(dbPassword);
+        qsFarm.setDbHost(dbHost);
+        qsFarm.setQsHost(qsHost);
         return commonQsData(qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, qsFarm);
     }
 
     private QsFarm commonQsData(@RequestParam(name = "qsPathClient") String qsPathClient, @RequestParam(name = "qsPathRoot") String qsPathRoot, @RequestParam(name = "qsXrfKey") String qsXrfKey, @RequestParam(name = "qsKsPassword") String qsKsPassword, @RequestParam(required = false, name = "note") String note, @RequestParam(name = "dbSid") String dbSid, @RequestParam(name = "dbPort") String dbPort, @RequestParam(name = "qsUserHeader") String qsUserHeader, @RequestParam(name = "environment") String environment, QsFarm qsFarm) {
-        qsFarm.setQspathclient(qsPathClient);
-        qsFarm.setQspathroot(qsPathRoot);
-        qsFarm.setQsxrfkey(qsXrfKey);
-        qsFarm.setQskspasswd(qsKsPassword);
+        qsFarm.setQsPathClient(qsPathClient);
+        qsFarm.setQsPathRoot(qsPathRoot);
+        qsFarm.setQsXrfKey(qsXrfKey);
+        qsFarm.setQsKsPasswd(qsKsPassword);
         qsFarm.setNote(note);
-        qsFarm.setDbsid(dbSid);
-        qsFarm.setDbport(dbPort);
-        qsFarm.setQsuserheader(qsUserHeader);
+        qsFarm.setDbSid(dbSid);
+        qsFarm.setDbPort(dbPort);
+        qsFarm.setQsUserHeader(qsUserHeader);
         qsFarm.setEnvironment(environment);
         return qsFarm;
     }
@@ -609,11 +609,11 @@ public class ManagementController implements Serializable {
         QsFarm qsFarm = qsFarmService.findById(farmId).orElseThrow(() -> new IllegalArgumentException("No farm found with id " + farmId));
         qsFarm.setDescription(description);
         qsFarm.setCame(came);
-        qsFarm.setDbuser(dbUser);
-        qsFarm.setDbpassword(dbPassword);
-        qsFarm.setDbhost(dbHost);
-        qsFarm.setQshost(qsHost);
-        qsFarm.setQsreloadtaskname(qsReloadTaskName);
+        qsFarm.setDbUser(dbUser);
+        qsFarm.setDbPassword(dbPassword);
+        qsFarm.setDbHost(dbHost);
+        qsFarm.setQsHost(qsHost);
+        qsFarm.setQsReloadTaskName(qsReloadTaskName);
         return commonQsData(qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment, qsFarm);
     }
 }

@@ -1,17 +1,16 @@
 package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.repos.post.QsUsersAttributesRepository;
 import eni.it.gsrestservice.entities.oracle.QsAuditLog;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QsAdminUsers;
+import eni.it.gsrestservice.repos.post.QsUsersAttributesRepository;
 import eni.it.gsrestservice.service.ora.QsAuditLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.OffsetDateTime;
 
 /**
  * @author Zio Arnold aka Arni
@@ -23,18 +22,23 @@ public class QsUsersAttributesService {
     private final QsUsersAttributesRepository qsUsersAttributesRepository;
     private final QsAuditLogService qsAuditLogService;
 
-    public List<QsUsersAttrib> findUserTypeByUserId(String userId) {
-        return qsUsersAttributesRepository.findByUserid(userId);
+    public QsUsersAttrib findUserTypeByUserId(String userId) {
+        return qsUsersAttributesRepository.findByUserId(userId);
     }
 
-    public boolean updateRoleByUserId(String userId, String roleGroup, String oldRole, String userRole) {
+    public boolean updateRoleByUserId(String userId, String roleGroup, String newUserRole) {
+        QsUsersAttrib qsUsersAttrib = findByUserId(userId);
         switch (roleGroup) {
             case "gruppo":
-                qsUsersAttributesRepository.update(userId.toUpperCase(), "gruppo", oldRole, userRole);
+                qsUsersAttrib.setType("gruppo");
+                qsUsersAttrib.setValue(newUserRole);
+                qsUsersAttributesRepository.save(qsUsersAttrib);
                 break;
 
             case "ruolo":
-                qsUsersAttributesRepository.update(userId.toUpperCase(), "ruolo", oldRole, userRole);
+                qsUsersAttrib.setType("ruolo");
+                qsUsersAttrib.setValue(newUserRole);
+                qsUsersAttributesRepository.save(qsUsersAttrib);
                 break;
         }
         return true;
@@ -54,7 +58,7 @@ public class QsUsersAttributesService {
         if (type <= 0) {
             qsUsersAttributesRepository.save(qsUsersAttrib);
         } else {
-            qsUsersAttributesRepository.updateTypeAndUseridByValue(qsUsersAttrib.getType(), qsUsersAttrib.getUserid(), qsUsersAttrib.getValue());
+            qsUsersAttributesRepository.updateTypeAndUseridByValue(qsUsersAttrib.getType(), qsUsersAttrib.getUserId(), qsUsersAttrib.getValue());
         }
     }
 
@@ -64,8 +68,8 @@ public class QsUsersAttributesService {
         qsAuditLog.setDescription("Utenza " + QsAdminUsers.username + " su questa farm: " +
                                   Farm.description + " di " + Farm.environment + " ha eseguito questa query: INSERT INTO "
                                   + tabAttribute + " (userid, type, value) VALUES("
-                                  + qsUsersAttrib.getUserid() + "," + qsUsersAttrib.getType() + "," + qsUsersAttrib.getValue() + ")");
-        qsAuditLog.setExecutionData(LocalDate.now());
+                                  + qsUsersAttrib.getUserId() + "," + qsUsersAttrib.getType() + "," + qsUsersAttrib.getValue() + ")");
+        qsAuditLog.setExecutionData(OffsetDateTime.now());
         qsAuditLogService.save(qsAuditLog);
     }
 
@@ -77,7 +81,7 @@ public class QsUsersAttributesService {
                                       Farm.description + " di " + Farm.environment + " ha eseguito questa query: update " +
                                       tabAttribute + " set value = " + userRoleByUserId +
                                       " where value like " + oldRole + " and type like ruolo and userid like " + userId.toUpperCase());
-            qsAuditLog.setExecutionData(LocalDate.now());
+            qsAuditLog.setExecutionData(OffsetDateTime.now());
             qsAuditLogService.save(qsAuditLog);
             return true;
         } catch (Exception e) {

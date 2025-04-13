@@ -10,10 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @ComponentScan(basePackages = {
         "eni.it.gsrestservice.service",
-        "eni.it.gsrestservice.repos",
+        "eni.it.gsrestservice.repos.post",
+        "eni.it.gsrestservice.repos.ora",
         "eni.it.gsrestservice.config"
 })
-
 public class GsRestServiceApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
