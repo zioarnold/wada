@@ -4,54 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Refactor roles list initialization and update dependencies&#10;&#10;Replaced static roles list initialization with a dynamic method in `RolesListConfig` for improved flexibility. Added CORS configuration in `Config`, updated Maven dependencies for Oracle and Spring Boot, and enhanced repository settings for better compatibility.">
-      <change afterPath="$PROJECT_DIR$/sql/postgres/import.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDataSourceProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDbConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresDataSourceProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresDbConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmsTmpService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsDevUsersService.java" afterDir="false" />
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/postgres/qs_dev_users.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/postgres/qs_dev_users.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/postgres/qs_dev_users_attrib.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/postgres/qs_dev_users_attrib.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/QlikViewSenseConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/QlikViewSenseConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/RolesListConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/RolesListConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDataSourceProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDbConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/OracleDbConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/mapper/QsUsersAttrMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/mapper/QsUsersAttrMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/oracle/QsAuditLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/oracle/QsAuditLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/oracle/QsFarm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/oracle/QsFarm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/oracle/QsFarmsTmp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/oracle/QsFarmsTmp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsDevUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsDevUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsDevUsersAttrib.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsDevUsersAttrib.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUsersAttrib.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUsersAttrib.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/LDAPUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/model/QsAudit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsAdminUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsAdminUserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsAuditLogRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsAuditLogRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsFarmRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsFarmRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsFarmsTmpRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/ora/QsFarmsTmpRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsUsersAttributesRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsUsersAttributesRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsUsersRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsUsersRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/LDAPService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/LDAPService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsAdminUsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/ora/QsFarmService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsDevUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsDevUsersAttributesService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersAttributesService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsUsersService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/oracle.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/postgres.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/allFarmPage.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/editFarm.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchQUserOnDB.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/searchQUserOnDB.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,8 +207,8 @@
     "Maven.gs-rest-service [spring-boot:run].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
+    "RequestMappingsPanelWidth0": "1231",
+    "RequestMappingsPanelWidth1": "1230",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -512,7 +472,7 @@
       <workItem from="1744372596330" duration="5848000" />
       <workItem from="1744379897837" duration="7807000" />
       <workItem from="1744457885616" duration="21300000" />
-      <workItem from="1744548569311" duration="18571000" />
+      <workItem from="1744548569311" duration="19563000" />
     </task>
     <task id="LOCAL-00002" summary="spring ldap boot added">
       <created>1569512608466</created>
@@ -857,7 +817,7 @@
       <option name="project" value="LOCAL" />
       <updated>1681317090042</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -903,7 +863,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="bootstrap modal added with form action inside: edit buttons implemented" />
     <MESSAGE value="progress bar implemented" />
     <MESSAGE value="qlikconnector performed" />
     <MESSAGE value="modal fade class removed, caused a bug with preventing to reopen modals&#10;and navigate in navbar" />
@@ -928,7 +887,8 @@
     <MESSAGE value="Remove unused files and improve CSVReaderService logging&#10;&#10;Deleted obsolete Java models, JSP files, and configuration classes to clean up the project. Enhanced `CSVReaderService` by adding error logs for failed file creation, improving debugging and maintainability." />
     <MESSAGE value="Update PostgreSQL driver to version 42.3.3&#10;&#10;Upgraded the PostgreSQL JDBC dependency from 42.2.27 to 42.3.3 in the pom.xml file. This ensures compatibility with recent database updates and includes important bug fixes and performance improvements." />
     <MESSAGE value="Refactor roles list initialization and update dependencies&#10;&#10;Replaced static roles list initialization with a dynamic method in `RolesListConfig` for improved flexibility. Added CORS configuration in `Config`, updated Maven dependencies for Oracle and Spring Boot, and enhanced repository settings for better compatibility." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor roles list initialization and update dependencies&#10;&#10;Replaced static roles list initialization with a dynamic method in `RolesListConfig` for improved flexibility. Added CORS configuration in `Config`, updated Maven dependencies for Oracle and Spring Boot, and enhanced repository settings for better compatibility." />
+    <MESSAGE value="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

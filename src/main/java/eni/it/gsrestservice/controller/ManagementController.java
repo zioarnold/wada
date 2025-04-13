@@ -32,9 +32,9 @@ public class ManagementController implements Serializable {
     private final QsFarmService qsFarmService;
     private final QsAdminUsersService qsAdminUsersService;
     private final QsAuditLogService qsAuditLogService;
+    private final Environment environment;
     private final QsUsersService qsUsersService;
     private final QsUsersAttributesService qsUsersAttributesService;
-    private final Environment environment;
     private final QlikSenseService qlikSenseService;
     private final RolesListConfig rolesListConfig;
 
