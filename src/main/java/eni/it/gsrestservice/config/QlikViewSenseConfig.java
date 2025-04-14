@@ -1,7 +1,7 @@
 package eni.it.gsrestservice.config;
 
 
-import eni.it.gsrestservice.entities.oracle.QsFarm;
+import eni.it.gsrestservice.entities.postgres.QsFarm;
 import eni.it.gsrestservice.service.QlikSenseService;
 import org.springframework.stereotype.Component;
 

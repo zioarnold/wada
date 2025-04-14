@@ -2,15 +2,15 @@ package eni.it.gsrestservice.controller;
 
 import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.config.RolesListConfig;
-import eni.it.gsrestservice.entities.oracle.QsAuditLog;
+import eni.it.gsrestservice.entities.postgres.QsAuditLog;
 import eni.it.gsrestservice.entities.postgres.QsUser;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.service.LDAPService;
 import eni.it.gsrestservice.service.QlikSenseService;
-import eni.it.gsrestservice.service.ora.QsAdminUsersService;
-import eni.it.gsrestservice.service.ora.QsAuditLogService;
+import eni.it.gsrestservice.service.post.QsAdminUsersService;
+import eni.it.gsrestservice.service.post.QsAuditLogService;
 import eni.it.gsrestservice.service.post.QsUsersAttributesService;
 import eni.it.gsrestservice.service.post.QsUsersService;
 import lombok.RequiredArgsConstructor;

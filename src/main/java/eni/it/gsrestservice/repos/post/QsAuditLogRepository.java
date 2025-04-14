@@ -1,7 +1,7 @@
-package eni.it.gsrestservice.repos.ora;
+package eni.it.gsrestservice.repos.post;
 
 
-import eni.it.gsrestservice.entities.oracle.QsAuditLog;
+import eni.it.gsrestservice.entities.postgres.QsAuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

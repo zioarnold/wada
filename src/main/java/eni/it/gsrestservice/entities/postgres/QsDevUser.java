@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,6 +18,9 @@ public class QsDevUser {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @OneToMany(mappedBy = "user") // Changed from "id" to "user"
+    private Set<QsDevUsersAttrib> qsDevUsersAttrib;
+
     @Column(name = "userid", nullable = false, length = 20)
     private String userid;
 
@@ -28,5 +32,6 @@ public class QsDevUser {
 
     @Column(name = "data_last_modify", nullable = false)
     private OffsetDateTime dataLastModify;
+
 
 }

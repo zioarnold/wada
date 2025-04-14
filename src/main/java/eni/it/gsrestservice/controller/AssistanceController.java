@@ -4,7 +4,7 @@ import eni.it.gsrestservice.config.ErrorWadaManagement;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.service.QlikSenseService;
-import eni.it.gsrestservice.service.ora.QsAdminUsersService;
+import eni.it.gsrestservice.service.post.QsAdminUsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

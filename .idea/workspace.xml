@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies.">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -242,11 +240,11 @@
       <recent name="C:\Users\UID0931174\IdeaProjects\gs-rest-service\src\lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="S:\JavaProjects\wada\src\main\webapp" />
+      <recent name="S:\JavaProjects\wada\src\main\resources\static\" />
+      <recent name="S:\JavaProjects\wada\src\main\webapp\WEB-INF\jsp" />
+      <recent name="S:\JavaProjects\wada\sql" />
       <recent name="S:\JavaProjects\wada\src\main\webapp\WEB-INF" />
-      <recent name="S:\JavaProjects\wada" />
-      <recent name="S:\JavaProjects\wada\cfg" />
-      <recent name="S:\JavaProjects\wada\src\main\resources" />
-      <recent name="S:\JavaProjects\wada\sql\oracle" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.GsRestServiceApplication">
@@ -467,6 +465,8 @@
       <workItem from="1744379897837" duration="7807000" />
       <workItem from="1744457885616" duration="21300000" />
       <workItem from="1744548569311" duration="20060000" />
+      <workItem from="1744584837271" duration="601000" />
+      <workItem from="1744625525511" duration="10063000" />
     </task>
     <task id="LOCAL-00002" summary="spring ldap boot added">
       <created>1569512608466</created>
@@ -811,7 +811,7 @@
       <option name="project" value="LOCAL" />
       <updated>1681317090042</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -857,8 +857,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="modal fade class removed, caused a bug with preventing to reopen modals&#10;and navigate in navbar" />
-    <MESSAGE value="bugfix bootstrap-modal-js-fade, update user role from qmc to db performed" />
     <MESSAGE value="QSUM renamed to WADA" />
     <MESSAGE value="added original ojdbc8 jar file, removed spring-session and spring-jpa.&#10;session will be managed by custom configuration through DB and&#10;static field in QsAdminUsers" />
     <MESSAGE value="class.forName removed used DriverManager.register instead" />
@@ -882,7 +880,9 @@
     <MESSAGE value="Remove Oracle and PostgreSQL configurations and refactor models.&#10;&#10;Removed Oracle and PostgreSQL database configurations, along with related properties and Java classes, to streamline dependency management. Refactored model classes and JSP files, standardizing identifiers and improving naming conventions for better readability. Updated `ManagementController` to use consistent types, replaced static date handling with `OffsetDateTime`, and adjusted dependencies in the application setup." />
     <MESSAGE value="Remove Oracle configurations and update dependency handling.&#10;&#10;Oracle-related configurations, properties, and classes were removed to streamline the application. Updated `OracleDbConfig` to decode Base64 passwords directly via the `Environment`, improving security and flexibility. Adjusted dependency management to reflect the changes in the data source setup." />
     <MESSAGE value="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies." />
+    <MESSAGE value="Update LDAP and database configurations for improved security.&#10;&#10;Replaced hardcoded LDAP settings in `application.properties` with updated credentials and Base64-encoded password decoding for better security. Removed Oracle-specific configurations, streamlining dependency management and aligning setup with environment-based properties." />
+    <MESSAGE value="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration." />
+    <option name="LAST_COMMIT_MESSAGE" value="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
