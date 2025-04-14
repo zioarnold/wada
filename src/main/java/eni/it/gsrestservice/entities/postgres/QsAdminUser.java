@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.entities.oracle;
+package eni.it.gsrestservice.entities.postgres;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "QSADMINUSERS")
+@Table(name = "qs_admin_users")
 public class QsAdminUser {
     @Id
     @Column(name = "ID", nullable = false)

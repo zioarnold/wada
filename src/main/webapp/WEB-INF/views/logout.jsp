@@ -16,7 +16,7 @@
                 <h3>Logout</h3>
             </div>
             <div class="card-body">
-                <form action="/" method="post">
+                <form action="${pageContext.request.contextPath}/" method="get">
                     <h5><span style="color:whitesmoke">Logout e` avvenuto con successo</span></h5>
                     <div class="form-group">
                         <input type="submit" value="Ok" class="btn float-right login_btn">

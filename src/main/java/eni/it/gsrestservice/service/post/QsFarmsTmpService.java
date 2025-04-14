@@ -1,7 +1,7 @@
-package eni.it.gsrestservice.service.ora;
+package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.repos.ora.QsFarmsTmpRepository;
+import eni.it.gsrestservice.repos.post.QsFarmsTmpRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

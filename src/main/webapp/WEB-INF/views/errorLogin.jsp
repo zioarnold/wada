@@ -16,7 +16,7 @@
                 <h3>Errore</h3>
             </div>
             <div class="card-body">
-                <form action="${pageContext.request.contextPath}/" method="post">
+                <form action="${pageContext.request.contextPath}/" method="get">
                     <h5><span style="color:whitesmoke">${errorMsg}</span></h5>
                     <div class="form-group">
                         <input type="submit" value="Login" class="btn float-right login_btn">

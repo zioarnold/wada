@@ -1,16 +1,15 @@
-package eni.it.gsrestservice.service.ora;
+package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.entities.oracle.QsAdminUser;
+import eni.it.gsrestservice.entities.postgres.QsAdminUser;
 import eni.it.gsrestservice.model.QsAdminUsers;
-import eni.it.gsrestservice.repos.ora.QsAdminUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import eni.it.gsrestservice.repos.post.QsAdminUserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,14 +21,10 @@ import static eni.it.gsrestservice.utility.Utility.MD5;
  * @created 11/04/2025 - 14:53 </br>
  */
 @Service
+@RequiredArgsConstructor
 public class QsAdminUsersService {
 
-    @Autowired
-    @Qualifier("oracleTransactionManager")
-    private PlatformTransactionManager oracleTxManager;
-
-    @Autowired
-    private QsAdminUserRepository qsAdminUserRepository;
+    private final QsAdminUserRepository qsAdminUserRepository;
 
     public List<QsAdminUser> findAllAdminUsers() {
         return qsAdminUserRepository.findAll();
@@ -54,8 +49,12 @@ public class QsAdminUsersService {
     public QsAdminUser login(String username, String pwd) {
         QsAdminUser user = qsAdminUserRepository.findByUsernameAndPassword(username, pwd);
         user.setAuthenticated("Y");
+        user.setCurrentSessionLoginTime(LocalDate.now());
+        user.setSessionLoginExpireTime(LocalDate.now().plusDays(1));
         QsAdminUsers.username = user.getUsername();
         QsAdminUsers.role = user.getRole();
+        System.out.println("user.toString() = " + user);
+        qsAdminUserRepository.save(user);
         return user;
     }
 

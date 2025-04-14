@@ -1,8 +1,8 @@
-package eni.it.gsrestservice.service.ora;
+package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.repos.ora.QsAuditLogRepository;
-import eni.it.gsrestservice.entities.oracle.QsAuditLog;
+import eni.it.gsrestservice.entities.postgres.QsAuditLog;
+import eni.it.gsrestservice.repos.post.QsAuditLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

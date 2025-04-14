@@ -1,22 +1,25 @@
-package eni.it.gsrestservice.entities.oracle;
+package eni.it.gsrestservice.entities.postgres;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "QSFARMS")
-public class QsFarm {
+@Table(name = "qs_farms_tmp")
+@ToString
+@RequiredArgsConstructor
+public class QsFarmsTmp {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
-    private Long id;
-
-    @Column(name = "FARMID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long farmId;
 
     @Column(name = "DESCRIZIONE", nullable = false, length = 100)
@@ -70,4 +73,19 @@ public class QsFarm {
     @Column(name = "QSRELOADTASKNAME", length = 100)
     private String qsReloadTaskName;
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        QsFarmsTmp that = (QsFarmsTmp) o;
+        return getFarmId() != null && Objects.equals(getFarmId(), that.getFarmId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }

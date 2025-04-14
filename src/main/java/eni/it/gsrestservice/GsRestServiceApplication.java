@@ -11,7 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {
         "eni.it.gsrestservice.service",
         "eni.it.gsrestservice.repos.post",
-        "eni.it.gsrestservice.repos.ora",
         "eni.it.gsrestservice.config"
 })
 public class GsRestServiceApplication extends SpringBootServletInitializer {

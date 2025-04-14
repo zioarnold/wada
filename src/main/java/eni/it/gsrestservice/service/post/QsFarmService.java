@@ -1,10 +1,10 @@
-package eni.it.gsrestservice.service.ora;
+package eni.it.gsrestservice.service.post;
 
 
 import eni.it.gsrestservice.config.QlikViewSenseConfig;
-import eni.it.gsrestservice.entities.oracle.QsFarm;
+import eni.it.gsrestservice.entities.postgres.QsFarm;
 import eni.it.gsrestservice.model.Farm;
-import eni.it.gsrestservice.repos.ora.QsFarmRepository;
+import eni.it.gsrestservice.repos.post.QsFarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

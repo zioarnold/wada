@@ -1,7 +1,7 @@
-package eni.it.gsrestservice.repos.ora;
+package eni.it.gsrestservice.repos.post;
 
 
-import eni.it.gsrestservice.entities.oracle.QsAdminUser;
+import eni.it.gsrestservice.entities.postgres.QsAdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

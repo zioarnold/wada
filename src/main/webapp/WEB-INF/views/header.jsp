@@ -5,11 +5,19 @@
   Time: 16:46
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    response.setHeader("Cache-Control", "no-cache");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+%>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge"/>
     <meta about="Made by UID0931174 aka Zaki"/>
     <title>Eni Qlik Tool User Management</title>
+
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/background.css"/>
     <link type="text/javascript" href="${pageContext.request.contextPath}/js/bootstrap.js"/>

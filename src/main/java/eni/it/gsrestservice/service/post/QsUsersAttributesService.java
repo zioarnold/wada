@@ -1,12 +1,11 @@
 package eni.it.gsrestservice.service.post;
 
 
-import eni.it.gsrestservice.entities.oracle.QsAuditLog;
+import eni.it.gsrestservice.entities.postgres.QsAuditLog;
 import eni.it.gsrestservice.entities.postgres.QsUsersAttrib;
 import eni.it.gsrestservice.model.Farm;
 import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.repos.post.QsUsersAttributesRepository;
-import eni.it.gsrestservice.service.ora.QsAuditLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

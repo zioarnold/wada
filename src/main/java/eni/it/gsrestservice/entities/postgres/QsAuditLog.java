@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.entities.oracle;
+package eni.it.gsrestservice.entities.postgres;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,16 +12,16 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "QSAUDITLOG")
+@Table(name = "qs_audit_log")
 public class QsAuditLog {
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "DESCRIPTION", length = 4000)
+    @Column(name = "description", length = 4000)
     private String description;
 
-    @Column(name = "EXECUTION_DATA", nullable = false)
+    @Column(name = "execution_data", nullable = false)
     private OffsetDateTime executionData;
 
 }

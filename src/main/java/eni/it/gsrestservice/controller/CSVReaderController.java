@@ -6,7 +6,7 @@ import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.service.CSVReaderService;
 import eni.it.gsrestservice.service.LDAPService;
 import eni.it.gsrestservice.service.QlikSenseService;
-import eni.it.gsrestservice.service.ora.QsAdminUsersService;
+import eni.it.gsrestservice.service.post.QsAdminUsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

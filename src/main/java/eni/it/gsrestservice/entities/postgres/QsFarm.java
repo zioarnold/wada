@@ -1,4 +1,4 @@
-package eni.it.gsrestservice.entities.oracle;
+package eni.it.gsrestservice.entities.postgres;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,17 +9,15 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "QSFARMSTMP")
-public class QsFarmsTmp {
+@Table(name = "qs_farms")
+public class QsFarm {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
-    private Long id;
-
-    @Column(name = "FARMID", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long farmId;
 
-    @Column(name = "DESCRIZIONE", nullable = false, length = 100)
+    @Column(name = "descrizione", nullable = false, length = 100)
     private String description;
 
     @Column(name = "DBUSER", nullable = false, length = 30)
