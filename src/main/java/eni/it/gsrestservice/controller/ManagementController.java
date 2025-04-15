@@ -11,6 +11,8 @@ import eni.it.gsrestservice.model.QsAdminUsers;
 import eni.it.gsrestservice.service.QlikSenseService;
 import eni.it.gsrestservice.service.post.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ import java.util.NoSuchElementException;
 @Controller
 @RequiredArgsConstructor
 public class ManagementController implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(ManagementController.class);
+
     private final QsFarmService qsFarmService;
     private final QsAdminUsersService qsAdminUsersService;
     private final QsAuditLogService qsAuditLogService;
@@ -34,7 +38,7 @@ public class ManagementController implements Serializable {
     private final QlikSenseService qlikSenseService;
     private final RolesListConfig rolesListConfig;
 
-    @Value("${db.db.tabattrib}")
+    @Value("${db.tabattrib}")
     private String tabAttribute;
 
     @GetMapping("/managementPage")
@@ -320,21 +324,21 @@ public class ManagementController implements Serializable {
     }
 
     @RequestMapping(value = "/addNewFarm")
-    public ModelAndView addNewFarm(@RequestParam(name = "description") String description,
-                                   @RequestParam(name = "came") String came,
-                                   @RequestParam(name = "dbUser") String dbUser,
-                                   @RequestParam(name = "dbPassword") String dbPassword,
-                                   @RequestParam(name = "dbHost") String dbHost,
-                                   @RequestParam(name = "qsHost") String qsHost,
-                                   @RequestParam(name = "qsPathClient") String qsPathClient,
-                                   @RequestParam(name = "qsPathRoot") String qsPathRoot,
-                                   @RequestParam(name = "qsXrfKey") String qsXrfKey,
-                                   @RequestParam(name = "qsKsPassword") String qsKsPassword,
+    public ModelAndView addNewFarm(@RequestParam(required = false, name = "description") String description,
+                                   @RequestParam(required = false, name = "came") String came,
+                                   @RequestParam(required = false, name = "dbUser") String dbUser,
+                                   @RequestParam(required = false, name = "dbPassword") String dbPassword,
+                                   @RequestParam(required = false, name = "dbHost") String dbHost,
+                                   @RequestParam(required = false, name = "qsHost") String qsHost,
+                                   @RequestParam(required = false, name = "qsPathClient") String qsPathClient,
+                                   @RequestParam(required = false, name = "qsPathRoot") String qsPathRoot,
+                                   @RequestParam(required = false, name = "qsXrfKey") String qsXrfKey,
+                                   @RequestParam(required = false, name = "qsKsPassword") String qsKsPassword,
                                    @RequestParam(required = false, name = "note") String note,
-                                   @RequestParam(name = "dbSid") String dbSid,
-                                   @RequestParam(name = "dbPort") String dbPort,
-                                   @RequestParam(name = "qsUserHeader") String qsUserHeader,
-                                   @RequestParam(name = "environment") String environment) {
+                                   @RequestParam(required = false, name = "dbSid") String dbSid,
+                                   @RequestParam(required = false, name = "dbPort") String dbPort,
+                                   @RequestParam(required = false, name = "qsUserHeader") String qsUserHeader,
+                                   @RequestParam(required = false, name = "environment") String environment) {
 
         QsFarm qsFarm = ex(description, came, dbUser, dbPassword, dbHost, qsHost, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment);
 
@@ -358,21 +362,21 @@ public class ManagementController implements Serializable {
     }
 
     @RequestMapping("/createFarm")
-    public ModelAndView createFarmDB(@RequestParam(name = "description") String description,
-                                     @RequestParam(name = "came") String came,
-                                     @RequestParam(name = "dbUser") String dbUser,
-                                     @RequestParam(name = "dbPassword") String dbPassword,
-                                     @RequestParam(name = "dbHost") String dbHost,
-                                     @RequestParam(name = "qsHost") String qsHost,
-                                     @RequestParam(name = "qsPathClient") String qsPathClient,
-                                     @RequestParam(name = "qsPathRoot") String qsPathRoot,
-                                     @RequestParam(name = "qsXrfKey") String qsXrfKey,
-                                     @RequestParam(name = "qsKsPassword") String qsKsPassword,
+    public ModelAndView createFarmDB(@RequestParam(required = false, name = "description") String description,
+                                     @RequestParam(required = false, name = "came") String came,
+                                     @RequestParam(required = false, name = "dbUser") String dbUser,
+                                     @RequestParam(required = false, name = "dbPassword") String dbPassword,
+                                     @RequestParam(required = false, name = "dbHost") String dbHost,
+                                     @RequestParam(required = false, name = "qsHost") String qsHost,
+                                     @RequestParam(required = false, name = "qsPathClient") String qsPathClient,
+                                     @RequestParam(required = false, name = "qsPathRoot") String qsPathRoot,
+                                     @RequestParam(required = false, name = "qsXrfKey") String qsXrfKey,
+                                     @RequestParam(required = false, name = "qsKsPassword") String qsKsPassword,
                                      @RequestParam(required = false, name = "note") String note,
-                                     @RequestParam(name = "dbSid") String dbSid,
-                                     @RequestParam(name = "dbPort") String dbPort,
-                                     @RequestParam(name = "qsUserHeader") String qsUserHeader,
-                                     @RequestParam(name = "environment") String environment) {
+                                     @RequestParam(required = false, name = "dbSid") String dbSid,
+                                     @RequestParam(required = false, name = "dbPort") String dbPort,
+                                     @RequestParam(required = false, name = "qsUserHeader") String qsUserHeader,
+                                     @RequestParam(required = false, name = "environment") String environment) {
         QsFarm qsFarm = ex(description, came, dbUser, dbPassword, dbHost, qsHost, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment);
         if (qsFarmService.create(qsFarm) != null) {
             return new ModelAndView("chooseFarm")
@@ -511,22 +515,22 @@ public class ManagementController implements Serializable {
 
     @RequestMapping(value = "/saveFarm", method = RequestMethod.POST)
     public ModelAndView saveFarm(@RequestParam(required = false, name = "farmId") String farmId,
-                                 @RequestParam(name = "description") String description,
-                                 @RequestParam(name = "came") String came,
-                                 @RequestParam(name = "dbUser") String dbUser,
-                                 @RequestParam(name = "dbPassword") String dbPassword,
-                                 @RequestParam(name = "dbHost") String dbHost,
-                                 @RequestParam(name = "qsHost") String qsHost,
-                                 @RequestParam(name = "qsReloadTaskName") String qsReloadTaskName,
-                                 @RequestParam(name = "qsPathClientJKS") String qsPathClient,
-                                 @RequestParam(name = "qsPathRootJKS") String qsPathRoot,
-                                 @RequestParam(name = "qsXrfKey") String qsXrfKey,
-                                 @RequestParam(name = "qsKeyStorePwd") String qsKsPassword,
+                                 @RequestParam(required = false, name = "description") String description,
+                                 @RequestParam(required = false, name = "came") String came,
+                                 @RequestParam(required = false, name = "dbUser") String dbUser,
+                                 @RequestParam(required = false, name = "dbPassword") String dbPassword,
+                                 @RequestParam(required = false, name = "dbHost") String dbHost,
+                                 @RequestParam(required = false, name = "qsHost") String qsHost,
+                                 @RequestParam(required = false, name = "qsReloadTaskName") String qsReloadTaskName,
+                                 @RequestParam(required = false, name = "qsPathClientJKS") String qsPathClient,
+                                 @RequestParam(required = false, name = "qsPathRootJKS") String qsPathRoot,
+                                 @RequestParam(required = false, name = "qsXrfKey") String qsXrfKey,
+                                 @RequestParam(required = false, name = "qsKeyStorePwd") String qsKsPassword,
                                  @RequestParam(required = false, name = "note") String note,
-                                 @RequestParam(name = "dbSid") String dbSid,
-                                 @RequestParam(name = "dbPort") String dbPort,
-                                 @RequestParam(name = "qsHeader") String qsUserHeader,
-                                 @RequestParam(name = "environment") String environment) {
+                                 @RequestParam(required = false, name = "dbSid") String dbSid,
+                                 @RequestParam(required = false, name = "dbPort") String dbPort,
+                                 @RequestParam(required = false, name = "qsHeader") String qsUserHeader,
+                                 @RequestParam(required = false, name = "environment") String environment) {
         QsFarm qsFarm = updateFarm(farmId, description, came, dbUser, dbPassword, dbHost, qsHost, qsReloadTaskName, qsPathClient, qsPathRoot, qsXrfKey, qsKsPassword, note, dbSid, dbPort, qsUserHeader, environment);
         if (qsFarmService.update(qsFarm) != null) {
             return new ModelAndView("success")
@@ -547,21 +551,21 @@ public class ManagementController implements Serializable {
         }
     }
 
-    private QsFarm ex(@RequestParam(name = "description") String description,
-                      @RequestParam(name = "came") String came,
-                      @RequestParam(name = "dbUser") String dbUser,
-                      @RequestParam(name = "dbPassword") String dbPassword,
-                      @RequestParam(name = "dbHost") String dbHost,
-                      @RequestParam(name = "qsHost") String qsHost,
-                      @RequestParam(name = "qsPathClient") String qsPathClient,
-                      @RequestParam(name = "qsPathRoot") String qsPathRoot,
-                      @RequestParam(name = "qsXrfKey") String qsXrfKey,
-                      @RequestParam(name = "qsKsPassword") String qsKsPassword,
+    private QsFarm ex(@RequestParam(required = false, name = "description") String description,
+                      @RequestParam(required = false, name = "came") String came,
+                      @RequestParam(required = false, name = "dbUser") String dbUser,
+                      @RequestParam(required = false, name = "dbPassword") String dbPassword,
+                      @RequestParam(required = false, name = "dbHost") String dbHost,
+                      @RequestParam(required = false, name = "qsHost") String qsHost,
+                      @RequestParam(required = false, name = "qsPathClient") String qsPathClient,
+                      @RequestParam(required = false, name = "qsPathRoot") String qsPathRoot,
+                      @RequestParam(required = false, name = "qsXrfKey") String qsXrfKey,
+                      @RequestParam(required = false, name = "qsKsPassword") String qsKsPassword,
                       @RequestParam(required = false, name = "note") String note,
-                      @RequestParam(name = "dbSid") String dbSid,
-                      @RequestParam(name = "dbPort") String dbPort,
-                      @RequestParam(name = "qsUserHeader") String qsUserHeader,
-                      @RequestParam(name = "environment") String environment) {
+                      @RequestParam(required = false, name = "dbSid") String dbSid,
+                      @RequestParam(required = false, name = "dbPort") String dbPort,
+                      @RequestParam(required = false, name = "qsUserHeader") String qsUserHeader,
+                      @RequestParam(required = false, name = "environment") String environment) {
         QsFarm qsFarm = new QsFarm();
         qsFarm.setDescription(description);
         qsFarm.setCame(came);
@@ -586,22 +590,22 @@ public class ManagementController implements Serializable {
     }
 
     private QsFarm updateFarm(@RequestParam(required = false, name = "farmId") String farmId,
-                              @RequestParam(name = "description") String description,
-                              @RequestParam(name = "came") String came,
-                              @RequestParam(name = "dbUser") String dbUser,
-                              @RequestParam(name = "dbPassword") String dbPassword,
-                              @RequestParam(name = "dbHost") String dbHost,
-                              @RequestParam(name = "qsHost") String qsHost,
-                              @RequestParam(name = "qsReloadTaskName") String qsReloadTaskName,
-                              @RequestParam(name = "qsPathClient") String qsPathClient,
-                              @RequestParam(name = "qsPathRoot") String qsPathRoot,
-                              @RequestParam(name = "qsXrfKey") String qsXrfKey,
-                              @RequestParam(name = "qsKsPassword") String qsKsPassword,
+                              @RequestParam(required = false, name = "description") String description,
+                              @RequestParam(required = false, name = "came") String came,
+                              @RequestParam(required = false, name = "dbUser") String dbUser,
+                              @RequestParam(required = false, name = "dbPassword") String dbPassword,
+                              @RequestParam(required = false, name = "dbHost") String dbHost,
+                              @RequestParam(required = false, name = "qsHost") String qsHost,
+                              @RequestParam(required = false, name = "qsReloadTaskName") String qsReloadTaskName,
+                              @RequestParam(required = false, name = "qsPathClient") String qsPathClient,
+                              @RequestParam(required = false, name = "qsPathRoot") String qsPathRoot,
+                              @RequestParam(required = false, name = "qsXrfKey") String qsXrfKey,
+                              @RequestParam(required = false, name = "qsKsPassword") String qsKsPassword,
                               @RequestParam(required = false, name = "note") String note,
-                              @RequestParam(name = "dbSid") String dbSid,
-                              @RequestParam(name = "dbPort") String dbPort,
-                              @RequestParam(name = "qsUserHeader") String qsUserHeader,
-                              @RequestParam(name = "environment") String environment) {
+                              @RequestParam(required = false, name = "dbSid") String dbSid,
+                              @RequestParam(required = false, name = "dbPort") String dbPort,
+                              @RequestParam(required = false, name = "qsUserHeader") String qsUserHeader,
+                              @RequestParam(required = false, name = "environment") String environment) {
         QsFarm qsFarm = qsFarmService.findById(farmId).orElseThrow(() -> new IllegalArgumentException("No farm found with id " + farmId));
         qsFarm.setDescription(description);
         qsFarm.setCame(came);

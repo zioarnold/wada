@@ -3,10 +3,7 @@ package eni.it.gsrestservice.entities.postgres;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
@@ -15,25 +12,26 @@ import java.time.LocalDate;
 @Table(name = "qs_admin_users")
 public class QsAdminUser {
     @Id
-    @Column(name = "ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "USERNAME", nullable = false, length = 30)
+    @Column(name = "username", nullable = false, length = 30)
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false, length = 40)
+    @Column(name = "password", nullable = false, length = 40)
     private String password;
 
-    @Column(name = "CURRENT_SESSION_LOGIN_TIME", nullable = false)
+    @Column(name = "current_session_login_time", nullable = false)
     private LocalDate currentSessionLoginTime;
 
-    @Column(name = "SESSION_LOGIN_EXPIRE_TIME", nullable = false)
+    @Column(name = "session_login_expire_time", nullable = false)
     private LocalDate sessionLoginExpireTime;
 
-    @Column(name = "AUTHENTICATED", nullable = false, length = 1)
+    @Column(name = "authenticated", nullable = false, length = 1)
     private String authenticated;
 
-    @Column(name = "ROLE", nullable = false, length = 5)
+    @Column(name = "role", nullable = false, length = 5)
     private String role;
 
 }

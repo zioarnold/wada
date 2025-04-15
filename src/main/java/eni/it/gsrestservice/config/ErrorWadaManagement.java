@@ -1,5 +1,8 @@
 package eni.it.gsrestservice.config;
 
+import lombok.Getter;
+
+@Getter
 public enum ErrorWadaManagement {
     E_500_INTERNAL_SERVER("Errore interno del server, causa certificati non impostati. Si prega di autenticarsi."),
     E_0001_QMC_ROLE_VALUE_NULL("Campo roles sulla QMC e` vuoto"),
@@ -28,7 +31,4 @@ public enum ErrorWadaManagement {
         this.errorMsg = errorMsg;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
 }

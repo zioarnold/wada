@@ -13,17 +13,18 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface QsAdminUserRepository extends JpaRepository<QsAdminUser, Long> {
+    @Query(value = "select * from qs_admin_users where username = :username and password = :password", nativeQuery = true)
     QsAdminUser findByUsernameAndPassword(String username, String password);
 
-    @Query(value = "SELECT AUTHENTICATED FROM QSADMINUSERS a WHERE a.USERNAME = :username", nativeQuery = true)
+    @Query(value = "SELECT authenticated FROM qs_admin_users a WHERE a.username = :username", nativeQuery = true)
     String findByAuthenticatedAndUsername(String username);
 
-    @Query(value = "select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED from QSADMINUSERS where USERNAME like :username", nativeQuery = true)
+    @Query(value = "select CURRENT_SESSION_LOGIN_TIME, SESSION_LOGIN_EXPIRE_TIME, AUTHENTICATED from qs_admin_users where USERNAME like :username", nativeQuery = true)
     QsAdminUser checkSession(String username);
 
     QsAdminUser findByUsername(String username);
 
     @Modifying
-    @Query(value = "UPDATE QSADMINUSERS a SET a.PASSWORD = :password WHERE a.ID = :adminId", nativeQuery = true)
+    @Query(value = "UPDATE qs_admin_users a SET a.PASSWORD = :password WHERE a.ID = :adminId", nativeQuery = true)
     void updatePasswordByUsername(Long adminId, String password);
 }

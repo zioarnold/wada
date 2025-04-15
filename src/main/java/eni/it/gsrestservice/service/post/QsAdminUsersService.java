@@ -53,7 +53,6 @@ public class QsAdminUsersService {
         user.setSessionLoginExpireTime(LocalDate.now().plusDays(1));
         QsAdminUsers.username = user.getUsername();
         QsAdminUsers.role = user.getRole();
-        System.out.println("user.toString() = " + user);
         qsAdminUserRepository.save(user);
         return user;
     }

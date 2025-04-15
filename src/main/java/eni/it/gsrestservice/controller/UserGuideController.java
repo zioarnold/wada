@@ -13,36 +13,41 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequiredArgsConstructor
 public class UserGuideController {
+    private static final String USER_GUIDE_VIEW = "userGuide";
+    private static final String SESSION_EXPIRED_VIEW = "sessionExpired";
+    private static final String ERROR_LOGIN_VIEW = "errorLogin";
     private final QlikSenseService qlikSenseService;
     private final QsAdminUsersService qsAdminUsersService;
     @GetMapping("/userGuide")
     public ModelAndView userGuide() {
         try {
-            if (qsAdminUsersService.isAuthenticated(QsAdminUsers.username)) {
-                if (qsAdminUsersService.checkSession(QsAdminUsers.username) == 1) {
-                    return new ModelAndView("userGuide")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseService.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
-                    return new ModelAndView("userGuide")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseService.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role);
-                } else {
-                    return new ModelAndView("sessionExpired");
-                }
-            } else {
-                return new ModelAndView("errorLogin").addObject("errorMsg",
-                        ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+            if (!qsAdminUsersService.isAuthenticated(QsAdminUsers.username)) {
+                return createErrorView(ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
             }
+
+            int sessionStatus = qsAdminUsersService.checkSession(QsAdminUsers.username);
+            if (sessionStatus == 0) {
+                return new ModelAndView(SESSION_EXPIRED_VIEW);
+            }
+
+            return createUserGuideView();
+
         } catch (Exception e) {
-            return new ModelAndView("errorLogin").addObject("errorMsg",
-                    ErrorWadaManagement.E_500_INTERNAL_SERVER.getErrorMsg());
+            return createErrorView(ErrorWadaManagement.E_500_INTERNAL_SERVER.getErrorMsg());
         }
+    }
+
+    private ModelAndView createUserGuideView() {
+        return new ModelAndView(USER_GUIDE_VIEW)
+                .addObject("farm_name", Farm.description)
+                .addObject("farm_environment", Farm.environment)
+                .addObject("ping_qlik", qlikSenseService.ping())
+                .addObject("user_logged_in", QsAdminUsers.username)
+                .addObject("user_role_logged_in", QsAdminUsers.role);
+    }
+
+    private ModelAndView createErrorView(String errorMessage) {
+        return new ModelAndView(ERROR_LOGIN_VIEW)
+                .addObject("errorMsg", errorMessage);
     }
 }

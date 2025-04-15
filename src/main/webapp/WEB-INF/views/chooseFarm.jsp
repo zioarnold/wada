@@ -7,7 +7,20 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-<jsp:include page="header.jsp"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta about="Made by UID0931174 aka Zaki"/>
+    <title>Eni Qlik Tool User Management</title>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/custom.css"/>
+    <link rel="stylesheet" href="css/background.css"/>
+    <link rel="shortcut icon" href="ico/favicon.ico"/>
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+</head>
 <body>
 <div class="container">
     <div class="d-flex justify-content-center h-100">
@@ -16,7 +29,7 @@
                 <h3>Seleziona la FARM</h3>
             </div>
             <div class="card-body">
-                <form class="form-group">
+                <form class="form-group" method="get">
                     <c:choose>
                         <c:when test="${empty farmList}">
                             <span style="color:whitesmoke">Nessuna farm censita!</span>
@@ -24,7 +37,7 @@
                         </c:when>
                         <c:otherwise>
                             <%--suppress HtmlFormInputWithoutLabel --%>
-                            <select name="farm" class="form-control">
+                            <select name="farm" class="form-control" id="farm">
                                 <c:forEach items="${farmList}" var="farm">
                                     <option value="${farm.description}">${farm.description}</option>
                                 </c:forEach>
@@ -37,7 +50,9 @@
                         </button>
                         <c:choose>
                             <c:when test="${empty farmList}">
-                                <button formaction="/createFarm" class="btn float-left login_btn">Crea</button>
+                                <button type="button" onclick="location.href='/createFarm'"
+                                        class="btn float-left login_btn">Crea
+                                </button>
                             </c:when>
                             <c:otherwise>
                             </c:otherwise>

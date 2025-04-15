@@ -4,7 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration." />
+    <list default="true" id="64f0d43d-25f4-4e85-badf-89f8db5ed4e4" name="Default Changelist" comment="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration.">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/GsRestServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/ErrorWadaManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/ErrorWadaManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresDataSourceProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/config/PostgresDbConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/AssistanceController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/CSVReaderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/FarmController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/FarmController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/QUsersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/UserGuideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsAdminUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsAdminUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUsersAttrib.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/entities/postgres/QsUsersAttrib.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsAdminUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/repos/post/QsAdminUserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/CSVReaderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/LDAPService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/LDAPService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsAdminUsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/service/post/QsAdminUsersService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/addFarmPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/addFarmPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/allAdminsPage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/allAdminsPage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/chooseFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/chooseFarm.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/createFarm.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/createFarm.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/error.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/error.jsp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -197,6 +227,7 @@
     &quot;Maven.gs-rest-service [mvn,clean:install...].executor&quot;: &quot;Run&quot;,
     &quot;Maven.gs-rest-service [package].executor&quot;: &quot;Run&quot;,
     &quot;Maven.gs-rest-service [spring-boot:run].executor&quot;: &quot;Run&quot;,
+    &quot;Remote JVM Debug.Remote Debug.executor&quot;: &quot;Debug&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
@@ -340,21 +371,38 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <configuration name="Remote Debug" type="Remote">
+      <module name="gs-rest-service" />
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <option name="AUTO_RESTART" value="false" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="5005" />
+        <option name="LOCAL" value="false" />
+      </RunnerSettings>
+      <method v="2" />
+    </configuration>
     <configuration name="GsRestServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="DEBUG_MODE" value="true" />
       <module name="gs-rest-service" />
       <selectedOptions>
         <option name="environmentVariables" />
       </selectedOptions>
       <option name="SPRING_BOOT_MAIN_CLASS" value="eni.it.gsrestservice.GsRestServiceApplication" />
       <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <option name="VM_PARAMETERS" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
       <item itemvalue="Maven.gs-rest-service [spring-boot:run]" />
+      <item itemvalue="Remote JVM Debug.Remote Debug" />
       <item itemvalue="Spring Boot.GsRestServiceApplication" />
     </list>
   </component>
@@ -467,6 +515,9 @@
       <workItem from="1744548569311" duration="20060000" />
       <workItem from="1744584837271" duration="601000" />
       <workItem from="1744625525511" duration="10063000" />
+      <workItem from="1744636074151" duration="93000" />
+      <workItem from="1744729858279" duration="3346000" />
+      <workItem from="1744748799691" duration="5689000" />
     </task>
     <task id="LOCAL-00002" summary="spring ldap boot added">
       <created>1569512608466</created>
@@ -811,7 +862,7 @@
       <option name="project" value="LOCAL" />
       <updated>1681317090042</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -857,7 +908,6 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="QSUM renamed to WADA" />
     <MESSAGE value="added original ojdbc8 jar file, removed spring-session and spring-jpa.&#10;session will be managed by custom configuration through DB and&#10;static field in QsAdminUsers" />
     <MESSAGE value="class.forName removed used DriverManager.register instead" />
     <MESSAGE value="krajee.js performed" />
@@ -881,12 +931,22 @@
     <MESSAGE value="Remove Oracle configurations and update dependency handling.&#10;&#10;Oracle-related configurations, properties, and classes were removed to streamline the application. Updated `OracleDbConfig` to decode Base64 passwords directly via the `Environment`, improving security and flexibility. Adjusted dependency management to reflect the changes in the data source setup." />
     <MESSAGE value="Remove Oracle-specific configurations and refactor database setup.&#10;&#10;Eliminated `OracleDataSourceProperties` and adjusted `OracleDbConfig` to use environment properties with Base64-decoded passwords. Updated `application.properties` to reflect changes in credentials. This simplifies the configuration and enhances security by removing hardcoded dependencies." />
     <MESSAGE value="Update LDAP and database configurations for improved security.&#10;&#10;Replaced hardcoded LDAP settings in `application.properties` with updated credentials and Base64-encoded password decoding for better security. Removed Oracle-specific configurations, streamlining dependency management and aligning setup with environment-based properties." />
+    <MESSAGE value="Migrate to PostgreSQL and enhance project security&#10;&#10;Replaced Oracle configurations and entities with PostgreSQL alternatives. Updated file paths, static resources, and JSP views to reflect structural changes. Improved security by removing hardcoded credentials and enabling better caching mechanisms." />
     <MESSAGE value="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration." />
     <option name="LAST_COMMIT_MESSAGE" value="Migrate from Oracle to PostgreSQL and refactor resources&#10;&#10;Replaced Oracle-related configuration, entities, and services with PostgreSQL equivalents across the codebase. Updated JSP paths and static resource handling to align with structural changes. Enabled enhanced security and caching mechanisms in the project configuration." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/eni/it/gsrestservice/controller/ManagementController.java</url>
+          <line>222</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
         <watch expression="getUserRoleByUserId(userId)" language="JAVA" />

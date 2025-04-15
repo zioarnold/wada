@@ -31,7 +31,7 @@ public class QsUser {
     @Column(name = "data_last_modify", nullable = false)
     private OffsetDateTime dataLastModify;
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<QsUsersAttrib> qsUsersAttribs = new LinkedHashSet<>();
 
 }

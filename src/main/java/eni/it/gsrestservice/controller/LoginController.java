@@ -8,7 +8,10 @@ import eni.it.gsrestservice.service.post.QsAdminUsersService;
 import eni.it.gsrestservice.service.post.QsFarmService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import static eni.it.gsrestservice.utility.Utility.MD5;
@@ -23,9 +26,8 @@ public class LoginController {
     private final QsFarmService qsFarmService;
 
     @GetMapping("/")
-    public String root() {
-        log.debug("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-        return "redirect:/login";
+    public ModelAndView root() {
+        return new ModelAndView("login");
     }
 
 
@@ -60,7 +62,7 @@ public class LoginController {
         }
     }
 
-    @PostMapping(value = "/loginPage")
+    @RequestMapping(value = "/loginPage")
     public ModelAndView loginPage(@RequestParam(required = false, name = "username") String username,
                                   @RequestParam(required = false, name = "password") String password) {
         if (qsAdminUsersService.login(username, MD5(password)) != null) {

@@ -14,6 +14,7 @@ import eni.it.gsrestservice.service.post.QsAuditLogService;
 import eni.it.gsrestservice.service.post.QsUsersAttributesService;
 import eni.it.gsrestservice.service.post.QsUsersService;
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +25,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class QUsersController {
+    private static final String FARM_NAME = "farm_name";
+    private static final String FARM_ENVIRONMENT = "farm_environment";
+    private static final String PING_QLIK = "ping_qlik";
+    private static final String USER_LOGGED = "user_logged_in";
+    private static final String USER_ROLE = "user_role_logged_in";
+
     private final QlikSenseService qlikSenseService;
     private final RolesListConfig rolesListConfig;
     private final QsUsersAttributesService qsUsersAttributesService;
@@ -32,48 +39,39 @@ public class QUsersController {
     private final QsAuditLogService qsAuditLogService;
     private final LDAPService ldapService;
 
+    private ModelAndView addCommonAttributes(ModelAndView modelAndView) {
+        return modelAndView
+                .addObject(FARM_NAME, Farm.description)
+                .addObject(FARM_ENVIRONMENT, Farm.environment)
+                .addObject(PING_QLIK, qlikSenseService.ping())
+                .addObject(USER_LOGGED, QsAdminUsers.username)
+                .addObject(USER_ROLE, QsAdminUsers.role);
+    }
+
+    private ModelAndView createErrorView(String errorMsg) {
+        return addCommonAttributes(new ModelAndView("error")
+                .addObject("errorMsg", errorMsg));
+    }
+
 
     @GetMapping("/AllQLIKUsersFromDB")
     public ModelAndView allQUsersFromDB() {
         List<QsUser> qsUsers = qsUsersService.findAll();
         if (qsUsers.isEmpty()) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseService.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        } else {
-            return new ModelAndView("allQUsersFromDB")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseService.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("qusers", qsUsers);
+            return createErrorView(ErrorWadaManagement.E_0006_USERS_NOT_EXISTING_ON_DB.getErrorMsg());
         }
+        return addCommonAttributes(new ModelAndView("allQUsersFromDB"))
+                .addObject("qusers", qsUsers);
     }
 
     @RequestMapping("/searchUserOnLDAP")
     public ModelAndView searchUserOnLDAP(@RequestParam(required = false, name = "userID") String userId) throws IOException {
-        if (ldapService.searchOnLDAP(userId).isEmpty()) {
-            return new ModelAndView("error")
-                    .addObject("errorMsg", ErrorWadaManagement.E_0009_USER_NOT_IN_LDAP.getErrorMsg())
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseService.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role);
-        } else {
-            return new ModelAndView("searchUserOnLDAP")
-                    .addObject("farm_name", Farm.description)
-                    .addObject("farm_environment", Farm.environment)
-                    .addObject("ping_qlik", qlikSenseService.ping())
-                    .addObject("user_logged_in", QsAdminUsers.username)
-                    .addObject("user_role_logged_in", QsAdminUsers.role)
-                    .addObject("userIDDATA", ldapService.searchOnLDAP(userId));
+        var ldapResults = ldapService.searchOnLDAP(userId);
+        if (ldapResults.isEmpty()) {
+            return createErrorView(ErrorWadaManagement.E_0009_USER_NOT_IN_LDAP.getErrorMsg());
         }
+        return addCommonAttributes(new ModelAndView("searchUserOnLDAP"))
+                .addObject("userIDDATA", ldapResults);
     }
 
     @RequestMapping("/searchQUserOnDB")
@@ -144,33 +142,22 @@ public class QUsersController {
     @GetMapping(value = "/singleUploadPage")
     public ModelAndView singleUploadPage() {
         try {
-            if (qsAdminUsersService.isAuthenticated(QsAdminUsers.username)) {
-                if (qsAdminUsersService.checkSession(QsAdminUsers.username) == 1) {
-                    return new ModelAndView("singleUploadPage")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseService.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role)
-                            .addObject("rolesList", rolesListConfig.initRolesList());
-                } else if (qsAdminUsersService.checkSession(QsAdminUsers.username) == -1) {
-                    return new ModelAndView("singleUploadPage")
-                            .addObject("farm_name", Farm.description)
-                            .addObject("farm_environment", Farm.environment)
-                            .addObject("ping_qlik", qlikSenseService.ping())
-                            .addObject("user_logged_in", QsAdminUsers.username)
-                            .addObject("user_role_logged_in", QsAdminUsers.role)
-                            .addObject("rolesList", rolesListConfig.initRolesList());
-                } else {
-                    return new ModelAndView("sessionExpired");
-                }
-            } else {
-                return new ModelAndView("errorLogin").addObject("errorMsg",
-                        ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
+            if (!qsAdminUsersService.isAuthenticated(QsAdminUsers.username)) {
+                return new ModelAndView("errorLogin")
+                        .addObject("errorMsg", ErrorWadaManagement.E_0015_NOT_AUTHENTICATED.getErrorMsg());
             }
+
+            int sessionStatus = qsAdminUsersService.checkSession(QsAdminUsers.username);
+            if (sessionStatus == 0) {
+                return new ModelAndView("sessionExpired");
+            }
+
+            return addCommonAttributes(new ModelAndView("singleUploadPage"))
+                    .addObject("rolesList", rolesListConfig.initRolesList());
+
         } catch (Exception e) {
-            return new ModelAndView("errorLogin").addObject("errorMsg",
-                    ErrorWadaManagement.E_500_INTERNAL_SERVER.getErrorMsg());
+            return new ModelAndView("errorLogin")
+                    .addObject("errorMsg", ErrorWadaManagement.E_500_INTERNAL_SERVER.getErrorMsg());
         }
     }
 

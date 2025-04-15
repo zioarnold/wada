@@ -6,7 +6,19 @@
   To change this template use File | Settings | File Templates.
 --%>
 <html>
-<jsp:include page="header.jsp"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+    <meta about="Made by UID0931174 aka Zaki"/>
+    <title>Eni Qlik Tool User Management</title>
+    <link rel="stylesheet" href="css/bootstrap.css"/>
+    <link rel="stylesheet" href="css/background.css"/>
+    <link rel="shortcut icon" href="ico/favicon.ico"/>
+    <!-- Load an icon library to show a hamburger menu (bars) on small screens -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+</head>
 <body>
 <div class="container">
     <div class="d-flex justify-content-center h-100">
@@ -20,25 +32,25 @@
                         <div class="form-group col-md-6">
                             <label for="description"><b>Descrizione</b></label>
                             <input class="form-control form-control-sm" type="text" name="description" id="description"
-                                   placeholder="es: FARM QS 12P">
+                                   placeholder="es: FARM QS 12P" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="dbUser"><b>Utenza DB</b></label>
                             <input class="form-control form-control-sm" type="text" name="dbUser" id="dbUser"
-                                   placeholder="utenza del DB">
+                                   placeholder="utenza del DB" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="dbPassword"><b>DB Password</b></label>
                             <input class="form-control form-control-sm" type="text" name="dbPassword" id="dbPassword"
-                                   placeholder="la pwd dell utenza db">
+                                   placeholder="la pwd dell utenza db" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="dbHost"><b>DB Host</b></label>
                             <input class="form-control form-control-sm" name="dbHost"
                                    placeholder="es: xxx.services.eni.intranet"
-                                   id="dbHost">
+                                   id="dbHost" required>
                         </div>
                     </div>
                     <div class="row">
@@ -46,61 +58,57 @@
                             <label for="dbPort"><b>DB Port</b></label>
                             <input class="form-control form-control-sm" name="dbPort" id="dbPort"
                                    placeholder="porta, es: 1531"
-                                   type="number">
+                                   type="number" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="dbSid"><b>DB SID</b></label>
                             <input class="form-control form-control-sm" name="dbSid" id="dbSid" placeholder="SID"
-                            >
+                                   required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="qsHost"><b>QS Host</b></label>
                             <input class="form-control form-control-sm" name="qsHost" id="qsHost"
-                                   placeholder="es: XXlogXXk0n"
-                            >
+                                   placeholder="es: XXlogXXk0n" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="qsXrfKey"><b>XRF KEY</b></label>
                             <input class="form-control form-control-sm" name="qsXrfKey" id="qsXrfKey"
-                                   placeholder="Chiave xrf"
-                            >
+                                   placeholder="Chiave xrf" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="qsPathClient"><b>QS Client.jks</b></label>
-                            <input class="form-control form-control-sm " name="qsPathClient" id="qsPathClient"
-                            >
+                            <input class="form-control form-control-sm " name="qsPathClient" id="qsPathClient" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="qsPathRoot"><b>QS Root.jks</b></label>
-                            <input class="form-control form-control-sm " name="qsPathRoot" id="qsPathRoot"
-                            >
+                            <input class="form-control form-control-sm " name="qsPathRoot" id="qsPathRoot" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="qsKsPassword"><b>QS JKS Password</b></label>
                             <input class="form-control form-control-sm" name="qsKsPassword" id="qsKsPassword"
-                                   placeholder="La password dei keystore">
+                                   placeholder="La password dei keystore" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="qsUserHeader"><b>QS User Header</b></label>
                             <input class="form-control form-control-sm" name="qsUserHeader" id="qsUserHeader"
-                                   placeholder="es: UserDirectory=ENINET; UserId=ADMQSLAB01">
+                                   placeholder="es: UserDirectory=ENINET; UserId=ADMQSLAB01" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="note"><b>Note</b></label>
                             <input class="form-control form-control-sm" name="note" id="note"
-                                   placeholder="eventuali note">
+                                   placeholder="eventuali note" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="environment"><b>Environment</b></label>
-                            <select name="environment" class="form-control form-control-sm" id="environment">
+                            <select name="environment" class="form-control form-control-sm" id="environment" required>
                                 <option>DEV</option>
                                 <option>TEST</option>
                                 <option>PRE</option>
@@ -110,19 +118,17 @@
                         <div class="form-group col-md-6">
                             <label for="came"><b>CAME</b></label>
                             <input class="form-control form-control-sm" name="came" type="number" id="came"
-                                   placeholder="es: 6440004">
+                                   placeholder="es: 6440004" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="qsReloadTaskName"><b>Reload Task</b></label>
                             <input class="form-control form-control-sm" name="qsReloadTaskName" type="text"
                                    id="qsReloadTaskName"
-                                   placeholder="es: UDC Sync_usersynctask">
+                                   placeholder="es: UDC Sync_usersynctask" required>
                         </div>
                     </div>
-                    <button formaction="/createFarmDB" formmethod="post" class="btn btn-success btn-sm float-left">
-                        Crea
-                    </button>
-                    <button formaction="/logout" class="btn btn-danger float-right">Annulla</button>
+                    <button type="submit" class="btn btn-success btn-sm float-left">Crea</button>
+                    <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger float-right">Annulla</a>
                 </form>
             </div>
         </div>

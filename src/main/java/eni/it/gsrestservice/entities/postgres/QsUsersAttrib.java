@@ -18,7 +18,7 @@ public class QsUsersAttrib implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", referencedColumnName = "id")
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
     private QsUser user;
 
     @Column(name = "userid", nullable = false, length = 20, insertable = false, updatable = false)
